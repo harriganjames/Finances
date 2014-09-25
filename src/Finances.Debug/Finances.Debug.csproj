@@ -1,0 +1,93 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{3A51B2E2-6848-4DBD-A1F2-70F0CB512600}</ProjectGuid>
+    <OutputType>Exe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Finances.Debug</RootNamespace>
+    <AssemblyName>Finances.Debug</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="NBehave.Spec.Framework, Version=0.4.5.183, Culture=neutral, PublicKeyToken=d421feca0f4a05f6, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\libs\NBehave.Spec.Framework.dll</HintPath>
+    </Reference>
+    <Reference Include="NBehave.Spec.NUnit, Version=0.4.5.183, Culture=neutral, PublicKeyToken=d421feca0f4a05f6, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\libs\NBehave.Spec.NUnit.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="DebugPersistenceFNH.cs" />
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Finances.Core.Wpf\Finances.Core.Wpf.csproj">
+      <Project>{f6ccdae2-ffed-4016-95d2-6817230c3519}</Project>
+      <Name>Finances.Core.Wpf</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Finances.Core\Finances.Core.csproj">
+      <Project>{bb8793f8-877f-42b0-82ef-0786b2c214ef}</Project>
+      <Name>Finances.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Finances.IntegrationTests\Finances.IntegrationTests.csproj">
+      <Project>{eaa485c0-edba-4e75-ae82-19bddb4de63b}</Project>
+      <Name>Finances.IntegrationTests</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Finances.Persistence.FNH\Finances.Persistence.FNH.csproj">
+      <Project>{c32d7189-fe4d-4335-8ee1-6cb4e9c0c8e8}</Project>
+      <Name>Finances.Persistence.FNH</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Finances.UnitTests\Finances.UnitTests.csproj">
+      <Project>{810540f3-3726-4674-b97c-7dd6918c9a2f}</Project>
+      <Name>Finances.UnitTests</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Finances.WinClient\Finances.WinClient.csproj">
+      <Project>{d481adf1-4007-40d7-9e05-2daaf3d89d90}</Project>
+      <Name>Finances.WinClient</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

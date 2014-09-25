@@ -1,0 +1,77 @@
+﻿<UserControl x:Class="Finances.WinClient.Views.WorkspaceAreaView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+xmlns:libattach="clr-namespace:Finances.Core.Wpf.AttachedProperties;assembly=Finances.Core.Wpf"
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="300">
+
+        <Grid x:Name="toplevel">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition />
+            </Grid.ColumnDefinitions>
+            <Border BorderThickness="2" BorderBrush="BurlyWood">
+                <StackPanel Grid.Column="0" Orientation="Vertical">
+                    <StackPanel.Resources>
+                        <Style TargetType="Button">
+                            <Setter Property="Padding" Value="10,0" />
+                            <Setter Property="Height" Value="25" />
+                            <Setter Property="Background" Value="GreenYellow" />
+                        </Style>
+                    </StackPanel.Resources>
+                    <!--Workspace Buttons-->
+                    <ItemsControl ItemsSource="{Binding RegisteredWorkspaces}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                            <StackPanel Orientation="Vertical">
+                                <Button Content="{Binding Caption}" Command="{Binding OpenCommand}"/>
+                                <!--<Button Content="Relative" 
+                                        Command="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=ItemsControl}, Path=DataContext.OpenWorkspaceCommand}" 
+                                        CommandParameter="{Binding Caption}"/>-->
+                            </StackPanel>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </StackPanel>
+            </Border>
+
+
+            <Border Grid.Column="1" BorderThickness="2" BorderBrush="DarkGray">
+                <TabControl Grid.Column="1"
+                                        IsSynchronizedWithCurrentItem="True"
+                                            libattach:TabItemGeneratorBehavior.ItemsSource="{Binding OpenWorkspaces}"
+                                            libattach:TabItemGeneratorBehavior.SelectedItem="{Binding SelectedWorkspace}"
+                                            >
+                    <TabControl.ItemTemplate>
+                        <DataTemplate>
+                            <DockPanel>
+                                <Button Command="{Binding Path=CloseCommand}"
+                                                    Content="X"
+                                                    Cursor="Hand"
+                                                    DockPanel.Dock="Right"
+                                                    Focusable="False"
+                                                    FontFamily="Courier" 
+                                                    FontSize="9"
+                                                    FontWeight="Bold"  
+                                                    Margin="10,1,0,0"
+                                                    Padding="0"
+                                                    VerticalContentAlignment="Bottom"
+                                                    Width="16" Height="16" 
+                                                    Background="RosyBrown"
+                                                    ToolTip="Close"
+                                                    />
+                                <ContentPresenter 
+                                                    Content="{Binding Path=Caption}" 
+                                                    VerticalAlignment="Center" 
+                                                    />
+                            </DockPanel>
+                        </DataTemplate>
+                    </TabControl.ItemTemplate>
+                </TabControl>
+            </Border>
+        </Grid>
+
+
+</UserControl>

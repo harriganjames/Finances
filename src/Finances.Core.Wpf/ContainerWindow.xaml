@@ -1,0 +1,11 @@
+﻿<Window x:Class="Finances.Core.Wpf.ContainerWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="{Binding DialogTitle}" 
+        SizeToContent="WidthAndHeight"
+        WindowStartupLocation="CenterScreen"
+        WindowStyle="ToolWindow"
+        ResizeMode="CanResizeWithGrip"
+        >
+    <!--<ContentControl Content="{Binding}" />-->
+</Window>

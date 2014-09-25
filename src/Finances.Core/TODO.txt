@@ -1,0 +1,32 @@
+﻿Currently working on:
+
+
+Backlog:
+
+Login
+SQL encryption?
+Generic repository?
+
+
+GIT
+---
+
+Exclude EXE/DLL etc
+Upload to github (hj/8b)
+
+
+
+
+
+Something to think about
+------------------------
+An object model that represents the application
+e.g. Main
+		OpenWorkspaces
+			Workspace
+		RegisteredWorkspaces
+
+inject reference to this into each workspace/class so accessible from anywhere?
+or just a static Main....
+have a look at cross-cutting concerns in DI book
+

@@ -1,0 +1,38 @@
+﻿<ResourceDictionary 
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+
+        xmlns:vm="clr-namespace:Finances.WinClient.ViewModels"
+        xmlns:v="clr-namespace:Finances.WinClient.Views"
+    >
+    
+    
+
+
+    <!-- Bank -->
+    <DataTemplate DataType="{x:Type vm:BanksViewModel}">
+        <v:BanksView/>
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type vm:BankEditorViewModel}">
+        <v:BankEditorView/>
+    </DataTemplate>
+
+    <!-- Bank Account -->
+    <DataTemplate DataType="{x:Type vm:BankAccountsViewModel}">
+        <v:BankAccountsView/>
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type vm:BankAccountEditorViewModel}">
+        <v:BankAccountEditorView/>
+    </DataTemplate>
+
+    <!--Main-->
+    <DataTemplate DataType="{x:Type vm:MainViewModel}">
+        <v:MainView/>
+    </DataTemplate>
+
+    <!--Application-->
+    <DataTemplate DataType="{x:Type vm:WorkspaceAreaViewModel}">
+        <v:WorkspaceAreaView/>
+    </DataTemplate>
+
+</ResourceDictionary>

@@ -1,0 +1,99 @@
+﻿<ResourceDictionary 
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        >
+
+
+
+    <!--<Style x:Key="TextBox" TargetType="{x:Type TextBox}">
+
+        <Style.Triggers>
+            <Trigger Property="IsFocused" Value="true">
+                <Setter Property="BorderBrush" Value="LightBlue" />
+            </Trigger>
+        </Style.Triggers>
+
+        <Setter Property="BorderThickness" Value="3"/>
+
+        <Setter Property="Validation.ErrorTemplate">
+            <Setter.Value>
+                <ControlTemplate>
+                    <DockPanel>
+                        <AdornedElementPlaceholder/>
+                        <Grid Name="errorGrid" ToolTip="{Binding Path=/ErrorContent}"
+                  Width="20" Height="0"
+                  >
+                            <Grid.Triggers>
+                                <EventTrigger RoutedEvent="Grid.Loaded">
+                                    <BeginStoryboard>
+                                        <Storyboard>
+                                            <DoubleAnimation Storyboard.TargetName="errorGrid"
+                                                 Storyboard.TargetProperty="Height"
+                                                 From="0.0" To="20" Duration="0:0:0.2"/>
+                                        </Storyboard>
+                                    </BeginStoryboard>
+                                </EventTrigger>
+                            </Grid.Triggers>
+
+                            <Image Source="..\Images\base_exclamationmark_32.png"/>
+
+                        </Grid>
+                    </DockPanel>
+                </ControlTemplate>
+
+            </Setter.Value>
+        </Setter>
+        
+        
+    </Style>-->
+
+
+
+
+
+    <!-- Places an exlamation to the right of the control in error with error message in tooltip -->
+    <ControlTemplate x:Key="validationTemplate">
+        <DockPanel>
+            <AdornedElementPlaceholder/>
+            <Grid Name="errorGrid" ToolTip="{Binding Path=/ErrorContent}"
+                  Width="20" Height="0"
+                  >
+                <Grid.Triggers>
+                    <EventTrigger RoutedEvent="Grid.Loaded">
+                        <BeginStoryboard>
+                            <Storyboard>
+                                <DoubleAnimation Storyboard.TargetName="errorGrid"
+                                                 Storyboard.TargetProperty="Height"
+                                                 From="0.0" To="20" Duration="0:0:0.2"/>
+                            </Storyboard>
+                        </BeginStoryboard>
+                    </EventTrigger>
+                </Grid.Triggers>
+
+                <!--<Image Source="..\Images\base_exclamationmark_32.png"/>-->
+                <Image Source="/Images/base_exclamationmark_32.png"/>
+
+            </Grid>
+        </DockPanel>
+    </ControlTemplate>
+
+
+    <!--This places the validation error in the tooltip of the control in error-->
+    <Style TargetType="Control" x:Key="myErrorTemplate">
+        <Style.Triggers>
+            <Trigger Property="Validation.HasError" Value="true">
+                <Setter Property="ToolTip"
+                    Value="{Binding RelativeSource={x:Static RelativeSource.Self},
+                            Path=(Validation.Errors)[0].ErrorContent}"/>
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+    <Style TargetType="TextBox" BasedOn="{StaticResource myErrorTemplate}" />
+    <Style TargetType="CheckBox" BasedOn="{StaticResource myErrorTemplate}" />
+    <Style TargetType="ComboBox" BasedOn="{StaticResource myErrorTemplate}" />
+    <Style TargetType="DatePicker" BasedOn="{StaticResource myErrorTemplate}" />
+
+
+</ResourceDictionary>
+    
+    

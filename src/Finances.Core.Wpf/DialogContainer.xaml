@@ -1,0 +1,68 @@
+﻿<UserControl x:Class="Finances.Core.Wpf.DialogContainer"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="300">
+    <!--main layout grid for buttons-->
+    <Grid Margin="10" >
+
+        <Grid.RowDefinitions>
+            <!--main area below-->
+            <RowDefinition Height="*" />
+            <!--errors below-->
+            <RowDefinition Height="Auto" />
+            <!--spacer-->
+            <!--<RowDefinition Height="10" />-->
+            <!--buttons below-->
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+
+        <ContentControl Content="{Binding}" Grid.Row="0" IsTabStop="False"/>
+
+
+        <!--Validation errors list-->
+        <ListBox    Grid.Row="1"
+                    ItemsSource="{Binding Errors}"
+                    Foreground="Red"
+                    BorderThickness="0"
+                    Margin="3"
+                    IsTabStop="False"
+                    TabIndex="0"
+                    Focusable="False"
+                    >
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <StackPanel Orientation="Horizontal" KeyboardNavigation.IsTabStop="False">
+                        <StackPanel.Resources>
+                            <Style TargetType="Label">
+                                <Setter Property="Foreground" Value="Red" />
+                            </Style>
+                        </StackPanel.Resources>
+                        <Label Content="* "/>
+                        <Label Content="{Binding}" Height="Auto"/>
+                    </StackPanel>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+
+        <!--OK/Cancel Buttons-->
+        <StackPanel Grid.Row="2"
+                    Orientation="Horizontal"
+                    HorizontalAlignment="Right"
+                    VerticalAlignment="Bottom"
+                    Margin="0,10,0,0">
+            <Button Content="_OK"
+                    IsEnabled="{Binding IsValid}"
+                    Command="{Binding DialogAcceptCommand}"
+                    Width="70"/>
+            <Label  Width="10" />
+            <Button Content="_Cancel" 
+                    IsCancel="True"
+                    Width="70"/>
+
+        </StackPanel>
+    </Grid>
+</UserControl>

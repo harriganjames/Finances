@@ -1,0 +1,350 @@
+﻿<UserControl x:Class="Finances.WinClient.Views.BankAccountEditorView_old"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
+             mc:Ignorable="d" 
+             Height="Auto"
+             MinWidth="350"
+             MinHeight="340">
+    <!--main layout grid for buttons-->
+    <Grid Margin="10" FocusManager.FocusedElement="{Binding ElementName=txtName}" KeyboardNavigation.IsTabStop="False">
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <!--main area-->
+            <RowDefinition Height="Auto" />
+            <!--errors-->
+            <RowDefinition Height="10" />
+            <!--spacer-->
+            <RowDefinition Height="Auto" />
+            <!--buttons-->
+        </Grid.RowDefinitions>
+
+        <!--layout grid for labels and text boxes-->
+        <Grid Margin="0,2,0,10" >
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <!--labels-->
+                <ColumnDefinition Width="*"/>
+                <!--inputs-->
+                <ColumnDefinition Width="10"/>
+                <!--validation-->
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <!--one row per label/textbox-->
+                <RowDefinition Height="40" />
+                <!--Name-->
+                <RowDefinition Height="40" />
+                <!--Bank-->
+                <RowDefinition Height="40" />
+                <!--Sort Code + Account Number-->
+                <RowDefinition Height="40" />
+                <!--Owner -->
+                <RowDefinition Height="40" Tag="Login URL"/>
+                <!---->
+                <RowDefinition Height="40" Tag="Login ID + Hint"/>   <!---->
+                <RowDefinition Height="40" Tag="Opened/Closed Dates" />
+                <!--Opened/Closed Dates-->
+                <RowDefinition Height="40" />
+                <!--Taxable + Initial Rate-->
+                <RowDefinition Height="40" />
+                <!--Milestone Date-->
+                <RowDefinition Height="50" />
+                <!--Milestone Notes-->
+                <RowDefinition Height="90" />
+                <!--Notes-->
+
+            </Grid.RowDefinitions>
+            <Grid.Resources>
+                <Style TargetType="Label">
+                    <Setter Property="Grid.Column" Value="0" />
+                    <!--<Setter Property="Background" Value="Beige" />-->
+                    <Setter Property="VerticalContentAlignment" Value="Center" />
+                    <!--<Setter Property="Margin" Value="5,0" />-->
+                    <Setter Property="Height" Value="25" />
+                </Style>
+                <Style TargetType="TextBox" 
+                       BasedOn="{StaticResource {x:Type TextBox}}" >
+                    <Setter Property="Grid.Column" Value="1" />
+                    <Setter Property="Background" Value="Beige" />
+                    <Setter Property="Height" Value="25" />
+                    <Setter Property="Width" Value="350" />
+                    <Setter Property="HorizontalAlignment" Value="Left" />
+                    <Setter Property="VerticalContentAlignment" Value="Center" />
+                    <Setter Property="Validation.ErrorTemplate" Value="{StaticResource validationTemplate}" />
+                </Style>
+                <Style TargetType="ComboBox">
+                    <Setter Property="Grid.Column" Value="1" />
+                    <Setter Property="Background" Value="Beige" />
+                    <Setter Property="Height" Value="25" />
+                    <Setter Property="Width" Value="350" />
+                    <Setter Property="HorizontalAlignment" Value="Left" />
+                    <Setter Property="VerticalContentAlignment" Value="Center" />
+                    <Setter Property="Validation.ErrorTemplate" Value="{StaticResource validationTemplate}" />
+                </Style>
+                <Style TargetType="DatePicker">
+                    <Setter Property="Grid.Column" Value="1" />
+                    <Setter Property="Background" Value="Beige" />
+                    <Setter Property="Height" Value="25" />
+                    <!--<Setter Property="Width" Value="100" />-->
+                    <Setter Property="HorizontalAlignment" Value="Left" />
+                    <Setter Property="VerticalContentAlignment" Value="Center" />
+                    <Setter Property="Validation.ErrorTemplate" Value="{StaticResource validationTemplate}" />
+                </Style>
+            </Grid.Resources>
+
+            <!--Bank-->
+            <Label      Content="Bank" 
+                        Grid.Row="0"/>
+            <ComboBox   Name="lstBank"
+                        Grid.Row="0"
+                        Width="Auto"
+                        ItemsSource="{Binding BankList}"
+                        SelectedItem="{Binding Bank}"
+                        >
+                <ComboBox.ItemTemplate>
+                    <DataTemplate>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="10"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Text="{Binding Name}"/>
+                            <Image Grid.Column="2" Source="{Binding Logo}" Height="25"/>
+                        </Grid>
+                    </DataTemplate>
+                </ComboBox.ItemTemplate>
+            </ComboBox>
+
+            <!--Account Name-->
+            <Label      Content="Account Name" 
+                        Grid.Row="1"/>
+            <TextBox    Name="txtName"
+                        Text="{Binding AccountName, UpdateSourceTrigger=PropertyChanged}"
+                        Grid.Row="1"
+                        Width="Auto"
+                        HorizontalAlignment="Stretch"/>
+
+            <!--Sort Code + Account-->
+            <Label      Content="Sort Code" 
+                        Grid.Row="2"/>
+            <Grid Grid.Row="2"
+                  Grid.Column="1">
+
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="80"/>
+                    <ColumnDefinition Width="60"/>
+                    <ColumnDefinition Width="80"/>
+                </Grid.ColumnDefinitions>
+
+                <!--Validation.ErrorTemplate="{StaticResource validationTemplate}"-->
+                <!--<TextBox.Text>-->
+                <!--<Binding Path="SortCode" UpdateSourceTrigger="PropertyChanged" diag:PresentationTraceSources.TraceLevel="High"/>-->
+                <!--</TextBox.Text>-->
+
+                <TextBox    Grid.Column="0"
+                            Text="{Binding SortCode, UpdateSourceTrigger=PropertyChanged}"
+                            Width="50"
+                            HorizontalAlignment="Left">
+                </TextBox>
+
+                <Label      Content="Account" 
+                            Grid.Column="1"/>
+                <TextBox    Grid.Column="2"
+                            Text="{Binding AccountNumber, UpdateSourceTrigger=PropertyChanged}"
+                            Width="70"
+                            HorizontalAlignment="Left"/>
+            </Grid>
+
+            <!--Account Owner-->
+            <Label      Content="Account Owner" 
+                        Grid.Row="3"/>
+            <TextBox    Text="{Binding AccountOwner, UpdateSourceTrigger=PropertyChanged}"
+                        Grid.Row="3"
+                        Width="80"
+                        HorizontalAlignment="Left"/>
+
+            <!--Login URL-->
+            <Label      Content="Login URL" 
+                        Grid.Row="4"/>
+            <TextBox    Text="{Binding LoginUrl, UpdateSourceTrigger=PropertyChanged}"
+                        Grid.Row="4"
+                        Width="Auto"
+                        HorizontalAlignment="Stretch"/>
+
+            <!--Login ID + Hint-->
+            <Label      Content="Login ID" 
+                        Grid.Row="5"/>
+            <Grid Grid.Row="5"
+                  Grid.Column="1">
+
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="80"/>
+                    <ColumnDefinition Width="60"/>
+                    <ColumnDefinition Width="80"/>
+                </Grid.ColumnDefinitions>
+
+                <TextBox    Text="{Binding LoginId, UpdateSourceTrigger=PropertyChanged}"
+                        Grid.Row="0"
+                            Grid.Column="0"
+                        Width="80"
+                        HorizontalAlignment="Left"/>
+
+                <Label      Content="Hint" 
+                            Grid.Column="1"
+                            HorizontalAlignment="Right"
+                            Margin="0,0,5,0"/>
+                <TextBox    Grid.Column="2"
+                            Text="{Binding PasswordHint, UpdateSourceTrigger=PropertyChanged}"
+                            Width="70"
+                            HorizontalAlignment="Left"/>
+            </Grid>
+
+
+            <!--OpenedDate		ClosedDate-->
+            <Label      Content="Date Opened" 
+                        Grid.Row="6"/>
+            <Grid Grid.Row="6"
+                  Grid.Column="1">
+
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="105"/>
+                    <ColumnDefinition Width="70"/>
+                    <ColumnDefinition Width="105"/>
+                </Grid.ColumnDefinitions>
+
+                <DatePicker
+                    SelectedDate="{Binding OpenedDate, UpdateSourceTrigger=PropertyChanged}"
+                    Grid.Column="0"
+                    />
+
+                <Label      Content="Closed" 
+                            Grid.Column="1"
+                            HorizontalAlignment="Right"
+                            Margin="0,0,5,0"/>
+
+                <DatePicker
+                    SelectedDate="{Binding ClosedDate, UpdateSourceTrigger=PropertyChanged}"
+                    Grid.Column="2"
+                    />
+
+            </Grid>
+
+
+            <!--Initial Rate + Pays Taxable Interest-->
+            <Label      Content="Initial Rate %" 
+                        Grid.Row="7"/>
+            <Grid Grid.Row="7"
+                  Grid.Column="1">
+
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="45"/>
+                    <ColumnDefinition Width="140"/>
+                    <ColumnDefinition Width="80"/>
+                </Grid.ColumnDefinitions>
+
+                <TextBox    Text="{Binding InitialRate, UpdateSourceTrigger=LostFocus, Converter={StaticResource PercentageConverter}}"
+                            Grid.Row="0"
+                            Grid.Column="0"
+                            Width="45"
+                            HorizontalAlignment="Left"/>
+
+                <Label      Content="Pays Taxable Interest" 
+                            Grid.Column="1"
+                            HorizontalAlignment="Right"
+                            Margin="0,0,5,0"/>
+                <CheckBox   Grid.Column="2"
+                            IsChecked="{Binding PaysTaxableInterest, UpdateSourceTrigger=PropertyChanged}"
+                            VerticalAlignment="Center"
+                            HorizontalAlignment="Left"
+                            Width="13"
+                            />
+            </Grid>
+
+
+            <!--Milestone Date-->
+            <Label      Content="Milestone Date" 
+                        Grid.Row="8"/>
+            <DatePicker SelectedDate="{Binding MilestoneDate, UpdateSourceTrigger=PropertyChanged}"
+                        Grid.Column="1"
+                        Grid.Row="8"
+                        />
+
+            <!--Milestone Notes-->
+            <Label      Content="Milestone Notes" 
+                        Grid.Row="9"
+                        VerticalAlignment="Top"/>
+            <TextBox    Text="{Binding MilestoneNotes, UpdateSourceTrigger=PropertyChanged}"
+                        Grid.Row="9"
+                        Width="280"
+                        Height="40"
+                        AcceptsReturn="True"
+                        TextWrapping="WrapWithOverflow"
+                        VerticalContentAlignment="Top"
+                        HorizontalAlignment="Left"/>
+
+            <!--Notes-->
+            <Label      Content="General Notes" 
+                        Grid.Row="10"
+                        VerticalAlignment="Top"/>
+            <TextBox    Text="{Binding Notes, UpdateSourceTrigger=PropertyChanged}"
+                        Grid.Row="10"
+                        Width="280"
+                        Height="80"
+                        AcceptsReturn="True"
+                        TextWrapping="WrapWithOverflow"
+                        VerticalContentAlignment="Top"
+                        HorizontalAlignment="Left"/>
+
+
+        </Grid>
+
+        <!--ItemsSource="{Binding Errors}"-->
+
+        <!--Validation errors list-->
+        <ListBox    Grid.Row="1"
+                    ItemsSource="{Binding Errors}"
+                    Foreground="Red"
+                    BorderThickness="0"
+                    Margin="5"
+                    IsTabStop="False"
+                    TabIndex="0"
+                    Focusable="False"
+                    >
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <StackPanel Orientation="Horizontal" KeyboardNavigation.IsTabStop="False">
+                        <StackPanel.Resources>
+                            <Style TargetType="Label">
+                                <Setter Property="Foreground" Value="Red" />
+                            </Style>
+                        </StackPanel.Resources>
+                        <Label Content="* "/>
+                        <Label Content="{Binding}" Height="Auto"/>
+                    </StackPanel>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+
+        <!--OK/Cancel Buttons-->
+        <StackPanel Grid.Row="3"
+                    Orientation="Horizontal"
+                    HorizontalAlignment="Right"
+                    VerticalAlignment="Bottom"
+                    Margin="0,10,0,0">
+            <Button Content="_OK"
+                    IsEnabled="{Binding IsValid}"
+                    Command="{Binding DialogAcceptCommand}"
+                    Width="70"/>
+            <Label  Width="10" />
+            <Button Content="_Cancel" 
+                    IsCancel="True"
+                    Width="70"/>
+            <!--Command="{Binding CancelCommand}"-->
+
+        </StackPanel>
+    </Grid>
+</UserControl>
