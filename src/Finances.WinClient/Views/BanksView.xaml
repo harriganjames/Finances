@@ -10,8 +10,14 @@
              xmlns:eim="clr-namespace:Microsoft.Expression.Interactivity.Media;assembly=Microsoft.Expression.Interactions"
              xmlns:tool="http://schemas.xceed.com/wpf/xaml/toolkit"
              xmlns:views="clr-namespace:Finances.WinClient.Views"
-             mc:Ignorable="d" 
-             d:DesignHeight="300" d:DesignWidth="300">
+             xmlns:lib="clr-namespace:Finances.Core.Wpf;assembly=Finances.Core.Wpf"
+             mc:Ignorable="d"
+             x:Name="apex"
+             d:DesignHeight="300" d:DesignWidth="300"
+            FocusManager.FocusedElement="{Binding ElementName=Items}"
+            >
+
+
 
     <!--xmlns:aubconv="clr-namespace:Aub.Library.Converters;assembly=Aub.Library"-->
 
@@ -20,14 +26,17 @@
         <aubconv:PositiveVisibilityConverter x:Key="PositiveVisibilityConverter"/>
     </UserControl.Resources>-->
 
+    
     <!--<i:Interaction.Triggers>
         <i:EventTrigger EventName="Loaded">
             <i:InvokeCommandAction Command="{Binding UILoadedCommand}" />
         </i:EventTrigger>
     </i:Interaction.Triggers>-->
 
-    <tool:BusyIndicator IsBusy="{Binding IsBusy}">
-    <Grid>
+    <tool:BusyIndicator IsBusy="{Binding IsBusy}" Margin="0,1,0,-1">
+    <Grid x:Name="maingrid">
+
+
             <!--<Grid Name="AddEdit" Visibility="{Binding IsAddEditMode, Converter={StaticResource PositiveVisivilityConverter}}">
                 <views:BankView DataContext="{Binding AddEditBankViewModel}"/>
             </Grid>-->
@@ -48,19 +57,26 @@
                 <ListView Grid.Row="1" 
                             ItemsSource="{Binding Banks}" 
                             SelectionMode="Extended"
-                          Name="Items"
+                          x:Name="Items"
                             >
+                    <!--<ListView.InputBindings>
+                        <KeyBinding Key="Insert" Command="{Binding AddCommand}"/>
+                        <KeyBinding Key="Enter" Command="{Binding EditCommand}"/>
+                        <KeyBinding Key="Delete" Command="{Binding DeleteCommand}"/>
+                        <MouseBinding MouseAction="LeftDoubleClick" Command="{Binding EditCommand}"/>
+                    </ListView.InputBindings>-->
+
                     <i:Interaction.Triggers>
-                        <eii:KeyTrigger FiredOn="KeyDown" Key="Enter" >
+                        <eii:KeyTrigger ActiveOnFocus="True" FiredOn="KeyUp" Key="Enter" >
                             <i:InvokeCommandAction Command="{Binding EditCommand}"/>
                         </eii:KeyTrigger>
-                        <eii:KeyTrigger FiredOn="KeyDown" Key="Insert" >
+                        <eii:KeyTrigger ActiveOnFocus="True" FiredOn="KeyUp" Key="Insert"  >
                             <i:InvokeCommandAction Command="{Binding AddCommand}"/>
                         </eii:KeyTrigger>
-                        <eii:KeyTrigger FiredOn="KeyDown" Key="Delete">
+                        <eii:KeyTrigger ActiveOnFocus="True" FiredOn="KeyUp" Key="Delete">
                             <i:InvokeCommandAction Command="{Binding DeleteCommand}"/>
                         </eii:KeyTrigger>
-                        <i:EventTrigger EventName="MouseDoubleClick">
+                        <i:EventTrigger EventName="MouseDoubleClick" >
                             <i:InvokeCommandAction Command="{Binding EditCommand}"/>
                         </i:EventTrigger>
                     </i:Interaction.Triggers>
@@ -78,13 +94,12 @@
                             <GridViewColumn Header="Logo" Width="60">
                                     <GridViewColumn.CellTemplate>
                                         <DataTemplate>
-                                            <Image Source="{Binding Logo}" Height="25"/>
-                                        </DataTemplate>
+                                        <Image Source="{Binding Logo}" Height="25" />
+                                    </DataTemplate>
                                     </GridViewColumn.CellTemplate>
                                 </GridViewColumn>
                             </GridView>
                     </ListView.View>
-
                 </ListView>
             </Grid>
         </Grid>

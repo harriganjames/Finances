@@ -1,0 +1,14 @@
+﻿<ResourceDictionary 
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+
+        xmlns:obj="clr-namespace:Finances.Core.Wpf.ObjectInformation;assembly=Finances.Core.Wpf"
+    >
+    
+    
+    <!-- Object Information -->
+    <DataTemplate DataType="{x:Type obj:ObjectInfoViewModel}">
+        <obj:ObjectInfoView/>
+    </DataTemplate>
+
+</ResourceDictionary>

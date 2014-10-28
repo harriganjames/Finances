@@ -13,7 +13,11 @@ namespace Finances.WinClient.CastleInstallers
         {
             container.Register(Component.For<IBankService>().ImplementedBy<BankService>());
 
+            //container.Register(Component.For<IBankTreeViewService>().ImplementedBy<BankTreeViewService>());
+
             container.Register(Component.For<IBankAccountService>().ImplementedBy<BankAccountService>());
+
+            //container.Register(Component.For<IBankAccountTreeViewService>().ImplementedBy<BankAccountTreeViewService>());
 
             //container.Register(Component.For<IBankViewModelFactory>().ImplementedBy<BankViewModelFactory>());
 
@@ -21,8 +25,10 @@ namespace Finances.WinClient.CastleInstallers
 
             //container.Register(Component.For<IBankEditorViewModel>().ImplementedBy<BankEditorViewModel>());
 
-        ////    container.Kernel.ProxyFactory.AddInterceptorSelector(new DomainServiceInterceptorSelector());
-        
+            container.Register(Component.For<ITransferService>().ImplementedBy<TransferService>());
+
+            container.Kernel.ProxyFactory.AddInterceptorSelector(new DomainServiceInterceptorSelector());
+
         }
     }
 }

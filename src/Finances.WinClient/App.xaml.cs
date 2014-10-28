@@ -2,16 +2,19 @@
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
+using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Markup;
 using System.Windows.Media;
 using Castle.Core;
 using Castle.MicroKernel.Registration;
 using Castle.MicroKernel.Resolvers.SpecializedResolvers;
 using Castle.Windsor;
+using Finances.Core;
 using Finances.WinClient.CastleInstallers;
 using Finances.WinClient.ViewModels;
 using Finances.WinClient.Views;
@@ -27,6 +30,9 @@ namespace Finances.WinClient
         {
             base.OnStartup(e);
 
+            FrameworkElement.LanguageProperty.OverrideMetadata(typeof(FrameworkElement),
+                new FrameworkPropertyMetadata(XmlLanguage.GetLanguage(CultureInfo.CurrentCulture.IetfLanguageTag)));
+
 
             EventManager.RegisterClassHandler(typeof(TextBox), TextBox.PreviewMouseLeftButtonDownEvent,
                 new MouseButtonEventHandler(SelectivelyIgnoreMouseButton));
@@ -34,6 +40,9 @@ namespace Finances.WinClient
                 new RoutedEventHandler(SelectAllText));
             EventManager.RegisterClassHandler(typeof(TextBox), TextBox.MouseDoubleClickEvent,
                 new RoutedEventHandler(SelectAllText));
+
+            EventManager.RegisterClassHandler(typeof(UserControl), UserControl.LoadedEvent,
+                new RoutedEventHandler(UserControlLoaded));
 
 
             Window w = new AppWindow();
@@ -49,14 +58,15 @@ namespace Finances.WinClient
                             new ExceptionServiceInstaller(),
                             new InterceptorsInstaller(),
                             new WorkspaceInstaller(),
-                            new ViewModelInstallers()
+                            new ViewModelInstallers(),
+                            new UtilitiesInstaller(w)
                             );
 
 
 
             //this.Resources.Add(null, new DataTemplate(typeof(MainViewModel)) { VisualTree = new MainView() });
 
-            
+            container.Resolve<Apex>();
 
             w.DataContext = container.Resolve<IMainViewModel>();
             
@@ -90,5 +100,9 @@ namespace Finances.WinClient
                 textBox.SelectAll();
         }
 
+        void UserControlLoaded(object sender, RoutedEventArgs e)
+        {
+            Apex.ObjectInformation.AddObjectReference(sender);
+        }
     }
 }

@@ -20,6 +20,7 @@ namespace Finances.Core.Wpf
         //bool ShowDialog(object vm);
         bool ShowDialog(IDialog vm);
         bool ShowDialogView(IDialog vm);
+        void ShowDialogNonModal(IDialog vm);
         ICommand DialogAcceptCommand { get; }
         MessageBoxResultEnum ShowMessageBox(string title, string message, MessageBoxButtonEnum buttons);
         string[] ShowOpenFileDialog(string filter = "", bool multi = false);
@@ -85,6 +86,22 @@ namespace Finances.Core.Wpf
             w.Content = dc;
             w.CommandBindings.Add(new CommandBinding(vm.DialogAcceptCommand, (sender, e) => w.DialogResult = true));
             return w.ShowDialog().GetValueOrDefault(false);
+        }
+
+
+        /// <summary>
+        /// Shows a window non-modally containing the object passed
+        /// </summary>
+        /// <param name="vm">The object to show. e.g. the ViewModel</param>
+        /// <returns></returns>
+        public void ShowDialogNonModal(IDialog vm)
+        {
+            ContainerWindow w = new ContainerWindow();
+            w.Owner = _wpfWindow;
+            w.DataContext = vm;
+            w.Content = vm;
+            w.CommandBindings.Add(new CommandBinding(vm.DialogAcceptCommand, (sender, e) => w.DialogResult = true));
+            w.Show();
         }
 
 

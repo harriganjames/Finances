@@ -39,11 +39,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Apex.cs" />
     <Compile Include="Connection.cs" />
     <Compile Include="Entities\Bank.cs" />
     <Compile Include="Entities\BankAccount.cs" />
     <Compile Include="Entities\Transfer.cs" />
     <Compile Include="Entities\DataIdName.cs" />
+    <Compile Include="Interfaces\IEntityMapper.cs" />
+    <Compile Include="Interfaces\IGenericRepository.cs" />
     <Compile Include="Interfaces\ITransferRepository.cs" />
     <Compile Include="Interfaces\IBankAccountRepository.cs" />
     <Compile Include="Interfaces\IBankRepository.cs" />
@@ -51,6 +54,12 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="TODO.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Finances.Core.Wpf\Finances.Core.Wpf.csproj">
+      <Project>{f6ccdae2-ffed-4016-95d2-6817230c3519}</Project>
+      <Name>Finances.Core.Wpf</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

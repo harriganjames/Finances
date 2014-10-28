@@ -7,7 +7,11 @@
              xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
              xmlns:eii="clr-namespace:Microsoft.Expression.Interactivity.Input;assembly=Microsoft.Expression.Interactions"
              mc:Ignorable="d" 
-             d:DesignHeight="300" d:DesignWidth="300">
+             d:DesignHeight="300" d:DesignWidth="300"
+            FocusManager.FocusedElement="{Binding ElementName=Items}"
+            >
+
+
     <tool:BusyIndicator IsBusy="{Binding IsBusy}">
         <Grid>
             <!--<Grid Name="AddEdit" Visibility="{Binding IsAddEditMode, Converter={StaticResource PositiveVisivilityConverter}}">
@@ -71,13 +75,13 @@
                             >
 
                     <i:Interaction.Triggers>
-                        <eii:KeyTrigger FiredOn="KeyDown" Key="Enter">
+                        <eii:KeyTrigger ActiveOnFocus="True" FiredOn="KeyDown" Key="Enter">
                             <i:InvokeCommandAction Command="{Binding EditCommand}"/>
                         </eii:KeyTrigger>
-                        <eii:KeyTrigger FiredOn="KeyDown" Key="Insert">
+                        <eii:KeyTrigger ActiveOnFocus="True" FiredOn="KeyDown" Key="Insert">
                             <i:InvokeCommandAction Command="{Binding AddCommand}"/>
                         </eii:KeyTrigger>
-                        <eii:KeyTrigger FiredOn="KeyDown" Key="Delete">
+                        <eii:KeyTrigger ActiveOnFocus="True" FiredOn="KeyDown" Key="Delete">
                             <i:InvokeCommandAction Command="{Binding DeleteCommand}"/>
                         </eii:KeyTrigger>
                         <i:EventTrigger EventName="MouseDoubleClick">

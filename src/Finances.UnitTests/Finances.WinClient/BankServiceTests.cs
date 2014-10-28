@@ -9,7 +9,7 @@ using Finances.Core.Interfaces;
 using Finances.WinClient.DomainServices;
 using Finances.Core.Entities;
 using Finances.WinClient.ViewModels;
-using Finances.WinClient.Mappers;
+//using Finances.WinClient.Mappers;
 
 namespace Finances.UnitTests.Finances.WinClient.BankServiceTests
 {
@@ -17,7 +17,7 @@ namespace Finances.UnitTests.Finances.WinClient.BankServiceTests
     {
         protected IBankService bankService;
         protected Mock<IBankRepository> bankRepository;
-        protected Mock<IBankMapper> bankMapper;
+        //protected Mock<IBankMapper> bankMapper;
         //protected Mock<IBankViewModelFactory> bankViewModelFactory;
 
         protected override void Establish_context()
@@ -25,10 +25,10 @@ namespace Finances.UnitTests.Finances.WinClient.BankServiceTests
             base.Establish_context();
 
             bankRepository = new Mock<IBankRepository>();
-            bankMapper = new Mock<IBankMapper>();
+            //bankMapper = new Mock<IBankMapper>();
             //bankViewModelFactory = new Mock<IBankViewModelFactory>();
 
-            bankService = new BankService(bankRepository.Object,bankMapper.Object);
+            bankService = new BankService(bankRepository.Object);
         }
 
 
@@ -44,7 +44,7 @@ namespace Finances.UnitTests.Finances.WinClient.BankServiceTests
             base.Establish_context();
 
             bankRepository.Setup(b => b.Add(It.IsAny<Bank>())).Returns(123);
-            bankMapper.Setup(m=>m.Map(testBankVM,It.IsAny<Bank>()));
+            //bankMapper.Setup(m=>m.Map(testBankVM,It.IsAny<Bank>()));
 
             testBankVM = new BankEditorViewModel(null,null);
         
@@ -82,11 +82,11 @@ namespace Finances.UnitTests.Finances.WinClient.BankServiceTests
 
             bankRepository.Setup(r => r.Update(It.IsAny<Bank>())).Callback<Bank>(b => { testBank = b; }).Returns(true);
 
-            bankMapper.Setup(m => m.Map(It.IsAny<IBankEditorViewModel>(), It.IsAny<Bank>())).Callback<IBankEditorViewModel, Bank>((vm, b) =>
-                {
-                    b.BankId = vm.BankId;
-                    b.Name = vm.Name;
-                });
+            //bankMapper.Setup(m => m.Map(It.IsAny<IBankEditorViewModel>(), It.IsAny<Bank>())).Callback<IBankEditorViewModel, Bank>((vm, b) =>
+            //    {
+            //        b.BankId = vm.BankId;
+            //        b.Name = vm.Name;
+            //    });
 
             testBankVM = new BankEditorViewModel(null,null) { BankId = 123, Name = "test" };
 
@@ -142,13 +142,13 @@ namespace Finances.UnitTests.Finances.WinClient.BankServiceTests
 
             testBankId = 123;
 
-            bankRepository.Setup(r => r.Delete(It.IsAny<int>())).Callback<int>(id => { testRepBankId = id; }).Returns(true);
+            bankRepository.Setup(r => r.Delete(It.IsAny<Bank>())).Callback<Bank>(b => { testRepBankId = b.BankId; }).Returns(true);
 
         }
 
         protected override void Because_of()
         {
-            result = bankService.Delete(testBankId);
+            result = bankService.Delete(new BankItemViewModel() { BankId = testBankId });
         }
 
 
@@ -161,7 +161,7 @@ namespace Finances.UnitTests.Finances.WinClient.BankServiceTests
         [Test]
         public void should_call_repository_delete()
         {
-            bankRepository.Verify(r => r.Delete(It.IsAny<int>()), Times.Once());
+            bankRepository.Verify(r => r.Delete(It.IsAny<Bank>()), Times.Once());
         }
 
 
@@ -186,19 +186,19 @@ namespace Finances.UnitTests.Finances.WinClient.BankServiceTests
             testBank = new Bank() { BankId = 123, Name = "test" };
 
             bankRepository.Setup(r => r.Read(testBank.BankId)).Returns(testBank);
-            bankMapper.Setup(m => m.Map(It.IsAny<Bank>(), It.IsAny<IBankItemViewModel>())).Callback<Bank, IBankItemViewModel>((from, to) =>
-            {
-                to.BankId = from.BankId;
-                to.Name = from.Name;
-            });
+            //bankMapper.Setup(m => m.Map(It.IsAny<Bank>(), It.IsAny<IBankItemViewModel>())).Callback<Bank, IBankItemViewModel>((from, to) =>
+            //{
+            //    to.BankId = from.BankId;
+            //    to.Name = from.Name;
+            //});
             //bankViewModelFactory.Setup(f => f.CreateBankViewModel()).Returns(new BankViewModel(null));
 
         }
 
         protected override void Because_of()
         {
-            testBankVM = bankService.CreateBankViewModel();
-            testBankVM = bankService.Read(testBank.BankId, testBankVM);
+            testBankVM = bankService.CreateBankItemViewModel();
+            bankService.Read(testBank.BankId, testBankVM);
         }
 
 
@@ -236,11 +236,11 @@ namespace Finances.UnitTests.Finances.WinClient.BankServiceTests
                 new Bank() { BankId = 3, Name = "test3" } };
 
             bankRepository.Setup(r => r.ReadList()).Returns(testBankList);
-            bankMapper.Setup(m => m.Map(It.IsAny<Bank>(), It.IsAny<IBankItemViewModel>())).Callback<Bank, IBankItemViewModel>((from, to) =>
-            {
-                to.BankId = from.BankId;
-                to.Name = from.Name;
-            });
+            //bankMapper.Setup(m => m.Map(It.IsAny<Bank>(), It.IsAny<IBankItemViewModel>())).Callback<Bank, IBankItemViewModel>((from, to) =>
+            //{
+            //    to.BankId = from.BankId;
+            //    to.Name = from.Name;
+            //});
             //bankViewModelFactory.Setup(f => f.CreateBankViewModel()).Returns(new BankViewModel(null));
 
         }

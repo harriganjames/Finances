@@ -1,7 +1,27 @@
 ﻿Currently working on:
 
 
+change all ReadListDataIdName to use base version.
+is/can ReadList be in Generic base? if we allow new Item....VM ??
+
+
+
+Need IBankAccountMapIn/Out
+Fully implement and remove/tidy-up old Mappers
+
+
+Service to use interface to call MapIn/Out methods. e.g. ITransferMapIn/Out, in Core\Interfaces?
+This allows different VMs for the same data to be loaded with data by the service - exepct for ReadList
+which needs to create new - maybe all Item VMs have a parameterless ctor??
+
+
+move mappers into VMs
+check use of Create....
+
+
+
 Backlog:
+
 
 Login
 SQL encryption?
@@ -17,12 +37,57 @@ Upload to github (hj/8b)
 
 
 
+Interaction Triggers Problem
+----------------------------
+Triggers used in BanksView and BankAccountsView to allow Ins, Enter, Del and DoubleClick to open the Edit dialog.
+Issue:
+When the View is closed (by clicking the X on the tab) the triggers are still active. e.g. prressing Ins will open the Add Bank 
+dialog.
+We can Detach each of the attached triggers in the UserControl Unloaded event, which prevents this, and when the view is re-opened
+the triggers are active again and work.
+However, when there are multiple workspace open and you switch between them (by clicking the tabs) this causes the Views to be 
+Unloaded/Loaded. Again Detaching in Unloaded works, but re-attaching in Loaded only partly works - it works for the mouse triggers but 
+not the keyboard triggers.
+
+When Interaction triggers are used, they will keep the View alive!
+Using Interaction.GetTriggers(parent).Clear() will release the triggers and allow the view to be GC.
+Also calling TriggerBase.Detach will remove the link and allow the view to be GC.
+
+Without calling Detach, the view will GC when unloaded if ActiveOnFocus="True" because the trigger is attached to the control.
+When ActiveOnFocus="False" (default) the trigger attaches to the event at the root Window level and therefore keeps the view alive.
+
+WIthout any attemts to Detach/Clear etc, if we toggle between the tabs of Bank and Account (which caused the
+UserControl Load/Unload events to fire), then when a key is pressed (e.g. Insert) this will fire multiple times, once for each toggle.
+But there is only 4 triggers (defined) int the GetTriggers() collection!
+
+This problem of MULTIPLE FIRING WAS CAUSED BY TabItemGeneratorBehavior
+
+Tree View adventure
+-------------------
+BankService can read into both IBankIteVM and IBankTreeViewItemVM - using the IBankMapIn interface.
+But how can BankService create new ...ItemViewModels generically?
+Don't really want to have a factory service in the controlling VM - should be in BankService.
+
+The extra VMs are only going to be for reading, so maybe best to stick
+with what we had and just add Read/ReadList methods for the specific type (BankTreeViewItemVM)
+and inject factory service for it into BankService.
+Maybe the main CRUD methods can use generics anyway?
+
+Need IBankMapOut
+
+Could have a separate BankTreeViewService() ?
+
+Decided to only have the existing BankItemViewModels etc, and base them on TreeViewItemVMBase.
+Also handling TreeViewExpaned event int main BankTreeView and loading children in there.
+
+
+
 
 Something to think about
 ------------------------
 An object model that represents the application
 e.g. Main
-		OpenWorkspaces
+		OpenWorkspaces 
 			Workspace
 		RegisteredWorkspaces
 

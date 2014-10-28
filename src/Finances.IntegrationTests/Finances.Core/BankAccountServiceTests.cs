@@ -14,7 +14,7 @@ using Finances.WinClient.ViewModels;
 using NUnit.Framework;
 using NBehave.Spec.NUnit;
 using Finances.Core.Wpf;
-using Finances.WinClient.Mappers;
+//using Finances.WinClient.Mappers;
 
 namespace Finances.IntegrationTests.Finances.Core.BankAccountServiceTests
 {
@@ -41,7 +41,7 @@ namespace Finances.IntegrationTests.Finances.Core.BankAccountServiceTests
 
             var sessionFactory = container.Resolve<ISessionFactory>();
 
-            _bankAccountService = new BankAccountService(new BankAccountRepository(sessionFactory), new BankAccountMapper(new BankMapper()));
+            _bankAccountService = new BankAccountService(new BankAccountRepository(sessionFactory), null);
 
         }
 
@@ -73,7 +73,7 @@ namespace Finances.IntegrationTests.Finances.Core.BankAccountServiceTests
         {
             //_bankService.Add(_expected);
             _result = new BankAccountItemViewModel() { Bank = new BankItemViewModel() };
-            this._result = _bankAccountService.Read(1, _result);
+            _bankAccountService.Read(1, _result);
         }
 
         [Test]

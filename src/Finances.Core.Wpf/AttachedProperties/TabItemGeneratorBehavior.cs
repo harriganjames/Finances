@@ -9,6 +9,12 @@ using System.Windows.Controls.Primitives;
 using System.Windows.Data;
 using System.ComponentModel;
 
+
+//
+// NOTE: CAUSES Intyeraction.Trigger events (e.g. keyboard) to be fired multiple times when used in tab control item
+//
+//
+
 namespace Finances.Core.Wpf.AttachedProperties
 {
     public class TabItemGeneratorBehavior : INotifyPropertyChanged

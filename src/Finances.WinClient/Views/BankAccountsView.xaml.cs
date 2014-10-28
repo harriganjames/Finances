@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using Finances.Core;
 using Finances.Core.Wpf;
 
 namespace Finances.WinClient.Views
@@ -23,11 +24,18 @@ namespace Finances.WinClient.Views
     {
         public BankAccountsView()
         {
+            Apex.ObjectInformation.AddObjectReference(this);
+
             InitializeComponent();
+
 
             this.Unloaded += (s, e) =>
             {
-                XamlUtils.UnwireTriggers(s);
+                //XamlUtils.DetachTriggers(s);
+            };
+            this.Loaded += (s, e) =>
+            {
+                //XamlUtils.AttachTriggers(s);
             };
 
         }

@@ -7,7 +7,8 @@ using System;
 
 namespace Finances.Persistence.FNH
 {
-    public abstract class GenericRepository<T> where T : class, new()
+
+    public abstract class GenericRepository<T> : IGenericRepository<T> where T : class, new()
     {
         readonly ISessionFactory sessionFactory;
 

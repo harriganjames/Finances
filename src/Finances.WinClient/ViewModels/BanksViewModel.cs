@@ -140,7 +140,7 @@ namespace Finances.WinClient.ViewModels
 
                 if (result)
                 {
-                    IBankItemViewModel newvm = this.bankService.CreateBankViewModel();
+                    IBankItemViewModel newvm = this.bankService.CreateBankItemViewModel();
                     this.bankService.Read(this.bankEditorViewModel.BankId, newvm);
                     base.DataList.Add(newvm);
                     base.DataList.ToList().ForEach(i => i.IsSelected = false);
@@ -211,7 +211,7 @@ namespace Finances.WinClient.ViewModels
 
                 foreach (var b in sel)
                 {
-                    if (this.bankService.Delete(b.BankId))
+                    if (this.bankService.Delete(b))
                     {
                         base.DataList.Remove(b);
                     }

@@ -10,7 +10,7 @@ using System.Windows.Input;
 
 namespace Finances.Core.Wpf
 {
-    public interface IViewModelBase
+    public interface IViewModelBase : IDialog
     {
         void Dispose();
         bool IsBusy { get; set; }
@@ -21,7 +21,7 @@ namespace Finances.Core.Wpf
 //        string Title { get; }
     }
 
-    public abstract class ViewModelBase : INotifyPropertyChanged, IDisposable, IViewModelBase
+    public abstract class ViewModelBase : INotifyPropertyChanged, IDisposable, IViewModelBase, IDialog
     {
         string _title;
         bool _isBusy = false;
@@ -128,6 +128,19 @@ namespace Finances.Core.Wpf
             _commands = null;
             PropertyChanged = null;
         }
+
+
+
+        #region IDialog
+
+        private ICommand dialogAcceptCommand = new RoutedCommand();
+
+        public ICommand DialogAcceptCommand
+        {
+            get { return dialogAcceptCommand; }
+        }
+
+        #endregion
 
     }
 }

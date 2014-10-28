@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Finances.IntegrationTests.Finances.Core.BankAccountServiceTests;
-using Finances.UnitTests.Finances.WinClient.BankAccountMapperTests;
+//using Finances.UnitTests.Finances.WinClient.BankAccountMapperTests;
 
 namespace Finances.Debug
 {

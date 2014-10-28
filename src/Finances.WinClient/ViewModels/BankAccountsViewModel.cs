@@ -118,7 +118,7 @@ namespace Finances.WinClient.ViewModels
 
                 if (result)
                 {
-                    IBankAccountItemViewModel newvm = this.bankAccountService.CreateBankAccountViewModel();
+                    IBankAccountItemViewModel newvm = this.bankAccountService.CreateBankAccountItemViewModel();
                     this.bankAccountService.Read(this.bankAccountEditorViewModel.BankAccountId, newvm);
                     base.DataList.Add(newvm);
                     base.DataList.ToList().ForEach(i => i.IsSelected = false);
@@ -187,7 +187,7 @@ namespace Finances.WinClient.ViewModels
 
                 foreach (var a in sel)
                 {
-                    if (this.bankAccountService.Delete(a.BankAccountId))
+                    if (this.bankAccountService.Delete(a))
                     {
                         base.DataList.Remove(a);
                     }

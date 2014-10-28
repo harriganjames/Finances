@@ -1,40 +1,74 @@
-﻿using System.Windows;
+﻿using System.Collections.Generic;
+using System.Windows;
 using System.Windows.Interactivity;
 using System.Windows.Media;
+using System.Linq;
 
 namespace Finances.Core.Wpf
 {
     public static class XamlUtils
     {
-        public static void UnwireTriggers(object current)
+        public static void DetachTriggers(object current)
+        {
+            //AttachDetachTriggers(current, false);
+        }
+        public static void AttachTriggers(object current)
+        {
+            //AttachDetachTriggers(current, true);
+        }
+
+
+        private static void AttachDetachTriggers(object current, bool attach)
         {
             DependencyObject parent = current as DependencyObject;
 
             if (parent != null)
             {
-                int qty = Interaction.GetTriggers(parent).Count;
-
-                if (Interaction.GetTriggers(parent).Count > 0)
+                int triggerQty = Interaction.GetTriggers(parent).Count;
+                if (triggerQty > 0)
                 {
-
-                    foreach (var t in Interaction.GetTriggers(parent))
-                    {
-                        t.Detach();
-                    }
-                    foreach (var b in Interaction.GetBehaviors(parent))
-                    {
-                        b.Detach();
-                    }
-
-                    //Interaction.GetTriggers(parent).Clear();
-                    //Interaction.GetBehaviors(parent).Clear();
-
+                    int i = 0;
                 }
+
+
+                //var triggers = new List<System.Windows.Interactivity.TriggerBase>();
+
+
+
+                foreach (var t in Interaction.GetTriggers(parent).ToList())
+                {
+                    var tb = t as System.Windows.Interactivity.TriggerBase;
+                    var kt = t as Microsoft.Expression.Interactivity.Input.KeyTrigger;
+
+
+                    if (attach)
+                    {
+                        //t.Attach(parent);
+                        //Interaction.GetTriggers(parent).Remove(t);
+                        //Interaction.GetTriggers(parent).Add(t);
+                    }
+                    else
+                        t.Detach();
+                }
+
+                //foreach (var b in Interaction.GetBehaviors(parent))
+                //{
+                //    if (attach)
+                //        b.Attach(parent);
+                //    else
+                //        b.Detach();
+                //}
+
+                //if (!attach && Interaction.GetTriggers(parent).Count>0)
+                //{
+                //    Interaction.GetTriggers(parent).Clear();
+                //}
+
 
                 for (int i = 0; i < VisualTreeHelper.GetChildrenCount(parent); i++)
                 {
                     var child = VisualTreeHelper.GetChild(parent, i);
-                    UnwireTriggers(child);
+                    AttachDetachTriggers(child,attach);
                 }
             }
         }

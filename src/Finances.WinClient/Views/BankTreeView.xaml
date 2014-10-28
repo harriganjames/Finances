@@ -1,0 +1,70 @@
+﻿<UserControl x:Class="Finances.WinClient.Views.BankTreeView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:tool="http://schemas.xceed.com/wpf/xaml/toolkit"
+             xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
+             xmlns:eic="clr-namespace:Microsoft.Expression.Interactivity.Core;assembly=Microsoft.Expression.Interactions"
+             xmlns:eii="clr-namespace:Microsoft.Expression.Interactivity.Input;assembly=Microsoft.Expression.Interactions"
+             xmlns:eil="clr-namespace:Microsoft.Expression.Interactivity.Layout;assembly=Microsoft.Expression.Interactions"
+             xmlns:eim="clr-namespace:Microsoft.Expression.Interactivity.Media;assembly=Microsoft.Expression.Interactions"
+             xmlns:vm="clr-namespace:Finances.WinClient.ViewModels"
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="300">
+    
+    
+    <tool:BusyIndicator IsBusy="{Binding IsBusy}">
+        <Grid>
+            <Grid Name="List">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <ToolBar>
+                    <ToolBarPanel Orientation="Horizontal">
+                        <!--<Button Content="Add" Command="{Binding AddCommand}"/>-->
+                        <!--<Button Content="Edit" Command="{Binding EditCommand}"/>-->
+                        <!--<Button Content="Delete" Command="{Binding DeleteCommand}"/>-->
+                        <Button Content="Reload" Command="{Binding ReloadCommand}"/>
+                    </ToolBarPanel>
+                </ToolBar>
+
+                <TreeView   x:Name="tree"
+                            Grid.Row="2"
+                            ItemsSource="{Binding Banks}"
+                            >
+
+                    <TreeView.ItemContainerStyle>
+                        <Style TargetType="{x:Type TreeViewItem}">
+                            <Setter Property="IsExpanded" Value="{Binding IsExpanded, Mode=TwoWay}" />
+                            <Setter Property="IsSelected" Value="{Binding IsSelected, Mode=TwoWay}" />
+                            <Setter Property="FontWeight" Value="Normal" />
+                            <Style.Triggers>
+                                <Trigger Property="IsSelected" Value="True">
+                                    <Setter Property="FontWeight" Value="Bold" />
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </TreeView.ItemContainerStyle>
+
+                    <TreeView.Resources>
+                        <HierarchicalDataTemplate 
+                                DataType = "{x:Type vm:BankItemViewModel}"
+                                ItemsSource = "{Binding Children}">
+                            <Grid>
+                                <TextBlock Text="{Binding Path=Name}"/>
+                            </Grid>
+                        </HierarchicalDataTemplate>
+                        <DataTemplate   
+                                DataType="{x:Type vm:BankAccountItemViewModel}">
+                            <TextBlock Text="{Binding Path=AccountName}"/>
+                        </DataTemplate>
+                    </TreeView.Resources>
+
+                </TreeView>
+                
+            </Grid>
+        </Grid>
+    </tool:BusyIndicator>
+</UserControl>

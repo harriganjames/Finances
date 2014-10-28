@@ -3,7 +3,7 @@ using Castle.MicroKernel.SubSystems.Configuration;
 using Castle.MicroKernel.Registration;
 using Finances.Core.Interfaces;
 using Finances.Persistence.FNH;
-using Finances.WinClient.Mappers;
+//using Finances.WinClient.Mappers;
 
 namespace Finances.IntegrationTests.CastleInstallers
 {
@@ -13,7 +13,7 @@ namespace Finances.IntegrationTests.CastleInstallers
         {
             container.Register(Component.For<IBankRepository>().ImplementedBy<BankRepository>());
 
-            container.Register(Component.For<IBankMapper>().ImplementedBy<BankMapper>());
+            //container.Register(Component.For<IBankMapper>().ImplementedBy<BankMapper>());
 
         }
     }

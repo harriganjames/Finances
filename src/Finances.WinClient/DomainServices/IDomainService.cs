@@ -6,7 +6,8 @@ using System.Threading.Tasks;
 
 namespace Finances.WinClient.DomainServices
 {
-    // empty interface for DomainServiceInterceptorSelector
+    // empty interface for 
+
     public interface IDomainService
     {
     }

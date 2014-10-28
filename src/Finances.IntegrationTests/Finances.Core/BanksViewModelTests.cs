@@ -65,7 +65,7 @@ namespace Finances.IntegrationTests.Finances.Core
         protected override void Because_of()
         {
             _bankService.Add(_expected);
-            this._result = _bankService.Read(_expected.BankId,this._result);
+            _bankService.Read(_expected.BankId,this._result);
         }
 
         [Test]

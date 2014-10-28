@@ -10,7 +10,7 @@ using Finances.Core.Interfaces;
 using Finances.WinClient.DomainServices;
 using Finances.Core.Entities;
 using Finances.WinClient.ViewModels;
-using Finances.WinClient.Mappers;
+//using Finances.WinClient.Mappers;
 
 namespace Finances.UnitTests.Finances.WinClient.BankAccountServiceTests
 {
@@ -18,25 +18,25 @@ namespace Finances.UnitTests.Finances.WinClient.BankAccountServiceTests
     {
         protected IBankAccountService bankAccountService;
         protected Mock<IBankAccountRepository> bankAccountRepository;
-        protected Mock<IBankAccountMapper> bankAccountMapper;
+        //protected Mock<IBankAccountMapper> bankAccountMapper;
 
         protected override void Establish_context()
         {
             base.Establish_context();
 
             bankAccountRepository = new Mock<IBankAccountRepository>();
-            bankAccountMapper = new Mock<IBankAccountMapper>();
+            //bankAccountMapper = new Mock<IBankAccountMapper>();
 
-            bankAccountService = new BankAccountService(bankAccountRepository.Object, bankAccountMapper.Object);
+            bankAccountService = new BankAccountService(bankAccountRepository.Object, null);
 
-            bankAccountMapper.Setup(m => m.Map(It.IsAny<BankAccount>(), It.IsAny<IBankAccountItemViewModel>())).Callback<BankAccount, IBankAccountItemViewModel>((from, to) =>
-            {
-                to.BankAccountId = from.BankAccountId;
-                to.AccountName = from.Name;
-                to.Bank.BankId = from.Bank.BankId;
-                to.Bank.Name = from.Bank.Name;
-                to.Bank.LogoRaw = from.Bank.Logo;
-            });
+            //bankAccountMapper.Setup(m => m.Map(It.IsAny<BankAccount>(), It.IsAny<IBankAccountItemViewModel>())).Callback<BankAccount, IBankAccountItemViewModel>((from, to) =>
+            //{
+            //    to.BankAccountId = from.BankAccountId;
+            //    to.AccountName = from.Name;
+            //    to.Bank.BankId = from.Bank.BankId;
+            //    to.Bank.Name = from.Bank.Name;
+            //    to.Bank.LogoRaw = from.Bank.Logo;
+            //});
         }
 
     }
@@ -53,13 +53,13 @@ namespace Finances.UnitTests.Finances.WinClient.BankAccountServiceTests
 
             testBankAccountId = 123;
 
-            bankAccountRepository.Setup(r => r.Delete(It.IsAny<int>())).Callback<int>(id => { testRepBankAccountId = id; }).Returns(true);
+            bankAccountRepository.Setup(r => r.Delete(It.IsAny<BankAccount>())).Callback<BankAccount>(a => { testRepBankAccountId = a.BankAccountId; }).Returns(true);
 
         }
 
         protected override void Because_of()
         {
-            result = bankAccountService.Delete(testBankAccountId);
+            result = bankAccountService.Delete(new BankAccountItemViewModel() { BankAccountId = testBankAccountId } );
         }
 
 
@@ -72,7 +72,7 @@ namespace Finances.UnitTests.Finances.WinClient.BankAccountServiceTests
         [Test]
         public void should_call_repository_delete()
         {
-            bankAccountRepository.Verify(r => r.Delete(It.IsAny<int>()), Times.Once());
+            bankAccountRepository.Verify(r => r.Delete(It.IsAny<BankAccount>()), Times.Once());
         }
 
 
@@ -105,8 +105,8 @@ namespace Finances.UnitTests.Finances.WinClient.BankAccountServiceTests
 
         protected override void Because_of()
         {
-            testBankAccountVM = bankAccountService.CreateBankAccountViewModel();
-            testBankAccountVM = bankAccountService.Read(testBankAccount.BankAccountId, testBankAccountVM);
+            testBankAccountVM = bankAccountService.CreateBankAccountItemViewModel();
+            bankAccountService.Read(testBankAccount.BankAccountId, testBankAccountVM);
         }
 
 
@@ -263,7 +263,7 @@ namespace Finances.UnitTests.Finances.WinClient.BankAccountServiceTests
 
 
             //bankAccount = new BankAccount();
-            testObject = new BankAccountEditorViewModel(null,null)
+            testObject = new BankAccountEditorViewModel(null)
                 {
                     AccountName = "My qacount",
                     Bank = new BankItemViewModel() { BankId = 1, Name = "HSBV" }
@@ -271,13 +271,13 @@ namespace Finances.UnitTests.Finances.WinClient.BankAccountServiceTests
 
 
             bankAccountRepository.Setup(r => r.Add(It.IsAny<BankAccount>())).Returns(bankAccountId).Callback<BankAccount>(a => { bankAccount = a; });
-            bankAccountMapper.Setup(m => m.Map(testObject, It.IsAny<BankAccount>())).Callback<IBankAccountEditorViewModel,BankAccount>((from, to) =>
-                {
-                    to.BankAccountId = from.BankAccountId;
-                    to.Name = from.AccountName;
-                    to.Bank.BankId = from.Bank.BankId;
-                    to.Bank.Name = from.Bank.Name;
-                }).Returns(bankAccount);
+            //bankAccountMapper.Setup(m => m.Map(testObject, It.IsAny<BankAccount>())).Callback<IBankAccountEditorViewModel,BankAccount>((from, to) =>
+            //    {
+            //        to.BankAccountId = from.BankAccountId;
+            //        to.Name = from.AccountName;
+            //        to.Bank.BankId = from.Bank.BankId;
+            //        to.Bank.Name = from.Bank.Name;
+            //    }).Returns(bankAccount);
         
 
         }
@@ -323,7 +323,7 @@ namespace Finances.UnitTests.Finances.WinClient.BankAccountServiceTests
             base.Establish_context();
 
 
-            testObject = new BankAccountEditorViewModel(null,null)
+            testObject = new BankAccountEditorViewModel(null)
             {
                 BankAccountId=123,
                 AccountName = "My qacount",
@@ -332,13 +332,13 @@ namespace Finances.UnitTests.Finances.WinClient.BankAccountServiceTests
 
 
             bankAccountRepository.Setup(r => r.Update(It.IsAny<BankAccount>())).Returns(true).Callback<BankAccount>(a => { bankAccount = a; });
-            bankAccountMapper.Setup(m => m.Map(testObject, It.IsAny<BankAccount>())).Callback<IBankAccountEditorViewModel, BankAccount>((from, to) =>
-            {
-                to.BankAccountId = from.BankAccountId;
-                to.Name = from.AccountName;
-                to.Bank.BankId = from.Bank.BankId;
-                to.Bank.Name = from.Bank.Name;
-            }).Returns<IBankAccountEditorViewModel, BankAccount>((f,t) => t);
+            //bankAccountMapper.Setup(m => m.Map(testObject, It.IsAny<BankAccount>())).Callback<IBankAccountEditorViewModel, BankAccount>((from, to) =>
+            //{
+            //    to.BankAccountId = from.BankAccountId;
+            //    to.Name = from.AccountName;
+            //    to.Bank.BankId = from.Bank.BankId;
+            //    to.Bank.Name = from.Bank.Name;
+            //}).Returns<IBankAccountEditorViewModel, BankAccount>((f,t) => t);
 
         }
 
@@ -382,7 +382,7 @@ namespace Finances.UnitTests.Finances.WinClient.BankAccountServiceTests
             base.Establish_context();
 
 
-            testObject = new BankAccountEditorViewModel(null, null) { Bank = new BankItemViewModel() };
+            testObject = new BankAccountEditorViewModel(null) { Bank = new BankItemViewModel() };
 
             bankAccount = new BankAccount()
             {
@@ -393,19 +393,19 @@ namespace Finances.UnitTests.Finances.WinClient.BankAccountServiceTests
 
 
             bankAccountRepository.Setup(r => r.Read(bankAccount.BankAccountId)).Returns(bankAccount);
-            bankAccountMapper.Setup(m => m.Map(bankAccount, testObject)).Callback<BankAccount, IBankAccountEditorViewModel>((from, to) =>
-            {
-                to.BankAccountId = from.BankAccountId;
-                to.AccountName = from.Name;
-                to.Bank.BankId = from.Bank.BankId;
-                to.Bank.Name = from.Bank.Name;
-            }).Returns<BankAccount, IBankAccountEditorViewModel>((f, t) => t);
+            //bankAccountMapper.Setup(m => m.Map(bankAccount, testObject)).Callback<BankAccount, IBankAccountEditorViewModel>((from, to) =>
+            //{
+            //    to.BankAccountId = from.BankAccountId;
+            //    to.AccountName = from.Name;
+            //    to.Bank.BankId = from.Bank.BankId;
+            //    to.Bank.Name = from.Bank.Name;
+            //}).Returns<BankAccount, IBankAccountEditorViewModel>((f, t) => t);
 
         }
 
         protected override void Because_of()
         {
-            testObject = bankAccountService.Read(bankAccount.BankAccountId, testObject);
+            bankAccountService.Read(bankAccount.BankAccountId, testObject);
         }
 
 

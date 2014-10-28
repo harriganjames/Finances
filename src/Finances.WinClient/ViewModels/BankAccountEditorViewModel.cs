@@ -7,11 +7,12 @@ using System.Collections.Generic;
 using Finances.Core.Wpf;
 using Finances.WinClient.DomainServices;
 using Finances.Core.Entities;
+using Finances.Core.Interfaces;
 
 
 namespace Finances.WinClient.ViewModels
 {
-    public interface IBankAccountEditorViewModel : IEditorViewModelBase
+    public interface IBankAccountEditorViewModel : IEditorViewModelBase, IEntityMapper<BankAccount>
     {
         void InitializeForAddEdit(bool AddEdit);
 
@@ -42,14 +43,14 @@ namespace Finances.WinClient.ViewModels
 
 
         readonly IBankAccountService bankAccountService;
-        readonly IBankService bankService;
+        //readonly IBankService bankService;
 
 
-        public BankAccountEditorViewModel(IBankAccountService bankAccountService,
-                                IBankService bankService)
+        public BankAccountEditorViewModel(IBankAccountService bankAccountService)
+                                //IBankService bankService)
         {
             this.bankAccountService = bankAccountService;
-            this.bankService = bankService;
+            //this.bankService = bankService;
         }
 
 
@@ -162,7 +163,7 @@ namespace Finances.WinClient.ViewModels
                     bank = new BankItemViewModel();
 
 
-                if (!this.BankList.Contains(bank))
+                if (this.BankList!=null && !this.BankList.Contains(bank))
                 {
                     IBankItemViewModel find = this.BankList.FirstOrDefault(b => b.BankId == bank.BankId);
                     if (find != null)
@@ -303,7 +304,8 @@ namespace Finances.WinClient.ViewModels
         private void LoadBanksList()
         {
             bankList = new ObservableCollection<IBankItemViewModel>();
-            bankService.ReadList().ForEach(vm => bankList.Add(vm));
+            //bankService.ReadList().ForEach(vm => bankList.Add(vm));
+            bankAccountService.ReadBankList().ForEach(vm => bankList.Add(vm));
         }
 
         private void LoadExistingBankAccounts()
@@ -342,5 +344,50 @@ namespace Finances.WinClient.ViewModels
 
         #endregion
 
+
+        #region IEntityMapper
+
+        public void MapIn(BankAccount entity)
+        {
+            this.BankAccountId = entity.BankAccountId;
+            this.AccountName = entity.Name;
+            this.Bank.MapIn(entity.Bank);
+            this.AccountNumber = entity.AccountNumber;
+            this.SortCode = entity.SortCode;
+            this.AccountOwner = entity.AccountOwner;
+            this.OpenedDate = entity.OpenedDate;
+            this.ClosedDate = entity.ClosedDate;
+            this.InitialRate = entity.InitialRate;
+            this.LoginId = entity.LoginID;
+            this.LoginUrl = entity.LoginURL;
+            this.MilestoneDate = entity.MilestoneDate;
+            this.MilestoneNotes = entity.MilestoneNotes;
+            this.Notes = entity.Notes;
+            this.PasswordHint = entity.PasswordHint;
+            this.PaysTaxableInterest = entity.PaysTaxableInterest;
+        }
+
+        public void MapOut(BankAccount entity)
+        {
+            entity.BankAccountId = this.BankAccountId;
+            entity.Name = this.AccountName;
+            entity.Bank.BankId = this.Bank.BankId; // only need BankId for persisting
+            entity.AccountNumber = this.AccountNumber;
+            entity.SortCode = this.SortCode;
+            entity.AccountOwner = this.AccountOwner;
+            entity.OpenedDate = this.OpenedDate.GetValueOrDefault(DateTime.MinValue);
+            entity.ClosedDate = this.ClosedDate;
+            entity.InitialRate = this.InitialRate;
+            entity.LoginID = this.LoginId;
+            entity.LoginURL = this.LoginUrl;
+            entity.MilestoneDate = this.MilestoneDate;
+            entity.MilestoneNotes = this.MilestoneNotes;
+            entity.Notes = this.Notes;
+            entity.PasswordHint = this.PasswordHint;
+            entity.PaysTaxableInterest = this.PaysTaxableInterest;
+        }
+
+
+        #endregion
     }
 }

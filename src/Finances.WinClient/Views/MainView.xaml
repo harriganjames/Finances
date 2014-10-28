@@ -2,7 +2,9 @@
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:core="clr-namespace:Finances.Core;assembly=Finances.Core"
+             xmlns:lib="clr-namespace:Finances.Core.Wpf;assembly=Finances.Core.Wpf"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
     <Grid>
@@ -16,7 +18,16 @@
                 <Grid>
                     <TextBlock Text="Finances" FontSize="20"/>
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" >
-                        <Button Content="Logout" Margin="0,0,5,0" VerticalAlignment="Center" Command="{Binding LogoutCommand}" Visibility="{Binding LoggedIn, Converter={StaticResource PositiveVisibilityConverter}}"/>
+                        <Button Content="ObjectInfo" Margin="0,0,5,0" 
+                                VerticalAlignment="Center" 
+                                Command="{Binding OpenObjectInfoCommand}"/>
+                        <Button Content="Logout" Margin="0,0,5,0" VerticalAlignment="Center" 
+                                Command="{Binding LogoutCommand}" 
+                                Visibility="{Binding LoggedIn, Converter={StaticResource PositiveVisibilityConverter}}"/>
+                        
+                        <!--<TextBlock Text="{Binding Source={x:Static core:Apex.ObjectInformation}, Path=ObjectAliveCount, StringFormat=Objects {0}}" 
+                                   Margin="0,0,5,0" 
+                                   VerticalAlignment="Center" />-->
                         <TextBlock Text="Connection" Margin="0,0,5,0" VerticalAlignment="Center" />
                         <TextBlock Text="{Binding Connection}" Padding="5,2" VerticalAlignment="Center" Background="LightGreen"/>
                     </StackPanel>

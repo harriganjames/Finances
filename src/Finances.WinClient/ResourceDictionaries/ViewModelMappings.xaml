@@ -16,6 +16,9 @@
     <DataTemplate DataType="{x:Type vm:BankEditorViewModel}">
         <v:BankEditorView/>
     </DataTemplate>
+    <DataTemplate DataType="{x:Type vm:BankTreeViewModel}">
+        <v:BankTreeView/>
+    </DataTemplate>
 
     <!-- Bank Account -->
     <DataTemplate DataType="{x:Type vm:BankAccountsViewModel}">
@@ -25,6 +28,11 @@
         <v:BankAccountEditorView/>
     </DataTemplate>
 
+    <!-- Transfers -->
+    <DataTemplate DataType="{x:Type vm:TransferListViewModel}">
+        <v:TransferListView/>
+    </DataTemplate>
+    
     <!--Main-->
     <DataTemplate DataType="{x:Type vm:MainViewModel}">
         <v:MainView/>

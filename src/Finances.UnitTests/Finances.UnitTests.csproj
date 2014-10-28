@@ -62,7 +62,6 @@
     <Compile Include="Finances.WinClient\BankAccountsViewModelTests.cs" />
     <Compile Include="Finances.WinClient\BankEditorViewModelTests.cs" />
     <Compile Include="Finances.WinClient\BankServiceTests.cs" />
-    <Compile Include="Finances.WinClient\BankMapperTests.cs" />
     <Compile Include="Finances.Persistence\BankRepositoryTests.cs" />
     <Compile Include="Finances.WinClient\BanksViewModelTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

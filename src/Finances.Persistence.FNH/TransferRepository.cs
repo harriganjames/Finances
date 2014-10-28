@@ -3,6 +3,7 @@ using System.Linq;
 using Finances.Core.Interfaces;
 using Finances.Core.Entities;
 using NHibernate;
+using NHibernate.Linq;
 
 namespace Finances.Persistence.FNH
 {
@@ -14,7 +15,24 @@ namespace Finances.Persistence.FNH
         {
             this.sessionFactory = sessionFactory;
         }
-         
+
+
+        // overriding so can Fetch 
+        public override List<Transfer> ReadList() 
+        {
+            using (ISession session = this.sessionFactory.OpenSession())
+            {
+                var query = (from ac in session.Query<Transfer>()
+                                 .Fetch(t => t.FromBankAccount).ThenFetch(a => a.Bank)
+                                 .Fetch(t => t.ToBankAccount).ThenFetch(a => a.Bank)
+                             select ac);
+
+                var x = query.ToList();
+
+                return x;
+            }
+        }
+
 
         public List<DataIdName> ReadListDataIdName()
         {

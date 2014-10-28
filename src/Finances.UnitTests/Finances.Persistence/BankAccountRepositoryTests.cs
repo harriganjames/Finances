@@ -113,7 +113,7 @@ namespace Finances.UnitTests.DONOTUSE.Finances.Persistence.BankAccountRepository
 
         protected override void Because_of()
         {
-            result = bankAccountRepository.Delete(testBankAccountId);
+            result = bankAccountRepository.Delete(new BankAccount() { BankAccountId = testBankAccountId } );
         }
 
         [Test]

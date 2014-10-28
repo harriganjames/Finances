@@ -4,11 +4,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using Finances.Core.Entities;
+using Finances.Core.Interfaces;
 using Finances.Core.Wpf;
 
 namespace Finances.WinClient.ViewModels
 {
-    public interface IBankAccountItemViewModel : IItemViewModelBase
+    public interface IBankAccountItemViewModel : ITreeViewItemViewModelBase, IEntityMapper<BankAccount>
     {
         ICommand GoOnlineCommand { get; set; }
 
@@ -28,9 +30,10 @@ namespace Finances.WinClient.ViewModels
         string PasswordHint { get; set; }
         bool PaysTaxableInterest { get; set; }
         string SortCode { get; set; }
+        //IBankAccountItemViewModel MapIn(BankAccount from);
     }
 
-    public class BankAccountItemViewModel : ItemViewModelBase, IBankAccountItemViewModel
+    public class BankAccountItemViewModel : TreeViewItemViewModelBase, IBankAccountItemViewModel
     {
         //readonly IEventPublisher eventPublisher;
 
@@ -66,7 +69,12 @@ namespace Finances.WinClient.ViewModels
         IBankItemViewModel bank;
         public IBankItemViewModel Bank
         {
-            get { return bank; }
+            get 
+            {
+                if (bank == null)
+                    bank = new BankItemViewModel();
+                return bank; 
+            }
             set { bank = value; NotifyPropertyChanged(); }
         }
 
@@ -172,7 +180,34 @@ namespace Finances.WinClient.ViewModels
             //this.eventPublisher.SendMessage<OpenBrowserEvent>(ev);
         }
 
+        #region IEntityMapper
 
+        public void MapIn(BankAccount entity)
+        {
+            this.BankAccountId = entity.BankAccountId;
+            this.AccountName = entity.Name;
+            this.Bank.MapIn(entity.Bank);
+            this.AccountNumber = entity.AccountNumber;
+            this.SortCode = entity.SortCode;
+            this.AccountOwner = entity.AccountOwner;
+            this.OpenedDate = entity.OpenedDate;
+            this.ClosedDate = entity.ClosedDate;
+            this.InitialRate = entity.InitialRate;
+            this.LoginId = entity.LoginID;
+            this.LoginUrl = entity.LoginURL;
+            this.MilestoneDate = entity.MilestoneDate;
+            this.MilestoneNotes = entity.MilestoneNotes;
+            this.Notes = entity.Notes;
+            this.PasswordHint = entity.PasswordHint;
+            this.PaysTaxableInterest = entity.PaysTaxableInterest;
+        }
+
+        public void MapOut(BankAccount entity)
+        {
+            entity.BankAccountId = this.BankAccountId;
+        }
+
+        #endregion
 
     }
 }

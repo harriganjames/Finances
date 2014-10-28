@@ -1,28 +1,37 @@
-﻿using System.IO;
+﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.IO;
 using System.Windows.Media.Imaging;
+using Finances.Core.Entities;
+using Finances.Core.Interfaces;
 using Finances.Core.Wpf;
 using Finances.WinClient.DomainServices;
 
 
 namespace Finances.WinClient.ViewModels
 {
-    public interface IBankItemViewModel : IItemViewModelBase
+    public interface IBankItemViewModel : ITreeViewItemViewModelBase, IEntityMapper<Bank>
     {
         int BankId { get; set; }
         string Name { get; set; }
         byte[] LogoRaw { get; set; }
         //byte[] Logo { get; }
         BitmapSource Logo { get; }
+
+        //IBankItemViewModel MapIn(Bank from);
     }
 
-    public class BankItemViewModel : ItemViewModelBase, IBankItemViewModel
+    public class BankItemViewModel : TreeViewItemViewModelBase, IBankItemViewModel
     {
-        int bankId;
-        string name;
-        byte[] logo;
+
+        public BankItemViewModel()
+        {
+        }
 
         #region PublicProperties
 
+
+        int bankId;
         public int BankId
         {
             get { return this.bankId; }
@@ -34,6 +43,7 @@ namespace Finances.WinClient.ViewModels
         }
 
 
+        string name;
         public string Name
         {
             get { return this.name; }
@@ -44,6 +54,7 @@ namespace Finances.WinClient.ViewModels
             }
         }
 
+        byte[] logo;
         public byte[] LogoRaw
         {
             get { return this.logo; }
@@ -53,12 +64,6 @@ namespace Finances.WinClient.ViewModels
                 NotifyPropertyChanged(() => this.Logo);
             }
         }
-
-
-        //public byte[] Logo
-        //{
-        //    get { return this.logo; }
-        //}
 
         public BitmapSource Logo
         {
@@ -72,12 +77,36 @@ namespace Finances.WinClient.ViewModels
         }
 
 
+        //ObservableCollection<IBankAccountItemViewModel> bankAccounts = new ObservableCollection<IBankAccountItemViewModel>();
+        //public ObservableCollection<IBankAccountItemViewModel> BankAccounts 
+        //{
+        //    get
+        //    {
+        //        return bankAccounts;
+        //    }
+        //}
+
         #endregion
+
+
+        public void MapIn(Bank from)
+        {
+            this.BankId = from.BankId;
+            this.Name = from.Name;
+            this.LogoRaw = from.Logo;
+        }
+
+        public void MapOut(Bank entity)
+        {
+            entity.BankId = this.BankId;
+        }
+
 
         public override string ToString()
         {
             return this.Name;
         }
+
 
     }
 }

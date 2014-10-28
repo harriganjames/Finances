@@ -12,7 +12,7 @@ using Finances.Core.Entities;
 
 
 
-namespace Finances.UnitTests.Finances.WinClient.BankAccountEditorViewModelTests
+namespace Finances.UnitTests.MOVEDTOMS.Finances.WinClient.BankAccountEditorViewModelTests
 {
     public class when_working_with_the_bank_account_editor_view_model : Specification
     {
@@ -28,7 +28,7 @@ namespace Finances.UnitTests.Finances.WinClient.BankAccountEditorViewModelTests
             bankAccountService = new Mock<IBankAccountService>();
             //dialogService = new Mock<IDialogService>();
 
-            bankAccountEditorViewModel = new BankAccountEditorViewModel(bankAccountService.Object, null);
+            bankAccountEditorViewModel = new BankAccountEditorViewModel(bankAccountService.Object);
         
         }
     }
@@ -47,6 +47,10 @@ namespace Finances.UnitTests.Finances.WinClient.BankAccountEditorViewModelTests
                 };
 
             base.bankAccountService.Setup(bs => bs.ReadListDataIdName()).Returns(dataList);
+
+            List<IBankItemViewModel> banks = new List<IBankItemViewModel>();
+
+            base.bankAccountService.Setup(bs => bs.ReadBankList()).Returns(banks);
 
         }
 

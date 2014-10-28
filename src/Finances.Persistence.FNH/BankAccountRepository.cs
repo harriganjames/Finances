@@ -4,52 +4,27 @@ using Finances.Core.Interfaces;
 using Finances.Core.Entities;
 using NHibernate;
 using NHibernate.Linq;
+using System;
 
 namespace Finances.Persistence.FNH
 {
-    public class BankAccountRepository : IBankAccountRepository
+    public class BankAccountRepository : GenericRepository<BankAccount>, IBankAccountRepository
     {
         readonly ISessionFactory sessionFactory;
 
-        public BankAccountRepository(ISessionFactory sessionFactory)
+        public BankAccountRepository(ISessionFactory sessionFactory) : base(sessionFactory)
         {
             this.sessionFactory = sessionFactory;
         }
 
-        public int Add(BankAccount account)
-        {
-            int id;
-            using (var session = this.sessionFactory.OpenSession())
-            {
-                id = (int)session.Save(account);
-                session.Flush();
-            }
-            return id;
-        }
 
-
-        public bool Update(BankAccount account)
+        // overriding so can use SQL to avoid cascaded deletes
+        public override bool Delete(BankAccount bankAccount)
         {
             using (var session = this.sessionFactory.OpenSession())
             {
-                session.Update(account);
-                session.Flush();
-            }
-            return true;
-        }
-
-
-        public bool Delete(int accountId)
-        {
-            using (var session = this.sessionFactory.OpenSession())
-            {
-                //BankAccount a = new BankAccount() { BankAccountId = accountId };
-                //session.Delete(a);
-                //session.Save(a);
-                //session.Flush();
-
                 IQuery q = session.CreateQuery("delete BankAccount where BankAccountId=?");
-                q.SetInt32(0, accountId);
+                q.SetInt32(0, bankAccount.BankAccountId);
                 q.ExecuteUpdate();
 
             }
@@ -57,44 +32,36 @@ namespace Finances.Persistence.FNH
         }
 
 
-        public BankAccount Read(int accountId)
+        // Extra method - uses SQL to avoid cascaded deletes
+        //public bool Delete(int accountId)
+        //{
+        //    using (var session = this.sessionFactory.OpenSession())
+        //    {
+        //        IQuery q = session.CreateQuery("delete BankAccount where BankAccountId=?");
+        //        q.SetInt32(0, accountId);
+        //        q.ExecuteUpdate();
+        //    }
+        //    return true;
+        //}
+
+
+        // overriding so can Fetch Bank
+        public override BankAccount Read(int accountId)
         {
             using (var session = this.sessionFactory.OpenSession())
             {
-                //return session.Get<BankAccount>(accountId);
-                //return session.CreateCriteria<BankAccount>().SetFetchMode("Bank",FetchMode.Join).Add(
-
-                //return session.QueryOver<BankAccount>()
-                //    .Where(a=>a.BankAccountId==accountId)
-                //    .Fetch(a=>a.Bank).Eager.List().First();
-
-
                 return (from a in session.Query<BankAccount>().Fetch(a => a.Bank)
                         where a.BankAccountId == accountId
                         select a).Single();
-
-                //return (from a in session.Query<BankAccount>()
-                //         where a.BankAccountId==accountId).First();
             }
         }
 
  
-
-        public List<BankAccount> ReadList()
+        // overriding so can Fetch Bank
+        public override List<BankAccount> ReadList()
         {
             using (ISession session = this.sessionFactory.OpenSession())
             {
-                //return session.CreateCriteria<BankAccount>().List<BankAccount>().AsEnumerable().ToList();
-                //return session.CreateCriteria<BankAccount>().SetFetchMode("",FetchMode.Eager).List<BankAccount>().AsEnumerable().ToList();
-
-                //var a =(from ac in session.QueryOver<BankAccount>().Fetch(acc => acc.Bank).Eager
-                //        where ac.BankAccountId>=0
-                //        select ac);
-                
-                //var b = a.List();
-                //var c = b.AsEnumerable();
-                //var d = c.ToList();
-
                 var query = (from ac in session.Query<BankAccount>().Fetch(a => a.Bank)
                              select ac);
 
@@ -106,12 +73,17 @@ namespace Finances.Persistence.FNH
 
         public List<DataIdName> ReadListDataIdName()
         {
-            using (ISession session = this.sessionFactory.OpenSession())
-            {
-                return (from a in session.CreateCriteria<BankAccount>().List<BankAccount>().AsEnumerable()
-                        select new DataIdName() { Id = a.BankAccountId, Name = string.Format("{0} - {1}", a.Bank.Name, a.Name) }).ToList();
-            }
+            return base.ReadListDataIdName(a => a.BankAccountId, a => String.Format("{0} - {1}", a.Bank.Name, a.Name));
         }
+
+        //public List<DataIdName> ReadListDataIdName()
+        //{
+        //    using (ISession session = this.sessionFactory.OpenSession())
+        //    {
+        //        return (from a in session.CreateCriteria<BankAccount>().List<BankAccount>().AsEnumerable()
+        //                select new DataIdName() { Id = a.BankAccountId, Name = string.Format("{0} - {1}", a.Bank.Name, a.Name) }).ToList();
+        //    }
+        //}
 
     }
 }

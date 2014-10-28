@@ -2,12 +2,14 @@
 using System;
 using Finances.Core;
 using Finances.Core.Wpf;
+using Finances.Core.Wpf.ObjectInformation;
 namespace Finances.WinClient.ViewModels
 {
     public interface IMainViewModel
     {
         ActionCommand LoginCommand { get; set; }
         ActionCommand LogoutCommand { get; set; }
+        ActionCommand OpenObjectInfoCommand { get; set; }
 
         bool LoggedIn { get; }
     }
@@ -18,21 +20,29 @@ namespace Finances.WinClient.ViewModels
         
         readonly IWorkspaceAreaViewModel workspaceAreaViewModel;
         readonly IConnection connection;
+        readonly IDialogService dialogService;
+        readonly ObjectInfoViewModel objectInfoViewModel;
 
         public MainViewModel(IWorkspaceAreaViewModel workspaceAreaViewModel,
-                        IConnection connection)
+                        IConnection connection,
+                        IDialogService dialogService,
+                        ObjectInfoViewModel objectInfoViewModel)
         {
             this.workspaceAreaViewModel = workspaceAreaViewModel;
             this.connection = connection;
+            this.dialogService = dialogService;
+            this.objectInfoViewModel = objectInfoViewModel;
 
             LoginCommand = base.AddNewCommand(new ActionCommand(Login));
             LogoutCommand = base.AddNewCommand(new ActionCommand(Logout));
+            OpenObjectInfoCommand = base.AddNewCommand(new ActionCommand(OpenObjectInfo));
         }
 
         #region Publics
 
         public ActionCommand LoginCommand { get; set; }
         public ActionCommand LogoutCommand { get; set; }
+        public ActionCommand OpenObjectInfoCommand { get; set; }
 
         public IWorkspaceAreaViewModel LoggedInViewModel
         {
@@ -68,6 +78,7 @@ namespace Finances.WinClient.ViewModels
             }
         }
 
+
         #endregion
 
         private void Login(object pwd)
@@ -96,6 +107,10 @@ namespace Finances.WinClient.ViewModels
         }
 
 
+        private void OpenObjectInfo()
+        {
+            this.dialogService.ShowDialogNonModal(this.objectInfoViewModel);
+        }
 
     }
 }

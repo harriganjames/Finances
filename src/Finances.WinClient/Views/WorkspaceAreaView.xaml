@@ -39,11 +39,14 @@ xmlns:libattach="clr-namespace:Finances.Core.Wpf.AttachedProperties;assembly=Fin
 
 
             <Border Grid.Column="1" BorderThickness="2" BorderBrush="DarkGray">
-                <TabControl Grid.Column="1"
-                                        IsSynchronizedWithCurrentItem="True"
-                                            libattach:TabItemGeneratorBehavior.ItemsSource="{Binding OpenWorkspaces}"
+            <TabControl Grid.Column="1"
+                        IsSynchronizedWithCurrentItem="True"
+                        ItemsSource="{Binding OpenWorkspaces}"
+                        SelectedItem="{Binding SelectedWorkspace}"
+                        >
+                <!--libattach:TabItemGeneratorBehavior.ItemsSource="{Binding OpenWorkspaces}"
                                             libattach:TabItemGeneratorBehavior.SelectedItem="{Binding SelectedWorkspace}"
-                                            >
+                                            >-->
                     <TabControl.ItemTemplate>
                         <DataTemplate>
                             <DockPanel>

@@ -14,10 +14,17 @@ namespace Finances.WinClient.CastleInstallers
             // Banks
             container.Register(Component.For<IWorkspace>().ImplementedBy<BanksViewModel>());
             container.Register(Component.For<IBankEditorViewModel>().ImplementedBy<BankEditorViewModel>());
+            container.Register(Component.For<IWorkspace>().ImplementedBy<BankTreeViewModel>());
+            //container.Register(Component.For<IBankTreeViewItemViewModelFactory>().ImplementedBy<BankTreeViewItemViewModelFactory>());
+            
 
             // Banks Accounts
             container.Register(Component.For<IWorkspace>().ImplementedBy<BankAccountsViewModel>());
             container.Register(Component.For<IBankAccountEditorViewModel>().ImplementedBy<BankAccountEditorViewModel>());
+
+            // Transfers
+            container.Register(Component.For<IWorkspace>().ImplementedBy<TransferListViewModel>());
+
 
             // Main
             container.Register(Component.For<IMainViewModel>().ImplementedBy<MainViewModel>());

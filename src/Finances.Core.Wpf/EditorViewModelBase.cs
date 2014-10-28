@@ -13,7 +13,7 @@ using Finances.Core.Wpf.Validation;
 
 namespace Finances.Core.Wpf
 {
-    public interface IEditorViewModelBase : IViewModelBase, IDialog
+    public interface IEditorViewModelBase : IViewModelBase
     {
         IEnumerable<string> Errors { get; }
         event EventHandler<DataErrorsChangedEventArgs> ErrorsChanged;
@@ -22,7 +22,7 @@ namespace Finances.Core.Wpf
         void NotifyPropertyChangedAndValidate(string propertyName = "");
     }
 
-    public abstract class EditorViewModelBase : ViewModelBase, INotifyDataErrorInfo, IEditorViewModelBase, IDialog
+    public abstract class EditorViewModelBase : ViewModelBase, INotifyDataErrorInfo, IEditorViewModelBase
     {
         bool _isValid;
         ValidationHelper _validationHelper;
@@ -145,15 +145,5 @@ namespace Finances.Core.Wpf
 
 
 
-        #region IDialog
-
-        private ICommand dialogAcceptCommand = new RoutedCommand();
-
-        public ICommand DialogAcceptCommand
-        {
-            get { return dialogAcceptCommand; }
-        }
-
-        #endregion
     }
 }

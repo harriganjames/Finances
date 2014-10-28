@@ -5,13 +5,14 @@ using System.IO;
 using System.Windows.Input;
 using System.Windows.Media.Imaging;
 using Finances.Core.Entities;
+using Finances.Core.Interfaces;
 using Finances.Core.Wpf;
 using Finances.WinClient.DomainServices;
 
 
 namespace Finances.WinClient.ViewModels
 {
-    public interface IBankEditorViewModel : IEditorViewModelBase
+    public interface IBankEditorViewModel : IEditorViewModelBase, IEntityMapper<Bank>
     {
         int BankId { get; set; }
         string Name { get; set; }
@@ -191,6 +192,26 @@ namespace Finances.WinClient.ViewModels
             existingBanks = bankService.ReadListDataIdName();
             //existingBanks.RemoveAll(b => b.Id == _bankId);
         }
+
+        #endregion
+
+
+        #region Map
+
+        public void MapOut(Bank to)
+        {
+            to.BankId = this.BankId;
+            to.Name = this.Name;
+            to.Logo = this.LogoRaw;
+        }
+
+        public void MapIn(Bank from)
+        {
+            this.BankId = from.BankId;
+            this.Name = from.Name;
+            this.LogoRaw = from.Logo;
+        }
+
 
         #endregion
 
