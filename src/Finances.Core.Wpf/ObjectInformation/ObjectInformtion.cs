@@ -14,22 +14,41 @@ namespace Finances.Core.Wpf.ObjectInformation
 {
     public class ObjectInformation
     {
-        ObservableCollection<WeakReference> refs = new ObservableCollection<WeakReference>();
+        public object Locker = new object();
 
+        List<WeakReference> refs = new List<WeakReference>();
 
+        public event EventHandler ReferencesChanged;
 
-        public ObservableCollection<WeakReference> ObjectReferences
+        public List<WeakReference> References
         {
             get { return refs; }
             set { refs = value; }
         }
 
-        public void AddObjectReference(object obj)
+        public void AddReference(object obj)
         {
-            lock (refs)
+            bool changes = false;
+            lock (Locker)
             {
-                refs.Add(new WeakReference(obj));
+                bool exists = false;
+                foreach (var wr in refs)
+                {
+                    if (wr.Target!=null && wr.Target.Equals(obj))
+                    {
+                        exists = true;
+                        break;
+                    }
+                }
+
+                if (!exists)
+                {
+                    refs.Add(new WeakReference(obj));
+                    changes = true;
+                }
             }
+            if (changes)
+                NotifyReferencesChanged();
         }
 
 
@@ -48,15 +67,25 @@ namespace Finances.Core.Wpf.ObjectInformation
 
         void PurgeRefs()
         {
-            lock (refs)
+            bool changes = false;
+            lock (Locker)
             {
                 foreach (var wr in refs.Where(wr => !wr.IsAlive).ToList())
                 {
                     refs.Remove(wr);
+                    changes = true;
                 }
             }
+            if (changes)
+                NotifyReferencesChanged();
         }
 
+
+        void NotifyReferencesChanged()
+        {
+            if (ReferencesChanged != null)
+                ReferencesChanged(this, new EventArgs());
+        }
 
 
     }

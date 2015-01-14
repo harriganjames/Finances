@@ -26,6 +26,12 @@ namespace Finances.WinClient
     /// </summary>
     public partial class App : Application
     {
+        public App()
+        {
+            EventManager.RegisterClassHandler(typeof(UserControl), UserControl.LoadedEvent,
+                new RoutedEventHandler(UserControlLoaded));
+        }
+
         protected override void OnStartup(StartupEventArgs e)
         {
             base.OnStartup(e);
@@ -41,8 +47,6 @@ namespace Finances.WinClient
             EventManager.RegisterClassHandler(typeof(TextBox), TextBox.MouseDoubleClickEvent,
                 new RoutedEventHandler(SelectAllText));
 
-            EventManager.RegisterClassHandler(typeof(UserControl), UserControl.LoadedEvent,
-                new RoutedEventHandler(UserControlLoaded));
 
 
             Window w = new AppWindow();
@@ -51,7 +55,10 @@ namespace Finances.WinClient
 
             container.Kernel.Resolver.AddSubResolver(new CollectionResolver(container.Kernel));
 
-            container.Install(new NHibernateSessionFactoryInstaller(),
+            container.Install(
+                            new ConnectionInstaller(),
+                            new EFModelContextFactoryInstaller(),
+                            new NHibernateSessionFactoryInstaller(),
                             new DialogServiceInstaller(w),
                             new RepositoriesInstaller(),
                             new DomainServicesInstaller(),
@@ -59,7 +66,8 @@ namespace Finances.WinClient
                             new InterceptorsInstaller(),
                             new WorkspaceInstaller(),
                             new ViewModelInstallers(),
-                            new UtilitiesInstaller(w)
+                            new UtilitiesInstaller(w),
+                            new MappingsCreatorInstaller()
                             );
 
 
@@ -67,6 +75,8 @@ namespace Finances.WinClient
             //this.Resources.Add(null, new DataTemplate(typeof(MainViewModel)) { VisualTree = new MainView() });
 
             container.Resolve<Apex>();
+
+            container.Resolve<MappingsCreator>();
 
             w.DataContext = container.Resolve<IMainViewModel>();
             
@@ -102,7 +112,12 @@ namespace Finances.WinClient
 
         void UserControlLoaded(object sender, RoutedEventArgs e)
         {
-            Apex.ObjectInformation.AddObjectReference(sender);
+            Apex.ObjectInformation.AddReference(sender);
+            var fe = sender as FrameworkElement;
+            if (fe != null && fe.DataContext!=null)
+            {
+                Apex.ObjectInformation.AddReference(fe.DataContext);
+            }
         }
     }
 }

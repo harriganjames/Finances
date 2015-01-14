@@ -1,57 +1,96 @@
 ﻿using System;
+using System.Collections.Generic;
 using Finances.Core.Interfaces;
 using Finances.Persistence.FNH;
 
 namespace Finances.WinClient.DomainServices
 {
-    public interface IGenericDomainService<T> where T : class, new()
+    public interface IGenericDomainService<TEntity> where TEntity : class, new()
     {
-        bool Add(IEntityMapper<T> vm);
-        bool Update(IEntityMapper<T> vm);
-        void Read(int id, IEntityMapper<T> vm);
-        bool Delete(IEntityMapper<T> vm);
-        //List<T> ReadList();
+        bool Add(IEntityMapper<TEntity> vm);
+        bool Update(IEntityMapper<TEntity> vm);
+        void Read(int id, IEntityMapper<TEntity> vm);
+        bool Delete(IEntityMapper<TEntity> vm);
+        //List<TEntity> ReadList();
     }
 
 
-    public class GenericDomainService<T> : IGenericDomainService<T> where T : class, new()
+    public class GenericDomainService<TEntity> : IGenericDomainService<TEntity> where TEntity : class, new()
     {
-        readonly IGenericRepository<T> repo;
+        readonly IGenericRepository<TEntity> repo;
 
-        public GenericDomainService(IGenericRepository<T> repo)
+        public GenericDomainService(IGenericRepository<TEntity> repo)
         {
             this.repo = repo;
         }
 
-        public bool Add(IEntityMapper<T> vm)
+        public bool Add(IEntityMapper<TEntity> vm)
         {
-            T entity = new T();
+            TEntity entity = new TEntity();
             vm.MapOut(entity);
             int id = this.repo.Add(entity);
             vm.MapIn(entity);
             return id > 0;
         }
 
-        public bool Update(IEntityMapper<T> vm)
+        public bool Update(IEntityMapper<TEntity> vm)
         {
-            T entity = new T();
+            TEntity entity = new TEntity();
             vm.MapOut(entity);
             return this.repo.Update(entity);
         }
 
-        public void Read(int id, IEntityMapper<T> vm) 
+        public void Read(int id, IEntityMapper<TEntity> vm) 
         {
-            T entity = this.repo.Read(id);
+            TEntity entity = this.repo.Read(id);
             if (entity != null)
-                vm.MapIn(entity);
+                 vm.MapIn(entity);
         }
 
-        public bool Delete(IEntityMapper<T> vm)
+        public bool Delete(IEntityMapper<TEntity> vm)
         {
-            T entity = new T();
+            TEntity entity = new TEntity();
             vm.MapOut(entity);
             return this.repo.Delete(entity);
         }
+
+
+        public List<IMapper> ReadList<TMapper, IMapper>() 
+                                    where TMapper : IMapper, new()
+                                    where IMapper : IEntityMapper<TEntity>
+        {
+            List<IMapper> mappers = new List<IMapper>();
+            List<TEntity> entities = this.repo.ReadList();
+            if (entities != null)
+            {
+                foreach (TEntity e in entities)
+                {
+                    IMapper m = new TMapper();
+                    m.MapIn(e);
+                    mappers.Add(m);
+                }
+            }
+            return mappers;
+        }
+
+        public List<IMapper> ReadListFunc<TMapper, IMapper>(Func<List<TEntity>> func)
+            where TMapper : IMapper, new()
+            where IMapper : IEntityMapper<TEntity>
+        {
+            List<IMapper> mappers = new List<IMapper>();
+            List<TEntity> entities = func();
+            if (entities != null)
+            {
+                foreach (TEntity e in entities)
+                {
+                    IMapper m = new TMapper();
+                    m.MapIn(e);
+                    mappers.Add(m);
+                }
+            }
+            return mappers;
+        }
+
 
     }
 }

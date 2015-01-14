@@ -107,7 +107,7 @@ namespace Finances.WinClient.ViewModels
         {
             var x = e.TreeViewItemExpanded;
 
-            var bank = e.TreeViewItemExpanded as IBankItemViewModel;
+            var bank = e.TreeViewItemExpanded as BankItemViewModel;
             if (bank != null)
             {
                 if (bank.Children.Count == 0)

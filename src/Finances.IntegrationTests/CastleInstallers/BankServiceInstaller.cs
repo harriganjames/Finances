@@ -10,11 +10,11 @@ namespace Finances.IntegrationTests.CastleInstallers
     {
         public void Install(IWindsorContainer container, IConfigurationStore store)
         {
-            container.Register(Component.For<IBankService>().ImplementedBy<BankService>());
+            ////container.Register(Component.For<IBankService>().ImplementedBy<BankService>());
 
             //container.Register(Component.For<IBankViewModelFactory>().ImplementedBy<BankViewModelFactory>());
 
-            container.Register(Component.For<IBanksViewModel>().ImplementedBy<BanksViewModel>());
+            ////container.Register(Component.For<IBanksViewModel>().ImplementedBy<BanksViewModel>());
 
 
             //container.Register(Component.For<IBanksViewModelFactory>().ImplementedBy<BanksViewModelFactory>());

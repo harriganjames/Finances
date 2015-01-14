@@ -105,7 +105,7 @@ namespace Finances.UnitTests.Finances.WinClient.BankAccountServiceTests
 
         protected override void Because_of()
         {
-            testBankAccountVM = bankAccountService.CreateBankAccountItemViewModel();
+            testBankAccountVM = new BankAccountItemViewModel();
             bankAccountService.Read(testBankAccount.BankAccountId, testBankAccountVM);
         }
 

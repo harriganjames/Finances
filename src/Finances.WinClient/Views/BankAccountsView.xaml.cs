@@ -24,8 +24,6 @@ namespace Finances.WinClient.Views
     {
         public BankAccountsView()
         {
-            Apex.ObjectInformation.AddObjectReference(this);
-
             InitializeComponent();
 
 

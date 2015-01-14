@@ -71,6 +71,21 @@ namespace Finances.Persistence.FNH
             }
         }
 
+        public List<BankAccount> ReadListByBankId(int bankId)
+        {
+            using (ISession session = this.sessionFactory.OpenSession())
+            {
+                var query = (from ac in session.Query<BankAccount>().Fetch(a => a.Bank)
+                             where ac.Bank.BankId==bankId
+                             select ac);
+
+                var x = query.ToList();
+
+                return x;
+            }
+        }
+
+
         public List<DataIdName> ReadListDataIdName()
         {
             return base.ReadListDataIdName(a => a.BankAccountId, a => String.Format("{0} - {1}", a.Bank.Name, a.Name));

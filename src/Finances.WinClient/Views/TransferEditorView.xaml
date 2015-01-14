@@ -1,0 +1,190 @@
+﻿<UserControl x:Class="Finances.WinClient.Views.TransferEditorView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d" 
+             MinWidth="300"
+             d:DesignHeight="300" d:DesignWidth="300">
+    
+    <UserControl.Resources>
+        <DataTemplate x:Key="BankAccountTemplate">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="10"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <Image Source="{Binding Bank.Logo}" Height="25" Width="50"/>
+                <TextBlock Grid.Column="2" Text="{Binding AccountName}"/>
+            </Grid>
+        </DataTemplate>
+    </UserControl.Resources>
+    
+    <Grid Grid.IsSharedSizeScope="True" 
+          FocusManager.FocusedElement="{Binding ElementName=txtName}"
+          >
+        <Grid.Resources>
+            <Thickness x:Key="Spacer" Bottom="10"/>
+
+            <Style TargetType="Label">
+                <Setter Property="VerticalContentAlignment" Value="Center" />
+                <Setter Property="Height" Value="25" />
+            </Style>
+            <Style TargetType="TextBox" BasedOn="{StaticResource {x:Type Control}}" >
+                <Setter Property="Background" Value="Beige" />
+                <Setter Property="HorizontalAlignment" Value="Left" />
+                <Setter Property="Validation.ErrorTemplate" Value="{StaticResource validationTemplate}" />
+            </Style>
+            <Style TargetType="ComboBox" BasedOn="{StaticResource {x:Type Control}}">
+                <Setter Property="Background" Value="Beige" />
+                <Setter Property="Height" Value="25" />
+                <Setter Property="Width" Value="350" />
+                <Setter Property="HorizontalAlignment" Value="Left" />
+                <Setter Property="VerticalContentAlignment" Value="Center" />
+                <Setter Property="Validation.ErrorTemplate" Value="{StaticResource validationTemplate}" />
+            </Style>
+            <Style TargetType="DatePicker" >
+                <!--<Setter Property="Background" Value="Beige" />-->
+                <Setter Property="Height" Value="25" />
+                <Setter Property="HorizontalAlignment" Value="Left" />
+                <Setter Property="VerticalContentAlignment" Value="Center" />
+                <Setter Property="Validation.ErrorTemplate" Value="{StaticResource validationTemplate}" />
+            </Style>
+        </Grid.Resources>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <!--column below is space for validation icon-->
+            <ColumnDefinition Width="10"/>
+        </Grid.ColumnDefinitions>
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <!--<RowDefinition Height="*"/>-->
+        </Grid.RowDefinitions>
+
+        <StackPanel Orientation="Vertical">
+
+            <!--Name-->
+            <Grid Margin="{StaticResource Spacer}">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" SharedSizeGroup="label"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <Label      Content="Name"/>
+                <TextBox    x:Name="txtName"
+                            Grid.Column="1"
+                            HorizontalAlignment="Stretch"
+                            Text="{Binding Name, UpdateSourceTrigger=PropertyChanged}"/>
+            </Grid>
+
+            <!--FromBankAccount-->
+            <Grid Margin="{StaticResource Spacer}">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" SharedSizeGroup="label"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <Label      Content="From Account"/>
+                <ComboBox   Width="Auto"
+                            HorizontalAlignment="Stretch"
+                            Grid.Column="1"
+                            ItemsSource="{Binding BankAccounts}"
+                            SelectedItem="{Binding FromBankAccount}"
+                            ItemTemplate="{StaticResource BankAccountNameDataTemplate}">
+                </ComboBox>
+
+            </Grid>
+
+            <!--ToBankAccount-->
+            <Grid Margin="{StaticResource Spacer}">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" SharedSizeGroup="label"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <Label      Content="To Account"/>
+                <ComboBox   Width="Auto"
+                            HorizontalAlignment="Stretch"
+                            Grid.Column="1"
+                            ItemsSource="{Binding BankAccounts}"
+                            SelectedItem="{Binding ToBankAccount}"
+                            ItemTemplate="{StaticResource BankAccountNameDataTemplate}">
+                </ComboBox>
+            </Grid>
+
+            <!--Amount-->
+            <Grid Margin="{StaticResource Spacer}">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" SharedSizeGroup="label"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <Label      Content="Amount"/>
+                <TextBox    Grid.Column="1"
+                            Width="80"
+                            
+                            HorizontalContentAlignment="Right"
+                            Text="{Binding Amount.Input, UpdateSourceTrigger=LostFocus}"/>
+            </Grid>
+
+            <!--Start Date-->
+            <Grid Margin="{StaticResource Spacer}">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" SharedSizeGroup="label"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <Label      Content="Start Date"/>
+                <DatePicker SelectedDate="{Binding StartDate, UpdateSourceTrigger=PropertyChanged}"
+                                Grid.Column="1"
+                                />
+            </Grid>
+
+            <!--End Date (optional)-->
+            <Grid Margin="{StaticResource Spacer}">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" SharedSizeGroup="label"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <Label      Content="End Date"/>
+                <DatePicker SelectedDate="{Binding EndDate, UpdateSourceTrigger=PropertyChanged}"
+                                Grid.Column="1"
+                                />
+            </Grid>
+
+            <!--Frequency-->
+            <Grid Margin="{StaticResource Spacer}">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" SharedSizeGroup="label"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <Label      Content="Frequency"/>
+                <ComboBox   Width="Auto"
+                            HorizontalAlignment="Stretch"
+                            Grid.Column="1"
+                            ItemsSource="{Binding Frequencies}"
+                            SelectedItem="{Binding Frequency}">
+                </ComboBox>
+            </Grid>
+
+            <!--IsEnabled-->
+            <Grid Margin="{StaticResource Spacer}">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" SharedSizeGroup="label"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <Label      Content="Enabled"/>
+                <CheckBox   Grid.Column="1"
+                            VerticalAlignment="Center"
+                            IsChecked="{Binding IsEnabled}"/>
+            </Grid>
+
+        </StackPanel>
+
+    </Grid>
+</UserControl>

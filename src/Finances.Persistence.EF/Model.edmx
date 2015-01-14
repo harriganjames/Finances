@@ -1,0 +1,312 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="FinanceModel.Store" Alias="Self" Provider="System.Data.SqlClient" ProviderManifestToken="2008" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityContainer Name="FinanceModelStoreContainer">
+          <EntitySet Name="Bank" EntityType="FinanceModel.Store.Bank" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="BankAccount" EntityType="FinanceModel.Store.BankAccount" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="Transfer" EntityType="FinanceModel.Store.Transfer" store:Type="Tables" Schema="dbo" />
+          <AssociationSet Name="FK_BankAccount_BankId" Association="FinanceModel.Store.FK_BankAccount_BankId">
+            <End Role="Bank" EntitySet="Bank" />
+            <End Role="BankAccount" EntitySet="BankAccount" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Transfer_FromBankAccountId" Association="FinanceModel.Store.FK_Transfer_FromBankAccountId">
+            <End Role="BankAccount" EntitySet="BankAccount" />
+            <End Role="Transfer" EntitySet="Transfer" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Transfer_ToBankAccountId" Association="FinanceModel.Store.FK_Transfer_ToBankAccountId">
+            <End Role="BankAccount" EntitySet="BankAccount" />
+            <End Role="Transfer" EntitySet="Transfer" />
+          </AssociationSet>
+        </EntityContainer>
+        <EntityType Name="Bank">
+          <Key>
+            <PropertyRef Name="BankId" />
+          </Key>
+          <Property Name="BankId" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="varchar" MaxLength="100" />
+          <Property Name="Logo" Type="varbinary(max)" />
+        </EntityType>
+        <EntityType Name="BankAccount">
+          <Key>
+            <PropertyRef Name="BankAccountId" />
+          </Key>
+          <Property Name="BankAccountId" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="varchar" Nullable="false" MaxLength="100" />
+          <Property Name="BankId" Type="int" Nullable="false" />
+          <Property Name="SortCode" Type="varchar" MaxLength="6" />
+          <Property Name="AccountNumber" Type="varchar" MaxLength="50" />
+          <Property Name="AccountOwner" Type="varchar" Nullable="false" MaxLength="20" />
+          <Property Name="PaysTaxableInterest" Type="bit" Nullable="false" />
+          <Property Name="LoginURL" Type="varchar" MaxLength="200" />
+          <Property Name="LoginID" Type="varchar" MaxLength="100" />
+          <Property Name="PasswordHint" Type="varchar" MaxLength="500" />
+          <Property Name="OpenedDate" Type="date" Nullable="false" />
+          <Property Name="ClosedDate" Type="date" />
+          <Property Name="InitialRate" Type="numeric" Precision="5" Scale="4" />
+          <Property Name="MilestoneDate" Type="date" />
+          <Property Name="MilestoneNotes" Type="varchar" MaxLength="500" />
+          <Property Name="Notes" Type="varchar" MaxLength="1000" />
+          <Property Name="RecordCreatedDateTime" Type="datetime" Nullable="false" StoreGeneratedPattern="Computed" />
+          <Property Name="RecordUpdatedDateTime" Type="datetime" Nullable="false" StoreGeneratedPattern="Computed" />
+        </EntityType>
+        <EntityType Name="Transfer">
+          <Key>
+            <PropertyRef Name="TransferId" />
+          </Key>
+          <Property Name="TransferId" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="varchar" Nullable="false" MaxLength="100" />
+          <Property Name="FromBankAccountId" Type="int" />
+          <Property Name="ToBankAccountId" Type="int" />
+          <Property Name="Amount" Type="money" Nullable="false" />
+          <Property Name="AmountTolerence" Type="numeric" Nullable="false" Precision="3" Scale="2" />
+          <Property Name="StartDate" Type="date" Nullable="false" />
+          <Property Name="EndDate" Type="date" />
+          <Property Name="Frequency" Type="varchar" Nullable="false" MaxLength="100" />
+          <Property Name="IsEnabled" Type="bit" Nullable="false" />
+          <Property Name="RecordCreatedDateTime" Type="datetime" Nullable="false" />
+          <Property Name="RecordUpdatedDateTime" Type="datetime" Nullable="false" />
+        </EntityType>
+        <Association Name="FK_BankAccount_BankId">
+          <End Role="Bank" Type="FinanceModel.Store.Bank" Multiplicity="1" />
+          <End Role="BankAccount" Type="FinanceModel.Store.BankAccount" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Bank">
+              <PropertyRef Name="BankId" />
+            </Principal>
+            <Dependent Role="BankAccount">
+              <PropertyRef Name="BankId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Transfer_FromBankAccountId">
+          <End Role="BankAccount" Type="FinanceModel.Store.BankAccount" Multiplicity="0..1" />
+          <End Role="Transfer" Type="FinanceModel.Store.Transfer" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="BankAccount">
+              <PropertyRef Name="BankAccountId" />
+            </Principal>
+            <Dependent Role="Transfer">
+              <PropertyRef Name="FromBankAccountId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Transfer_ToBankAccountId">
+          <End Role="BankAccount" Type="FinanceModel.Store.BankAccount" Multiplicity="0..1" />
+          <End Role="Transfer" Type="FinanceModel.Store.Transfer" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="BankAccount">
+              <PropertyRef Name="BankAccountId" />
+            </Principal>
+            <Dependent Role="Transfer">
+              <PropertyRef Name="ToBankAccountId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Function Name="GetDataTest" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="FinanceModel" Alias="Self" p1:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:p1="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityContainer Name="FinanceEntities" p1:LazyLoadingEnabled="true">
+          <EntitySet Name="Banks" EntityType="FinanceModel.Bank" a:GetterAccess="Public" xmlns:a="http://schemas.microsoft.com/ado/2006/04/codegeneration" />
+          <EntitySet Name="BankAccounts" EntityType="FinanceModel.BankAccount" a:GetterAccess="Public" xmlns:a="http://schemas.microsoft.com/ado/2006/04/codegeneration" />
+          <EntitySet Name="Transfers" EntityType="FinanceModel.Transfer" a:GetterAccess="Public" xmlns:a="http://schemas.microsoft.com/ado/2006/04/codegeneration" />
+          <AssociationSet Name="FK_BankAccount_BankId" Association="FinanceModel.FK_BankAccount_BankId">
+            <End Role="Bank" EntitySet="Banks" />
+            <End Role="BankAccount" EntitySet="BankAccounts" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Transfer_FromBankAccountId" Association="FinanceModel.FK_Transfer_FromBankAccountId">
+            <End Role="BankAccount" EntitySet="BankAccounts" />
+            <End Role="Transfer" EntitySet="Transfers" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Transfer_ToBankAccountId" Association="FinanceModel.FK_Transfer_ToBankAccountId">
+            <End Role="BankAccount" EntitySet="BankAccounts" />
+            <End Role="Transfer" EntitySet="Transfers" />
+          </AssociationSet>
+          <FunctionImport Name="GetDataTest" ReturnType="Collection(FinanceModel.GetDataTest_Result)" />
+        </EntityContainer>
+        <EntityType Name="Bank" a:TypeAccess="Public" xmlns:a="http://schemas.microsoft.com/ado/2006/04/codegeneration">
+          <Key>
+            <PropertyRef Name="BankId" />
+          </Key>
+          <Property Name="BankId" Type="Int32" Nullable="false" p1:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" MaxLength="100" Unicode="false" FixedLength="false" />
+          <Property Name="Logo" Type="Binary" MaxLength="Max" FixedLength="false" />
+        </EntityType>
+        <EntityType Name="BankAccount" a:TypeAccess="Public" xmlns:a="http://schemas.microsoft.com/ado/2006/04/codegeneration">
+          <Key>
+            <PropertyRef Name="BankAccountId" />
+          </Key>
+          <Property Name="BankAccountId" Type="Int32" Nullable="false" p1:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="100" Unicode="false" FixedLength="false" />
+          <Property Name="BankId" Type="Int32" Nullable="false" />
+          <Property Name="SortCode" Type="String" MaxLength="6" Unicode="false" FixedLength="false" />
+          <Property Name="AccountNumber" Type="String" MaxLength="50" Unicode="false" FixedLength="false" />
+          <Property Name="AccountOwner" Type="String" Nullable="false" MaxLength="20" Unicode="false" FixedLength="false" />
+          <Property Name="PaysTaxableInterest" Type="Boolean" Nullable="false" />
+          <Property Name="LoginURL" Type="String" MaxLength="200" Unicode="false" FixedLength="false" />
+          <Property Name="LoginID" Type="String" MaxLength="100" Unicode="false" FixedLength="false" />
+          <Property Name="PasswordHint" Type="String" MaxLength="500" Unicode="false" FixedLength="false" />
+          <Property Name="OpenedDate" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="ClosedDate" Type="DateTime" Precision="0" />
+          <Property Name="InitialRate" Type="Decimal" Precision="5" Scale="4" />
+          <Property Name="MilestoneDate" Type="DateTime" Precision="0" />
+          <Property Name="MilestoneNotes" Type="String" MaxLength="500" Unicode="false" FixedLength="false" />
+          <Property Name="Notes" Type="String" MaxLength="1000" Unicode="false" FixedLength="false" />
+          <Property Name="RecordCreatedDateTime" Type="DateTime" Nullable="false" Precision="3" annotation:StoreGeneratedPattern="Computed" />
+          <Property Name="RecordUpdatedDateTime" Type="DateTime" Nullable="false" Precision="3" annotation:StoreGeneratedPattern="Computed" />
+          <NavigationProperty Name="Bank" Relationship="FinanceModel.FK_BankAccount_BankId" FromRole="BankAccount" ToRole="Bank" />
+        </EntityType>
+        <EntityType Name="Transfer" a:TypeAccess="Public" xmlns:a="http://schemas.microsoft.com/ado/2006/04/codegeneration">
+          <Key>
+            <PropertyRef Name="TransferId" />
+          </Key>
+          <Property Name="TransferId" Type="Int32" Nullable="false" p1:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="100" Unicode="false" FixedLength="false" />
+          <Property Name="FromBankAccountId" Type="Int32" />
+          <Property Name="ToBankAccountId" Type="Int32" />
+          <Property Name="Amount" Type="Decimal" Nullable="false" Precision="19" Scale="4" />
+          <Property Name="AmountTolerence" Type="Decimal" Nullable="false" Precision="3" Scale="2" />
+          <Property Name="StartDate" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="EndDate" Type="DateTime" Precision="0" />
+          <Property Name="Frequency" Type="String" Nullable="false" MaxLength="100" Unicode="false" FixedLength="false" />
+          <Property Name="IsEnabled" Type="Boolean" Nullable="false" />
+          <Property Name="RecordCreatedDateTime" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="RecordUpdatedDateTime" Type="DateTime" Nullable="false" Precision="3" />
+          <NavigationProperty Name="FromBankAccount" Relationship="FinanceModel.FK_Transfer_FromBankAccountId" FromRole="Transfer" ToRole="BankAccount" />
+          <NavigationProperty Name="ToBankAccount" Relationship="FinanceModel.FK_Transfer_ToBankAccountId" FromRole="Transfer" ToRole="BankAccount" />
+        </EntityType>
+        <Association Name="FK_BankAccount_BankId">
+          <End Role="Bank" Type="FinanceModel.Bank" Multiplicity="1" />
+          <End Role="BankAccount" Type="FinanceModel.BankAccount" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Bank">
+              <PropertyRef Name="BankId" />
+            </Principal>
+            <Dependent Role="BankAccount">
+              <PropertyRef Name="BankId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Transfer_FromBankAccountId">
+          <End Role="BankAccount" Type="FinanceModel.BankAccount" Multiplicity="0..1" />
+          <End Role="Transfer" Type="FinanceModel.Transfer" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="BankAccount">
+              <PropertyRef Name="BankAccountId" />
+            </Principal>
+            <Dependent Role="Transfer">
+              <PropertyRef Name="FromBankAccountId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Transfer_ToBankAccountId">
+          <End Role="BankAccount" Type="FinanceModel.BankAccount" Multiplicity="0..1" />
+          <End Role="Transfer" Type="FinanceModel.Transfer" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="BankAccount">
+              <PropertyRef Name="BankAccountId" />
+            </Principal>
+            <Dependent Role="Transfer">
+              <PropertyRef Name="ToBankAccountId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <ComplexType Name="GetDataTest_Result">
+          <Property Type="Int32" Name="BankId" Nullable="false" />
+          <Property Type="String" Name="Name" Nullable="true" MaxLength="100" />
+          <Property Type="Binary" Name="Logo" Nullable="true" />
+        </ComplexType>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="FinanceModelStoreContainer" CdmEntityContainer="FinanceEntities">
+          <EntitySetMapping Name="Banks">
+            <EntityTypeMapping TypeName="FinanceModel.Bank">
+              <MappingFragment StoreEntitySet="Bank">
+                <ScalarProperty Name="BankId" ColumnName="BankId" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Logo" ColumnName="Logo" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="BankAccounts">
+            <EntityTypeMapping TypeName="FinanceModel.BankAccount">
+              <MappingFragment StoreEntitySet="BankAccount">
+                <ScalarProperty Name="BankAccountId" ColumnName="BankAccountId" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="BankId" ColumnName="BankId" />
+                <ScalarProperty Name="SortCode" ColumnName="SortCode" />
+                <ScalarProperty Name="AccountNumber" ColumnName="AccountNumber" />
+                <ScalarProperty Name="AccountOwner" ColumnName="AccountOwner" />
+                <ScalarProperty Name="PaysTaxableInterest" ColumnName="PaysTaxableInterest" />
+                <ScalarProperty Name="LoginURL" ColumnName="LoginURL" />
+                <ScalarProperty Name="LoginID" ColumnName="LoginID" />
+                <ScalarProperty Name="PasswordHint" ColumnName="PasswordHint" />
+                <ScalarProperty Name="OpenedDate" ColumnName="OpenedDate" />
+                <ScalarProperty Name="ClosedDate" ColumnName="ClosedDate" />
+                <ScalarProperty Name="InitialRate" ColumnName="InitialRate" />
+                <ScalarProperty Name="MilestoneDate" ColumnName="MilestoneDate" />
+                <ScalarProperty Name="MilestoneNotes" ColumnName="MilestoneNotes" />
+                <ScalarProperty Name="Notes" ColumnName="Notes" />
+                <ScalarProperty Name="RecordCreatedDateTime" ColumnName="RecordCreatedDateTime" />
+                <ScalarProperty Name="RecordUpdatedDateTime" ColumnName="RecordUpdatedDateTime" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Transfers">
+            <EntityTypeMapping TypeName="FinanceModel.Transfer">
+              <MappingFragment StoreEntitySet="Transfer">
+                <ScalarProperty Name="TransferId" ColumnName="TransferId" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="FromBankAccountId" ColumnName="FromBankAccountId" />
+                <ScalarProperty Name="ToBankAccountId" ColumnName="ToBankAccountId" />
+                <ScalarProperty Name="Amount" ColumnName="Amount" />
+                <ScalarProperty Name="AmountTolerence" ColumnName="AmountTolerence" />
+                <ScalarProperty Name="StartDate" ColumnName="StartDate" />
+                <ScalarProperty Name="EndDate" ColumnName="EndDate" />
+                <ScalarProperty Name="Frequency" ColumnName="Frequency" />
+                <ScalarProperty Name="IsEnabled" ColumnName="IsEnabled" />
+                <ScalarProperty Name="RecordCreatedDateTime" ColumnName="RecordCreatedDateTime" />
+                <ScalarProperty Name="RecordUpdatedDateTime" ColumnName="RecordUpdatedDateTime" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="GetDataTest" FunctionName="FinanceModel.Store.GetDataTest">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="FinanceModel.GetDataTest_Result">
+                <ScalarProperty Name="BankId" ColumnName="BankId" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Logo" ColumnName="Logo" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="True" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="True" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

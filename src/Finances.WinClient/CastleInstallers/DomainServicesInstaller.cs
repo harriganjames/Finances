@@ -4,6 +4,7 @@ using Castle.MicroKernel.Registration;
 using Finances.WinClient.DomainServices;
 using Finances.WinClient.ViewModels;
 using Finances.WinClient.InterceptorSelectors;
+using Finances.Core.Interfaces;
 
 namespace Finances.WinClient.CastleInstallers
 {
@@ -26,6 +27,10 @@ namespace Finances.WinClient.CastleInstallers
             //container.Register(Component.For<IBankEditorViewModel>().ImplementedBy<BankEditorViewModel>());
 
             container.Register(Component.For<ITransferService>().ImplementedBy<TransferService>());
+
+            // Mappings
+            container.Register(Component.For<IMappingCreator>().ImplementedBy<MappingCreator>());
+
 
             container.Kernel.ProxyFactory.AddInterceptorSelector(new DomainServiceInterceptorSelector());
 

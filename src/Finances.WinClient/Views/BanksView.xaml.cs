@@ -23,8 +23,6 @@ namespace Finances.WinClient.Views
 
         public BanksView()
         {
-            Apex.ObjectInformation.AddObjectReference(this);
-
             InitializeComponent();
 
             this.Unloaded += (s, e) =>

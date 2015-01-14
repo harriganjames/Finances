@@ -21,13 +21,13 @@ namespace Finances.Core.Wpf
 //        string Title { get; }
     }
 
-    public abstract class ViewModelBase : INotifyPropertyChanged, IDisposable, IViewModelBase, IDialog
+    public abstract class ViewModelBase : NotifyBase, IDisposable, IViewModelBase, IDialog
     {
         string _title;
         bool _isBusy = false;
         List<ActionCommand> _commands = new List<ActionCommand>();
 
-        public event PropertyChangedEventHandler PropertyChanged;
+        //public event PropertyChangedEventHandler PropertyChanged;
 
 
         public ViewModelBase()
@@ -90,45 +90,44 @@ namespace Finances.Core.Wpf
 
 
 
-        // The CallerMemberName attribute that is applied to the optional propertyName 
-        // parameter causes the property name of the caller to be substituted as an argument. 
-        public virtual void NotifyPropertyChanged([CallerMemberName] String propertyName = "")
-        {
-            if (PropertyChanged != null)
-            {
-                PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
-            }
-        }
+        //// The CallerMemberName attribute that is applied to the optional propertyName 
+        //// parameter causes the property name of the caller to be substituted as an argument. 
+        //public virtual void NotifyPropertyChanged([CallerMemberName] String propertyName = "")
+        //{
+        //    if (PropertyChanged != null)
+        //    {
+        //        PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+        //    }
+        //}
 
-        public virtual void NotifyPropertyChanged(Expression<Func<object>> propertyExpression)
-        {
-            if (propertyExpression != null)
-            {
-                if (propertyExpression.Body is MemberExpression)
-                {
-                    this.NotifyPropertyChanged(((MemberExpression)propertyExpression.Body).Member.Name);
-                    return;
-                }
-            }
-            throw new Exception("Invalid property expression passed into NotifyPropertyChanged");
-        }
+        //public virtual void NotifyPropertyChanged(Expression<Func<object>> propertyExpression)
+        //{
+        //    if (propertyExpression != null)
+        //    {
+        //        if (propertyExpression.Body is MemberExpression)
+        //        {
+        //            this.NotifyPropertyChanged(((MemberExpression)propertyExpression.Body).Member.Name);
+        //            return;
+        //        }
+        //    }
+        //    throw new Exception("Invalid property expression passed into NotifyPropertyChanged");
+        //}
 
-        public virtual void NotifyAllPropertiesChanged()
-        {
-            if (PropertyChanged != null)
-            {
-                PropertyChanged(this, new PropertyChangedEventArgs(""));
-            }
-        }
+        //public virtual void NotifyAllPropertiesChanged()
+        //{
+        //    if (PropertyChanged != null)
+        //    {
+        //        PropertyChanged(this, new PropertyChangedEventArgs(""));
+        //    }
+        //}
 
 
 
         public virtual void Dispose()
         {
             _commands = null;
-            PropertyChanged = null;
+            base.Dispose();
         }
-
 
 
         #region IDialog

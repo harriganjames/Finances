@@ -1,0 +1,27 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="clr-namespace:Finances.WinClient.ViewModels"
+        xmlns:conv="clr-namespace:Finances.Core.Wpf.Converters;assembly=Finances.Core.Wpf"
+        xmlns:finconv="clr-namespace:Finances.WinClient.Converters"
+                    >
+
+    <conv:NullToVisibleConverter x:Key="NullToVisibleConverter" />
+    <conv:NullToCollapsedConverter x:Key="NullToCollapsedConverter" />
+    <finconv:AccountEleswhereToVisibileConverter x:Key="AccountEleswhereToVisibileConverter"/>
+    <finconv:AccountEleswhereToCollapsedConverter x:Key="AccountEleswhereToCollapsedConverter"/>
+
+
+    <DataTemplate x:Key="BankAccountNameDataTemplate">
+        <Grid>
+            <StackPanel Orientation="Horizontal" 
+                        Visibility="{Binding ., Converter={StaticResource AccountEleswhereToCollapsedConverter}}">
+                <Image Source="{Binding Bank.Logo}" Height="20" Width="50"/>
+                <TextBlock Text="{Binding AccountName}" Padding="5,0,0,0"/>
+            </StackPanel>
+            <TextBlock Text="Elsewhere" Height="20" VerticalAlignment="Center"
+                       Visibility="{Binding ., Converter={StaticResource AccountEleswhereToVisibileConverter}}">
+            </TextBlock>
+        </Grid>
+    </DataTemplate>
+
+</ResourceDictionary>

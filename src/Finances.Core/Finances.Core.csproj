@@ -46,10 +46,13 @@
     <Compile Include="Entities\Transfer.cs" />
     <Compile Include="Entities\DataIdName.cs" />
     <Compile Include="Interfaces\IEntityMapper.cs" />
+    <Compile Include="Interfaces\IGeneralRepository.cs" />
     <Compile Include="Interfaces\IGenericRepository.cs" />
+    <Compile Include="Interfaces\IMappingCreator.cs" />
     <Compile Include="Interfaces\ITransferRepository.cs" />
     <Compile Include="Interfaces\IBankAccountRepository.cs" />
     <Compile Include="Interfaces\IBankRepository.cs" />
+    <Compile Include="MappingsCreator.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

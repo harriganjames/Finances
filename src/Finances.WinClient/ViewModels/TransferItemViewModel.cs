@@ -68,8 +68,8 @@ namespace Finances.WinClient.ViewModels
         {
             get
             {
-                if (fromBankAccount == null)
-                    fromBankAccount = new BankAccountItemViewModel();
+                //if (fromBankAccount == null)
+                //    fromBankAccount = new BankAccountItemViewModel();
                 return fromBankAccount;
             }
             set
@@ -84,8 +84,8 @@ namespace Finances.WinClient.ViewModels
         {
             get
             {
-                if (toBankAccount == null)
-                    toBankAccount = new BankAccountItemViewModel();
+                //if (toBankAccount == null)
+                //    toBankAccount = new BankAccountItemViewModel();
                 return toBankAccount;
             }
             set
@@ -203,8 +203,23 @@ namespace Finances.WinClient.ViewModels
         {
             this.TransferId = entity.TransferId;
             this.Name = entity.Name;
-            this.FromBankAccount.MapIn(entity.FromBankAccount);
-            this.ToBankAccount.MapIn(entity.ToBankAccount); ;
+
+            if (entity.FromBankAccount == null)
+                this.FromBankAccount = null;
+            else
+            {
+                this.FromBankAccount = new BankAccountItemViewModel();
+                this.FromBankAccount.MapIn(entity.FromBankAccount);
+            }
+
+            if (entity.ToBankAccount == null)
+                this.ToBankAccount = null;
+            else
+            {
+                this.ToBankAccount = new BankAccountItemViewModel();
+                this.ToBankAccount.MapIn(entity.ToBankAccount); ;
+            }
+
             this.Amount = entity.Amount;
             this.AmountTolerence = entity.AmountTolerence;
             this.StartDate = entity.StartDate;

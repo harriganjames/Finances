@@ -47,6 +47,7 @@
   <ItemGroup>
     <Compile Include="BankAccountRepository.cs" />
     <Compile Include="BankRepository.cs" />
+    <Compile Include="GeneralRepository.cs" />
     <Compile Include="GenericRepository.cs" />
     <Compile Include="TransferRepository.cs" />
     <Compile Include="Mappings\BankAccountMap.cs" />
@@ -61,6 +62,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="SQL\Procs\GetDateTest.sql" />
     <Content Include="SQL\ResetINT.sql" />
     <Content Include="SQL\Queries.sql" />
     <Content Include="SQL\Tables.sql" />

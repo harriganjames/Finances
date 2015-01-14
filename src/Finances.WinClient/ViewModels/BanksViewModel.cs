@@ -140,7 +140,7 @@ namespace Finances.WinClient.ViewModels
 
                 if (result)
                 {
-                    IBankItemViewModel newvm = this.bankService.CreateBankItemViewModel();
+                    IBankItemViewModel newvm = new BankItemViewModel(); // this.bankService.CreateBankItemViewModel();
                     this.bankService.Read(this.bankEditorViewModel.BankId, newvm);
                     base.DataList.Add(newvm);
                     base.DataList.ToList().ForEach(i => i.IsSelected = false);

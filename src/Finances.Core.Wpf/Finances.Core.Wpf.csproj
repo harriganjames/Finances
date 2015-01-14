@@ -55,10 +55,14 @@
     <Compile Include="ContainerWindow.xaml.cs">
       <DependentUpon>ContainerWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Converters\NullToCollapsedConverter.cs" />
     <Compile Include="Converters\NegativeVisibilityConverter.cs" />
+    <Compile Include="Converters\NullToVisibleConverter.cs" />
     <Compile Include="Converters\PercentageConverter.cs" />
     <Compile Include="Converters\PositiveVisibilityConverter.cs" />
     <Compile Include="Events\TreeViewItemExpandedEventArgs.cs" />
+    <Compile Include="Input\InputDecimal.cs" />
+    <Compile Include="NotifyBase.cs" />
     <Compile Include="TreeViewItemViewModelBase.cs" />
     <Compile Include="DialogContainer.xaml.cs">
       <DependentUpon>DialogContainer.xaml</DependentUpon>

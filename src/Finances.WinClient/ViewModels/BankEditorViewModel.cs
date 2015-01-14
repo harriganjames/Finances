@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.IO;
 using System.Windows.Input;
 using System.Windows.Media.Imaging;
+using AutoMapper;
 using Finances.Core.Entities;
 using Finances.Core.Interfaces;
 using Finances.Core.Wpf;
@@ -19,10 +20,8 @@ namespace Finances.WinClient.ViewModels
         byte[] LogoRaw { get; set; }
         BitmapSource Logo { get; }
         void InitializeForAddEdit(bool AddEdit);
-        //ICommand DialogAcceptCommand { get; }
         ActionCommand ImportLogoCommand { get; set; }
         ActionCommand ClearLogoCommand { get; set; }
-        //string Title { get; }
     }
 
     public class BankEditorViewModel : EditorViewModelBase, IBankEditorViewModel
@@ -33,8 +32,9 @@ namespace Finances.WinClient.ViewModels
         readonly IBankService bankService;
         readonly IDialogService dialogService;
 
-        public BankEditorViewModel(IBankService bankService,
-                    IDialogService dialogService)
+        public BankEditorViewModel(
+                        IBankService bankService,
+                        IDialogService dialogService)
         {
             this.bankService = bankService;
             this.dialogService = dialogService;
@@ -48,13 +48,6 @@ namespace Finances.WinClient.ViewModels
         public ActionCommand ImportLogoCommand { get; set; }
         public ActionCommand ClearLogoCommand { get; set; }
 
-        //public ICommand DialogAcceptCommand
-        //{
-        //    get
-        //    {
-        //        return this.dialogService.DialogAcceptCommand;
-        //    }
-        //}
 
         public string DialogTitle
         {
@@ -133,6 +126,7 @@ namespace Finances.WinClient.ViewModels
             if (base.ValidationHelper.Enabled)
                 base.Validate();
 
+
             if (addMode)
             {
                 this.BankId = 0;
@@ -190,7 +184,6 @@ namespace Finances.WinClient.ViewModels
         private void LoadExistingBanks()
         {
             existingBanks = bankService.ReadListDataIdName();
-            //existingBanks.RemoveAll(b => b.Id == _bankId);
         }
 
         #endregion

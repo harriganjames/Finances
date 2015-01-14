@@ -17,6 +17,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Finances.Core.Wpf", "Financ
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Finances.UnitTests.MS", "Finances.UnitTests.MS\Finances.UnitTests.MS.csproj", "{377D0637-9A91-4913-B480-276B9E2DEDD0}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Finances.Persistence.EF", "Finances.Persistence.EF\Finances.Persistence.EF.csproj", "{8BBA6FAA-E9DB-4016-8AF2-1466A7A751A0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Finances.IntegrationTests.MS", "Finances.IntegrationTests.MS\Finances.IntegrationTests.MS.csproj", "{7ECEE40F-ECAA-4A43-884D-9ADB749CCDB8}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -55,11 +59,16 @@ Global
 		{377D0637-9A91-4913-B480-276B9E2DEDD0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{377D0637-9A91-4913-B480-276B9E2DEDD0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{377D0637-9A91-4913-B480-276B9E2DEDD0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8BBA6FAA-E9DB-4016-8AF2-1466A7A751A0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8BBA6FAA-E9DB-4016-8AF2-1466A7A751A0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8BBA6FAA-E9DB-4016-8AF2-1466A7A751A0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8BBA6FAA-E9DB-4016-8AF2-1466A7A751A0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7ECEE40F-ECAA-4A43-884D-9ADB749CCDB8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7ECEE40F-ECAA-4A43-884D-9ADB749CCDB8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7ECEE40F-ECAA-4A43-884D-9ADB749CCDB8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7ECEE40F-ECAA-4A43-884D-9ADB749CCDB8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
-	EndGlobalSection
-	GlobalSection(Performance) = preSolution
-		HasPerformanceSessions = true
 	EndGlobalSection
 EndGlobal

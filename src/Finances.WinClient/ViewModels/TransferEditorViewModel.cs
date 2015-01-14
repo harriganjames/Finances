@@ -7,11 +7,13 @@ using System.Collections.Generic;
 using Finances.Core.Wpf;
 using Finances.WinClient.DomainServices;
 using Finances.Core.Entities;
+using Finances.Core.Interfaces;
+using System.Threading.Tasks;
 
 
 namespace Finances.WinClient.ViewModels
 {
-    public interface ITransferEditorViewModel : IEditorViewModelBase
+    public interface ITransferEditorViewModel : IEditorViewModelBase, IEntityMapper<Transfer>
     {
         void InitializeForAddEdit(bool AddEdit);
 
@@ -19,9 +21,9 @@ namespace Finances.WinClient.ViewModels
         string Name { get; set; }
         IBankAccountItemViewModel FromBankAccount { get; set; }
         IBankAccountItemViewModel ToBankAccount { get; set; }
-        decimal Amount { get; set; }
+        InputDecimal Amount { get; set; }
         decimal AmountTolerence { get; set; }
-        DateTime StartDate { get; set; }
+        DateTime? StartDate { get; set; }
         Nullable<DateTime> EndDate { get; set; }
         string Frequency { get; set; }
         bool IsEnabled { get; set; }
@@ -30,20 +32,26 @@ namespace Finances.WinClient.ViewModels
     public class TransferEditorViewModel : EditorViewModelBase, ITransferEditorViewModel
     {
         bool delayValidation = false; // must be false until change logic around IsValid
-        ObservableCollection<IBankAccountItemViewModel> bankAccountList;
+        ObservableCollection<IBankAccountItemViewModel> bankAccounts;
         List<DataIdName> existingTransfers;
 
 
         readonly ITransferService transferService;
-        //readonly IBankService bankService;
+        readonly IBankAccountService bankAccountService;
 
 
-        public TransferEditorViewModel(ITransferService transferService)
-        //IBankService bankService)
+        public TransferEditorViewModel(ITransferService transferService,
+            IBankAccountService bankAccountService)
         {
             this.transferService = transferService;
-            //this.bankService = bankService;
+            this.bankAccountService = bankAccountService;
+
+            this.Amount.PropertyChanged += (s,e) =>
+                {
+                    base.Validate();
+                };
         }
+
 
 
 
@@ -58,11 +66,16 @@ namespace Finances.WinClient.ViewModels
             LoadBankAccountList();
             LoadExistingTransfers();
 
-            if (base.ValidationHelper.Enabled)
-                base.Validate();
+            //if (base.ValidationHelper.Enabled)
+            //    base.Validate();
 
             if (addMode)
             {
+                //this.FromBankAccount = elsewhere;
+                //this.ToBankAccount = elsewhere;
+                this.StartDate = DateTime.Now.Date;
+                this.IsEnabled = true;
+
                 //this.BankAccountId = 0;
                 //this.AccountName = "";
                 //this.Bank = null;
@@ -93,11 +106,24 @@ namespace Finances.WinClient.ViewModels
         }
 
 
-        public ObservableCollection<IBankAccountItemViewModel> BankAccountList
+        public ObservableCollection<IBankAccountItemViewModel> BankAccounts
         {
             get
             {
-                return this.bankAccountList;
+                return this.bankAccounts;
+            }
+        }
+
+        ObservableCollection<string> frequencies;
+        public ObservableCollection<string> Frequencies
+        {
+            get
+            {
+                if (frequencies == null)
+                {
+                    frequencies = new ObservableCollection<string>() { "Monthly" };
+                }
+                return frequencies;
             }
         }
 
@@ -127,7 +153,7 @@ namespace Finances.WinClient.ViewModels
             set
             {
                 name = value;
-                NotifyPropertyChanged();
+                NotifyPropertyChangedAndValidate();
             }
         }
 
@@ -137,6 +163,16 @@ namespace Finances.WinClient.ViewModels
         {
             get
             {
+                if (fromBankAccount == null)
+                    fromBankAccount = BankAccountItemViewModel.Elsewhere;
+
+                if (this.BankAccounts != null && !this.BankAccounts.Contains(fromBankAccount))
+                {
+                    IBankAccountItemViewModel find = this.BankAccounts.FirstOrDefault(a => a!=null && a.BankAccountId == fromBankAccount.BankAccountId);
+                    if (find != null)
+                        fromBankAccount = find;
+                }
+
                 return fromBankAccount;
             }
             set
@@ -151,6 +187,17 @@ namespace Finances.WinClient.ViewModels
         {
             get
             {
+                if (toBankAccount == null)
+                    toBankAccount = BankAccountItemViewModel.Elsewhere;
+
+                if (this.BankAccounts != null && !this.BankAccounts.Contains(toBankAccount))
+                {
+                    IBankAccountItemViewModel find = this.BankAccounts.FirstOrDefault(a => a!=null && a.BankAccountId == toBankAccount.BankAccountId);
+                    if (find != null)
+                        toBankAccount = find;
+                }
+
+
                 return toBankAccount;
             }
             set
@@ -160,8 +207,9 @@ namespace Finances.WinClient.ViewModels
             }
         }
 
-        decimal amount;
-        public decimal Amount
+
+        InputDecimal amount = new InputDecimal() { FormatString = "n2", Mandatory = true };
+        public InputDecimal Amount
         {
             get
             {
@@ -173,6 +221,42 @@ namespace Finances.WinClient.ViewModels
                 NotifyPropertyChangedAndValidate();
             }
         }
+
+
+        //decimal? amount;
+        //public decimal? Amount
+        //{
+        //    get
+        //    {
+        //        return amount;
+        //    }
+        //    set
+        //    {
+        //        amount = value;
+        //        NotifyPropertyChangedAndValidate();
+        //    }
+        //}
+        //string amountString;
+        //public string AmountString
+        //{
+        //    get
+        //    {
+        //        if (amount.HasValue)
+        //            return amount.Value.ToString("n2");
+        //        else
+        //            return amountString; // String.Empty;
+        //    }
+        //    set
+        //    {
+        //        decimal v;
+        //        if (Decimal.TryParse(value, out v))
+        //            amount = v;
+        //        else
+        //            amount = null;
+        //        amountString = value;
+        //        NotifyPropertyChangedAndValidate();
+        //    }
+        //}
 
         decimal amountTolerence;
         public decimal AmountTolerence
@@ -188,32 +272,21 @@ namespace Finances.WinClient.ViewModels
             }
         }
 
-        DateTime startDate;
-        public DateTime StartDate
+
+
+        DateTime? startDate;
+        [Required(ErrorMessage = "Start Date is mandatory")]
+        public DateTime? StartDate
         {
-            get
-            {
-                return startDate;
-            }
-            set
-            {
-                startDate = value;
-                NotifyPropertyChangedAndValidate();
-            }
+            get { return startDate.HasValue ? startDate.Value.Date : startDate; }
+            set { startDate = value.HasValue ? value.Value.Date : value; NotifyPropertyChangedAndValidate(); }
         }
 
         DateTime? endDate;
         public DateTime? EndDate
         {
-            get
-            {
-                return endDate;
-            }
-            set
-            {
-                endDate = value;
-                NotifyPropertyChangedAndValidate();
-            }
+            get { return endDate.HasValue ? endDate.Value.Date : endDate; }
+            set { endDate = value.HasValue ? value.Value.Date : value; NotifyPropertyChangedAndValidate(); }
         }
 
         string frequency;
@@ -221,6 +294,8 @@ namespace Finances.WinClient.ViewModels
         {
             get
             {
+                if (frequency == null && this.Frequencies != null && this.Frequencies.Count() > 0)
+                    frequency = this.Frequencies[0];
                 return frequency;
             }
             set
@@ -250,13 +325,24 @@ namespace Finances.WinClient.ViewModels
 
         private void LoadBankAccountList()
         {
-            bankAccountList = new ObservableCollection<IBankAccountItemViewModel>();
-//            transferService.ReadAccountList().ForEach(vm => bankAccountList.Add(vm));
+            bankAccounts = new ObservableCollection<IBankAccountItemViewModel>();
+            BankAccounts.Add(BankAccountItemViewModel.Elsewhere);
+            //BankAccounts.Add(null);
+            bankAccountService.ReadList().ForEach(vm => BankAccounts.Add(vm));
         }
 
         private void LoadExistingTransfers()
         {
-            existingTransfers = transferService.ReadListDataIdName();
+            Task.Factory.StartNew(() =>
+                {
+                    existingTransfers = transferService.ReadListDataIdName();
+                });
+
+            //existingTransfers = transferService.ReadListDataIdName();
+
+
+
+            //existingTransfers = transferService.ReadListDataIdName();
         }
 
         #endregion
@@ -269,15 +355,36 @@ namespace Finances.WinClient.ViewModels
 
         protected override void ValidateData()
         {
-            // Bank Account exists
-            //if (existingTransfers != null)
-            //{
-            //    string uniqueName = String.Format("{0} ({1})", this.AccountName, this.Bank == null ? "" : this.Bank.Name);
-            //    if (existingTransfers.Exists(n => n.Name.Equals(uniqueName, StringComparison.CurrentCultureIgnoreCase) && n.Id != this.BankAccountId))
-            //    {
-            //        base.ValidationHelper.AddValidationMessage("Bank Account already exists", "AccountName");
-            //    }
-            //}
+            //Transfer exists
+            if (existingTransfers != null)
+            {
+                string uniqueName = String.Format("{0}", this.Name);
+                if (existingTransfers.Exists(n => n.Name.Equals(uniqueName, StringComparison.CurrentCultureIgnoreCase) && n.Id != this.TransferId))
+                {
+                    base.ValidationHelper.AddValidationMessage("Transfer already exists", "Name");
+                }
+            }
+
+
+            if (this.FromBankAccount == this.ToBankAccount)
+            {
+                base.ValidationHelper.AddValidationMessage("From and To Accounts must be different");
+            }
+
+            if (!amount.IsNumeric)
+            {
+                // probbaly needs IErrorInfo on BackingDecimal ??
+                base.ValidationHelper.AddValidationMessage("Amount is invalid", "Amount.Input");
+            }
+            else if (!amount.HasValue)
+            {
+                base.ValidationHelper.AddValidationMessage("Amount is mandatory", "Amount.Input");
+            }
+            else if (amount.Value<=0)
+            {
+                base.ValidationHelper.AddValidationMessage("Amount must be > 0", "Amount.Input");
+            }
+
 
 
             // Bank
@@ -290,5 +397,61 @@ namespace Finances.WinClient.ViewModels
 
         #endregion
 
+
+        #region IEntityMapper
+
+        public void MapIn(Transfer entity)
+        {
+            this.TransferId = entity.TransferId;
+            this.Name = entity.Name;
+
+            if (entity.FromBankAccount == null)
+                this.FromBankAccount = BankAccountItemViewModel.Elsewhere;
+            else
+            {
+                this.FromBankAccount = new BankAccountItemViewModel();
+                this.FromBankAccount.MapIn(entity.FromBankAccount);
+            }
+
+            if (entity.ToBankAccount == null)
+                this.ToBankAccount = BankAccountItemViewModel.Elsewhere;
+            else
+            {
+                this.ToBankAccount = new BankAccountItemViewModel();
+                this.ToBankAccount.MapIn(entity.ToBankAccount); ;
+            }
+            
+            this.Amount.Value = entity.Amount;
+            this.AmountTolerence = entity.AmountTolerence;
+            this.StartDate = entity.StartDate;
+            this.EndDate = entity.EndDate;
+            this.Frequency = entity.Frequency;
+            this.IsEnabled = entity.IsEnabled;
+        }
+
+        public void MapOut(Transfer entity)
+        {
+            entity.TransferId = this.TransferId;
+            entity.Name = this.Name;
+
+            if (this.FromBankAccount.BankAccountId == BankAccountItemViewModel.Elsewhere.BankAccountId)
+                entity.FromBankAccount = null;
+            else
+                this.FromBankAccount.MapOut(entity.FromBankAccount);
+
+            if (this.ToBankAccount.BankAccountId == BankAccountItemViewModel.Elsewhere.BankAccountId)
+                entity.ToBankAccount = null;
+            else
+                this.ToBankAccount.MapOut(entity.ToBankAccount);
+            
+            entity.Amount = this.Amount.Value;
+            entity.AmountTolerence = this.AmountTolerence;
+            entity.StartDate = this.StartDate.Value;
+            entity.EndDate = this.EndDate;
+            entity.Frequency = this.Frequency;
+            entity.IsEnabled = this.IsEnabled;
+        }
+
+        #endregion
     }
 }

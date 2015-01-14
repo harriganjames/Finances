@@ -45,6 +45,20 @@ namespace Finances.WinClient.ViewModels
             GoOnlineCommand = base.AddNewCommand(new ActionCommand(GoOnline));
         }
 
+
+        static IBankAccountItemViewModel elsewhere;
+        public static IBankAccountItemViewModel Elsewhere 
+        {
+            get
+            {
+                if(elsewhere==null)
+                    elsewhere = new BankAccountItemViewModel() { BankAccountId = -1, AccountName = "<elsewhere>" };
+                return elsewhere;
+            }
+        }
+
+
+
         int bankAccountId;
         public int BankAccountId
         {
@@ -56,7 +70,16 @@ namespace Finances.WinClient.ViewModels
         public string AccountName
         {
             get { return accountName; }
-            set { accountName = value; NotifyPropertyChanged(); }
+            set {
+                int i=0;
+
+
+                if (value == "Fred22" && accountName == "<Elsewhere>")
+                    i = 1;
+
+                accountName = value; 
+                
+                NotifyPropertyChanged(); }
         }
 
         //int bankId;

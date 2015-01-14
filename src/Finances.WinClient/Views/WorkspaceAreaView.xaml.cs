@@ -23,6 +23,8 @@ namespace Finances.WinClient.Views
         public WorkspaceAreaView()
         {
             InitializeComponent();
+
         }
+
     }
 }

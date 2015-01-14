@@ -5,12 +5,12 @@ namespace Finances.Core.Interfaces
 {
     public interface IBankRepository : IGenericRepository<Bank>
     {
-        //int Add(Bank bank);
-        //bool Update(Bank bank);
-        //bool Delete(Bank bank);
+        //bool Add(Core.Entities.Bank bank);
+        //bool Update(Core.Entities.Bank bank);
+        //bool Delete(Core.Entities.Bank bank);
         ////bool Delete(int bankId);
-        //Bank Read(int bankId);
-        //List<Bank> ReadList();
-        List<DataIdName> ReadListDataIdName();
+        //Core.Entities.Bank Read(int bankId);
+        //List<Core.Entities.Bank> ReadList();
+        List<Core.Entities.DataIdName> ReadListDataIdName();
     }
 }

@@ -1,22 +1,58 @@
 ﻿Currently working on:
 
 
-change all ReadListDataIdName to use base version.
-is/can ReadList be in Generic base? if we allow new Item....VM ??
+Convert to EF
+
+How to add EF5.0 properly? 
+POCO + entities in separate project? No keep wher ethey are. They contain sepcific things like reference properties.
+
+Maybe move the domain services closer to the repository to acheive a dependancy map whereby the business layer does not
+depend on the repository. This means the service will become specifc to the ORM. 
+e.g. The BankService is tied in to EF because it uses EF-generated entities.
+The business layer uses IBankService to abstract it.
+
+
+Dependancy map
+
+Repository ==> Domain Entities/Logic/IRepository <== Presentation/Service (e.g.VM/XAML)
+
+1. Business entites defined in Domain layer
+2. Repository returns/accepts business entites (regardless of ORM/DB). How to map? extension method? partial class? IMapInOut? AutoMapper?
+3. IRepository is defined in domain layer and injected into Service
+4. Service uses IRepository and it only deals with domain entities and VMs
+5. Presentation will use IService to read domain entities and map to VMs (e.g. using MapIn/Out, AutoMapper?)
+
+
+Refactoring steps (starting with Banks):
+Create domain entity
+Create IRepository
+Create EF Repository
+Integration tests for EF Repository
+
+# EF\BankRepository - OK
+next:
+WinClient\DomainServices
+	Mappers.cs - map between core entity and VM
+	BankAgent.cs - non-generic, uses AUtoMapper mappings
+
+
+try ListVM with just repo and mappers instead of Agent/VM
+
+.... wired up MappingCreator etc. Test? then do IMappingEngine?
 
 
 
-Need IBankAccountMapIn/Out
-Fully implement and remove/tidy-up old Mappers
+
+Do we need ReadBankList in BankAccountService??
 
 
-Service to use interface to call MapIn/Out methods. e.g. ITransferMapIn/Out, in Core\Interfaces?
-This allows different VMs for the same data to be loaded with data by the service - exepct for ReadList
-which needs to create new - maybe all Item VMs have a parameterless ctor??
+EF Notes
+========
+Set the state of navidation properties to Unchanged to avoid EF generating inserts for them.
+if(ef.Bank!=null) context.Entry(ef.Bank).State = System.Data.EntityState.Unchanged;
+                    
 
 
-move mappers into VMs
-check use of Create....
 
 
 
@@ -25,7 +61,6 @@ Backlog:
 
 Login
 SQL encryption?
-Generic repository?
 
 
 GIT
@@ -33,6 +68,13 @@ GIT
 
 Exclude EXE/DLL etc
 Upload to github (hj/8b)
+
+
+Cannot create default converter to perform 'two-way' conversions between types 
+'Finances.WinClient.ViewModels.InputDecimal' and 'System.String'. 
+Consider using Converter property of Binding. 
+BindingExpression:Path=Amount; DataItem='TransferEditorViewModel' (HashCode=18932196); 
+target element is 'TextBox' (Name=''); target property is 'Text' (type 'String')
 
 
 

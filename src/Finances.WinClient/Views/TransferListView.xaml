@@ -11,11 +11,52 @@
              xmlns:tool="http://schemas.xceed.com/wpf/xaml/toolkit"
              xmlns:views="clr-namespace:Finances.WinClient.Views"
              xmlns:lib="clr-namespace:Finances.Core.Wpf;assembly=Finances.Core.Wpf"
+             xmlns:conv="clr-namespace:Finances.Core.Wpf.Converters;assembly=Finances.Core.Wpf"
              mc:Ignorable="d"
              x:Name="apex"
              d:DesignHeight="300" d:DesignWidth="300"
             FocusManager.FocusedElement="{Binding ElementName=Items}"
             >
+    <!--<UserControl.Resources>
+        <conv:NullToVisibleConverter x:Key="NullToVisibleConverter" />
+        <conv:NullToCollapsedConverter x:Key="NullToCollapsedConverter" />
+    </UserControl.Resources>-->
+
+    <!--
+                                        <DataTemplate>
+                                        <Grid>
+                                            <StackPanel x:Name="bank_acccount_normal" Orientation="Horizontal">
+                                                <StackPanel.Style>
+                                                    <Style TargetType="StackPanel">
+                                                        <Style.Triggers>
+                                                        <DataTrigger Binding="{Binding FromBankAccount}" Value="{x:Null}">
+                                                            <Setter Property="Visibility" Value="Collapsed"/>
+                                                        </DataTrigger>
+                                                        </Style.Triggers>
+                                                    </Style>
+                                                </StackPanel.Style>
+                                                <Image Source="{Binding FromBankAccount.Bank.Logo}" Height="20" />
+                                                <TextBlock Text="{Binding FromBankAccount.AccountName}" Padding="5,0,0,0"/>
+                                            </StackPanel>
+                                            <TextBlock Text="Elsewhere"
+                                                       Visibility="Collapsed">
+                                                <TextBlock.Style>
+                                                    <Style TargetType="TextBlock">
+                                                        <Style.Triggers>
+                                                        <DataTrigger Binding="{Binding FromBankAccount}" Value="{x:Null}">
+                                                            <Setter Property="Visibility" Value="Visible"/>
+                                                        </DataTrigger>
+                                                        </Style.Triggers>
+                                                    </Style>
+                                                </TextBlock.Style>
+                                            </TextBlock>
+                                        </Grid>
+                                    </DataTemplate>
+
+    -->
+    
+    
+    
     <tool:BusyIndicator IsBusy="{Binding IsBusy}">
         <Grid>
             <Grid Name="List">
@@ -64,20 +105,16 @@
                             <GridViewColumn Header="From">
                                 <GridViewColumn.CellTemplate>
                                     <DataTemplate>
-                                        <StackPanel Orientation="Horizontal">
-                                            <Image Source="{Binding FromBankAccount.Bank.Logo}" Height="20" />
-                                            <TextBlock Text="{Binding FromBankAccount.AccountName}" Padding="5,0,0,0"/>
-                                        </StackPanel>
+                                        <ContentControl Content="{Binding FromBankAccount}" 
+                                                        ContentTemplate="{StaticResource BankAccountNameDataTemplate}"/>
                                     </DataTemplate>
                                 </GridViewColumn.CellTemplate>
                             </GridViewColumn>
                             <GridViewColumn Header="To" >
                                 <GridViewColumn.CellTemplate>
                                     <DataTemplate>
-                                        <StackPanel Orientation="Horizontal">
-                                            <Image Source="{Binding ToBankAccount.Bank.Logo}" Height="20" />
-                                            <TextBlock Text="{Binding ToBankAccount.AccountName}" Padding="5,0,0,0"/>
-                                        </StackPanel>
+                                        <ContentControl Content="{Binding ToBankAccount}" 
+                                                        ContentTemplate="{StaticResource BankAccountNameDataTemplate}"/>
                                     </DataTemplate>
                                 </GridViewColumn.CellTemplate>
                             </GridViewColumn>
@@ -88,6 +125,7 @@
                         </GridView>
                     </ListView.View>
                 </ListView>
+                                
             </Grid>
         </Grid>
     </tool:BusyIndicator>

@@ -3,10 +3,10 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
     <ResourceDictionary.MergedDictionaries>
-        <!--<ResourceDictionary Source="ResourceDictionaries\GlobalStyles.xaml" />-->
+        <ResourceDictionary Source="ResourceDictionaries\Converters.xaml" />
+        <ResourceDictionary Source="ResourceDictionaries\DataTemplates.xaml" />
         <ResourceDictionary Source="ResourceDictionaries\Validation.xaml" />
         <ResourceDictionary Source="ResourceDictionaries\ViewModelMappings.xaml" />
-        <ResourceDictionary Source="ResourceDictionaries\Converters.xaml" />
 
         <!--<ResourceDictionary Source="pack://application:,,,/Finances.Core.Wpf;component/ViewModelMappings.xaml" />-->
         

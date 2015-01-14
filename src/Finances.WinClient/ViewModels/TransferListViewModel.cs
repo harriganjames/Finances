@@ -2,11 +2,13 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Finances.Core.Wpf;
 using Finances.WinClient.DomainServices;
+using Finances.WinClient.Factories;
 
 namespace Finances.WinClient.ViewModels
 {
@@ -23,20 +25,23 @@ namespace Finances.WinClient.ViewModels
     {
         readonly ITransferService transferService;
         readonly IDialogService dialogService;
-        readonly ITransferEditorViewModel transferEditorViewModel;
+        readonly ITransferEditorViewModelFactory transferEditorViewModelFactory;
 
-        public TransferListViewModel(ITransferService bankService,
-                        IDialogService dialogService)
-                        //ITransferEditorViewModel bankEditorViewModel)
+
+        public TransferListViewModel(ITransferService transferService,
+                        IDialogService dialogService,
+                        ITransferEditorViewModelFactory bankEditorViewModelFactory
+            )
         {
-            this.transferService = bankService;
+            this.transferService = transferService;
             this.dialogService = dialogService;
-            //this.transferEditorViewModel = bankEditorViewModel;
+            this.transferEditorViewModelFactory = bankEditorViewModelFactory;
 
             ReloadCommand = base.AddNewCommand(new ActionCommand(Reload));
             AddCommand = base.AddNewCommand(new ActionCommand(Add));
             EditCommand = base.AddNewCommand(new ActionCommand(Edit, CanEdit));
             DeleteCommand = base.AddNewCommand(new ActionCommand(Delete, CanDelete));
+        
         }
 
 
@@ -64,6 +69,8 @@ namespace Finances.WinClient.ViewModels
 
         public override void WorkspaceOpened()
         {
+
+
             LoadData();
         }
 
@@ -110,22 +117,24 @@ namespace Finances.WinClient.ViewModels
 
         private void Add()
         {
-            //this.transferEditorViewModel.InitializeForAddEdit(true);
+            var editor = this.transferEditorViewModelFactory.Create();
 
-            //while (this.dialogService.ShowDialogView(this.transferEditorViewModel))
-            //{
-            //    bool result = this.transferService.Add(this.transferEditorViewModel);
+            editor.InitializeForAddEdit(true);
 
-            //    if (result)
-            //    {
-            //        ITransferItemViewModel newvm = this.transferService.CreateTransferViewItemModel();
-            //        this.transferService.Read(this.transferEditorViewModel.BankId, newvm);
-            //        base.DataList.Add(newvm);
-            //        base.DataList.ToList().ForEach(i => i.IsSelected = false);
-            //        newvm.IsSelected = true;
-            //        break;
-            //    }
-            //}
+            while (this.dialogService.ShowDialogView(editor))
+            {
+                bool result = this.transferService.Add(editor);
+
+                if (result)
+                {
+                    ITransferItemViewModel newvm = new TransferItemViewModel();
+                    this.transferService.Read(editor.TransferId, newvm);
+                    base.DataList.Add(newvm);
+                    base.DataList.ToList().ForEach(i => i.IsSelected = false);
+                    newvm.IsSelected = true;
+                    break;
+                }
+            }
 
         }
 
@@ -136,22 +145,23 @@ namespace Finances.WinClient.ViewModels
         }
         private void Edit()
         {
-            //ITransferItemViewModel vm = base.GetSelectedItems().First();
+            var editor = this.transferEditorViewModelFactory.Create();
 
-            //this.transferEditorViewModel.InitializeForAddEdit(false);
+            ITransferItemViewModel vm = base.GetSelectedItems().First();
 
-            //this.transferService.Read(vm.TransferId, this.transferEditorViewModel);
+            editor.InitializeForAddEdit(false);
 
-            //while (this.dialogService.ShowDialogView(this.transferEditorViewModel))
-            //{
-            //    bool result = this.transferService.Update(this.transferEditorViewModel);
-            //    if (result)
-            //    {
-            //        this.transferService.Read(vm.TransferId, vm);
-            //        break;
-            //    }
-            //}
+            this.transferService.Read(vm.TransferId, editor);
 
+            while (this.dialogService.ShowDialogView(editor))
+            {
+                bool result = this.transferService.Update(editor);
+                if (result)
+                {
+                    this.transferService.Read(vm.TransferId, vm);
+                    break;
+                }
+            }
 
         }
 

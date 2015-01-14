@@ -4,6 +4,12 @@ namespace Finances.Core.Entities
 {
     public class Transfer
     {
+        public Transfer()
+        {
+            FromBankAccount = new BankAccount();
+            ToBankAccount = new BankAccount();
+        }
+
         public virtual int TransferId { get; set; }
         public virtual string Name { get; set; }
         public virtual BankAccount FromBankAccount { get; set; }

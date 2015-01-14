@@ -118,7 +118,8 @@ namespace Finances.WinClient.ViewModels
 
                 if (result)
                 {
-                    IBankAccountItemViewModel newvm = this.bankAccountService.CreateBankAccountItemViewModel();
+                    //IBankAccountItemViewModel newvm = this.bankAccountService.CreateBankAccountItemViewModel();
+                    IBankAccountItemViewModel newvm = new BankAccountItemViewModel();
                     this.bankAccountService.Read(this.bankAccountEditorViewModel.BankAccountId, newvm);
                     base.DataList.Add(newvm);
                     base.DataList.ToList().ForEach(i => i.IsSelected = false);

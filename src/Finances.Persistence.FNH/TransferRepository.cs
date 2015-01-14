@@ -18,6 +18,20 @@ namespace Finances.Persistence.FNH
 
 
         // overriding so can Fetch 
+        public override Transfer Read(int transferId)
+        {
+            using (ISession session = this.sessionFactory.OpenSession())
+            {
+                return (from t in session.Query<Transfer>()
+                                 .Fetch(t => t.FromBankAccount).ThenFetch(a => a.Bank)
+                                 .Fetch(t => t.ToBankAccount).ThenFetch(a => a.Bank)
+                        where t.TransferId == transferId
+                        select t).Single();
+            }
+        }
+
+
+        // overriding so can Fetch 
         public override List<Transfer> ReadList() 
         {
             using (ISession session = this.sessionFactory.OpenSession())

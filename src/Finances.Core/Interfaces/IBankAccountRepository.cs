@@ -12,7 +12,9 @@ namespace Finances.Core.Interfaces
         //bool Delete(BankAccount account);
         //BankAccount Read(int accountId);
         //List<BankAccount> ReadList();
-        
+
+        List<BankAccount> ReadListByBankId(int bankId);
+
         List<DataIdName> ReadListDataIdName();
     }
 }

@@ -15,8 +15,6 @@ namespace Finances.WinClient.CastleInstallers
         {
             //string conn = "Server=localhost; Database=Finance; Integrated Security=true";// ConfigurationManager.AppSettings["localDB"];
 
-            container.Register(Component.For<IConnection>().ImplementedBy<Connection>());
-
             container.Register(Component.For<ISessionFactory>().UsingFactoryMethod(() =>
                 
                 Fluently.Configure()
