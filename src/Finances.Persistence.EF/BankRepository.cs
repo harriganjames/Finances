@@ -8,7 +8,7 @@ using AutoMapper.QueryableExtensions;
 
 namespace Finances.Persistence.EF
 {
-    public class BankRepository : IBankRepository
+    public class BankRepository : IBankRepository, IRepository
     {
         private readonly IModelContextFactory factory;
         private readonly IMappingEngine mapper;

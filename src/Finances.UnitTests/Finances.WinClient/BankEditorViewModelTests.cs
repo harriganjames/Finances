@@ -9,6 +9,7 @@ using Finances.WinClient.ViewModels;
 using Finances.WinClient.DomainServices;
 using Finances.Core.Wpf;
 using Finances.Core.Entities;
+using Finances.Core.Interfaces;
 
 
 namespace Finances.UnitTests.Finances.WinClient.BankEditorViewModelTests
@@ -16,8 +17,9 @@ namespace Finances.UnitTests.Finances.WinClient.BankEditorViewModelTests
     public class when_working_with_the_bank_editor_view_model : Specification
     {
         protected IBankEditorViewModel bankEditorViewModel;
-        
-        protected Mock<IBankService> bankService;
+
+        //protected Mock<IBankService> bankService;
+        protected Mock<IBankRepository> bankRepository;
         protected Mock<IDialogService> dialogService;
 
 
@@ -25,10 +27,10 @@ namespace Finances.UnitTests.Finances.WinClient.BankEditorViewModelTests
         {
             base.Establish_context();
 
-            bankService = new Mock<IBankService>();
+            bankRepository = new Mock<IBankRepository>();
             dialogService = new Mock<IDialogService>();
 
-            bankEditorViewModel = new BankEditorViewModel(bankService.Object, dialogService.Object);
+            bankEditorViewModel = new BankEditorViewModel(bankRepository.Object, dialogService.Object);
 
         }
     }
@@ -45,7 +47,7 @@ namespace Finances.UnitTests.Finances.WinClient.BankEditorViewModelTests
                     new DataIdName() { Id=1, Name="abc" }
                 };
 
-            base.bankService.Setup(bs => bs.ReadListDataIdName()).Returns(dataList);
+            base.bankRepository.Setup(bs => bs.ReadListDataIdName()).Returns(dataList);
 
         }
 

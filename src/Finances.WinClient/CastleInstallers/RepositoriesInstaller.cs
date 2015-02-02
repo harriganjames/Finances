@@ -20,6 +20,10 @@ namespace Finances.WinClient.CastleInstallers
 
             // Mappings
             container.Register(Component.For<IMappingCreator>().ImplementedBy<MappingCreator>());
+
+
+            container.Kernel.ProxyFactory.AddInterceptorSelector(new RepositoryInterceptorSelector());
+
         }
     }
 }

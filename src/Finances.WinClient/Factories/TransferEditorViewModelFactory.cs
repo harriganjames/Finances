@@ -1,5 +1,6 @@
 ﻿using System;
-using Finances.WinClient.DomainServices;
+using AutoMapper;
+using Finances.Core.Interfaces;
 using Finances.WinClient.ViewModels;
 
 
@@ -8,26 +9,30 @@ namespace Finances.WinClient.Factories
     public interface ITransferEditorViewModelFactory
     {
         ITransferEditorViewModel Create();
+        void Release(ITransferEditorViewModel vm);
     }
 
-    public class TransferEditorViewModelFactory : ITransferEditorViewModelFactory
-    {
-        readonly ITransferService transferService;
-        readonly IBankAccountService bankAccountService;
+    //public class TransferEditorViewModelFactory : ITransferEditorViewModelFactory
+    //{
 
-        public TransferEditorViewModelFactory(ITransferService transferService,
-                    IBankAccountService bankAccountService)
-        {
-            this.transferService = transferService;
-            this.bankAccountService = bankAccountService;
+    //    readonly ITransferRepository transferRepository;
+    //    readonly IMappingEngine mapper;
+    //    readonly IBankAccountRepository bankAccountRepository;
 
-        }
+    //    public TransferEditorViewModelFactory(
+    //            ITransferRepository transferRepository,
+    //            IMappingEngine mapper,
+    //            IBankAccountRepository bankAccountRepository
+    //            )
+    //    {
+    //        this.transferRepository = transferRepository;
+    //        this.mapper = mapper;
+    //        this.bankAccountRepository = bankAccountRepository;
+    //    }
 
-        public ITransferEditorViewModel Create()
-        {
-            return new TransferEditorViewModel(transferService, bankAccountService);
-        }
-
-
-    }
+    //    public ITransferEditorViewModel Create()
+    //    {
+    //        return new TransferEditorViewModel(transferRepository, mapper, bankAccountRepository);
+    //    }
+    //}
 }

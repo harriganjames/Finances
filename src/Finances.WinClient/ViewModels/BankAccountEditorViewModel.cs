@@ -8,6 +8,7 @@ using Finances.Core.Wpf;
 using Finances.WinClient.DomainServices;
 using Finances.Core.Entities;
 using Finances.Core.Interfaces;
+using AutoMapper;
 
 
 namespace Finances.WinClient.ViewModels
@@ -41,16 +42,20 @@ namespace Finances.WinClient.ViewModels
         ObservableCollection<IBankItemViewModel> bankList;
         List<DataIdName> existingBankAccounts;
 
+        readonly IBankAccountRepository bankAccountRepository;
+        readonly IBankRepository bankRepository;
+        readonly IMappingEngine mapper;
 
-        readonly IBankAccountService bankAccountService;
-        //readonly IBankService bankService;
 
-
-        public BankAccountEditorViewModel(IBankAccountService bankAccountService)
-                                //IBankService bankService)
+        public BankAccountEditorViewModel(
+                        IBankAccountRepository bankAccountRepository,
+                        IBankRepository bankRepository,
+                        IMappingEngine mapper
+                        )
         {
-            this.bankAccountService = bankAccountService;
-            //this.bankService = bankService;
+            this.bankRepository = bankRepository;
+            this.bankAccountRepository = bankAccountRepository;
+            this.mapper = mapper;
         }
 
 
@@ -304,13 +309,15 @@ namespace Finances.WinClient.ViewModels
         private void LoadBanksList()
         {
             bankList = new ObservableCollection<IBankItemViewModel>();
-            //bankService.ReadList().ForEach(vm => bankList.Add(vm));
-            bankAccountService.ReadBankList().ForEach(vm => bankList.Add(vm));
+            //bankAccountService.ReadBankList().ForEach(vm => bankList.Add(vm));
+
+            bankRepository.ReadList().ForEach(b => bankList.Add(mapper.Map<BankItemViewModel>(b)));
         }
 
         private void LoadExistingBankAccounts()
         {
-            existingBankAccounts = bankAccountService.ReadListDataIdName();
+            //existingBankAccounts = bankAccountService.ReadListDataIdName();
+            existingBankAccounts = bankAccountRepository.ReadListDataIdName();
         }
 
         #endregion
@@ -329,7 +336,7 @@ namespace Finances.WinClient.ViewModels
                 string uniqueName = String.Format("{0} ({1})",this.AccountName,this.Bank==null?"":this.Bank.Name);
                 if (existingBankAccounts.Exists(n => n.Name.Equals(uniqueName, StringComparison.CurrentCultureIgnoreCase) && n.Id != this.BankAccountId))
                 {
-                    base.ValidationHelper.AddValidationMessage("Bank Account already exists", "AccountName");
+                    base.ValidationHelper.AddValidationMessage("Bank + Account Name already exists", "AccountName");
                 }
             }
 

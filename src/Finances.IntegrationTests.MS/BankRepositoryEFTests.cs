@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using Finances.Core.Interfaces;
 using Finances.Persistence.EF;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -56,6 +57,17 @@ namespace Finances.IntegrationTests.MS
 
             read = _repository.Read(b.BankId);
             Assert.IsNull(read);
+        }
+
+        [TestMethod]
+        public void TestReadListDataIdName()
+        {
+            var list = _repository.ReadListDataIdName();
+            Assert.IsNotNull(list);
+            Assert.IsTrue(list.Count > 0);
+
+            Assert.IsTrue(list.Count(d => d.Id > 0) == list.Count);
+            Assert.IsTrue(list.Count(d => !String.IsNullOrEmpty(d.Name)) == list.Count);
         }
 
     }

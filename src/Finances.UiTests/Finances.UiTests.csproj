@@ -3,11 +3,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{7ECEE40F-ECAA-4A43-884D-9ADB749CCDB8}</ProjectGuid>
+    <ProjectGuid>{1B05A351-7DF3-4C61-882D-BF57DFFBE874}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Finances.IntegrationTests.MS</RootNamespace>
-    <AssemblyName>Finances.IntegrationTests.MS</AssemblyName>
+    <RootNamespace>Finances.UiTests</RootNamespace>
+    <AssemblyName>Finances.UiTests</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{3AC096D0-A1C2-E12C-1390-A8335801FDAB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
@@ -35,15 +35,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="AutoMapper, Version=3.2.1.0, Culture=neutral, PublicKeyToken=be96cd2c38ef1005, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\libs\AutoMapper.3.2.1\lib\net40\AutoMapper.dll</HintPath>
-    </Reference>
-    <Reference Include="AutoMapper.Net4, Version=3.2.1.0, Culture=neutral, PublicKeyToken=be96cd2c38ef1005, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\libs\AutoMapper.3.2.1\lib\net40\AutoMapper.Net4.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
+    <Reference Include="UIAutomationClient" />
+    <Reference Include="UIAutomationTypes" />
   </ItemGroup>
   <Choose>
     <When Condition="('$(VisualStudioVersion)' == '10.0' or '$(VisualStudioVersion)' == '') and '$(TargetFrameworkVersion)' == 'v3.5'">
@@ -58,29 +52,8 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
-    <Compile Include="BankRepositoryEFTests.cs" />
-    <Compile Include="BankAccountRepositoryEFTests.cs" />
-    <Compile Include="TransferRepositoryEFTests.cs" />
+    <Compile Include="UnitTest1.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="AccountRepository.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Finances.Core.Wpf\Finances.Core.Wpf.csproj">
-      <Project>{f6ccdae2-ffed-4016-95d2-6817230c3519}</Project>
-      <Name>Finances.Core.Wpf</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Finances.Core\Finances.Core.csproj">
-      <Project>{bb8793f8-877f-42b0-82ef-0786b2c214ef}</Project>
-      <Name>Finances.Core</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Finances.Persistence.EF\Finances.Persistence.EF.csproj">
-      <Project>{8bba6faa-e9db-4016-8af2-1466a7a751a0}</Project>
-      <Name>Finances.Persistence.EF</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Finances.WinClient\Finances.WinClient.csproj">
-      <Project>{d481adf1-4007-40d7-9e05-2daaf3d89d90}</Project>
-      <Name>Finances.WinClient</Name>
-    </ProjectReference>
   </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">

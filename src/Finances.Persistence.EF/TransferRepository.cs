@@ -10,7 +10,7 @@ using System.Text;
 
 namespace Finances.Persistence.EF
 {
-    public class TransferRepository : ITransferRepository
+    public class TransferRepository : ITransferRepository, IRepository
     {
         private readonly IModelContextFactory factory;
         private readonly IMappingEngine mapper;
@@ -33,11 +33,12 @@ namespace Finances.Persistence.EF
                 using (FinanceEntities context = factory.CreateContext())
                 {
                     context.Entry(ef).State = System.Data.EntityState.Added;
-                    SetChildEntitiesState(context, ef);
                     context.SaveChanges();
                 }
-                mapper.Map<Transfer, Core.Entities.Transfer>(ef, entity);
-                //entity.BankAccountId = ef.BankAccountId;
+                //read back columns which may have changed
+                entity.TransferId = ef.TransferId;
+                entity.RecordCreatedDateTime = ef.RecordCreatedDateTime;
+                entity.RecordUpdatedDateTime = ef.RecordUpdatedDateTime;
                 id = ef.TransferId;
             }
             catch (DbEntityValidationException e)
@@ -55,10 +56,10 @@ namespace Finances.Persistence.EF
                 using (FinanceEntities context = factory.CreateContext())
                 {
                     context.Entry(ef).State = System.Data.EntityState.Modified;
-                    SetChildEntitiesState(context, ef);
                     context.SaveChanges();
                 }
-                mapper.Map<Transfer, Core.Entities.Transfer>(ef, entity);
+                //read back columns which may have changed
+                entity.RecordUpdatedDateTime = ef.RecordUpdatedDateTime;
             }
             catch (DbEntityValidationException e)
             {
@@ -67,26 +68,6 @@ namespace Finances.Persistence.EF
             return true;
         }
 
-
-        private void SetChildEntitiesState(FinanceEntities context, Transfer ef)
-        {
-            if (ef.FromBankAccount != null)
-            {
-                context.Entry(ef.FromBankAccount).State = System.Data.EntityState.Unchanged;
-                if (ef.FromBankAccount.Bank != null)
-                {
-                    context.Entry(ef.FromBankAccount.Bank).State = System.Data.EntityState.Detached;
-                }
-            }
-            if (ef.ToBankAccount != null)
-            {
-                context.Entry(ef.ToBankAccount).State = System.Data.EntityState.Unchanged;
-                if (ef.ToBankAccount.Bank != null)
-                {
-                    context.Entry(ef.ToBankAccount.Bank).State = System.Data.EntityState.Detached;
-                }
-            }
-        }
 
         public bool Delete(Core.Entities.Transfer entity)
         {
@@ -158,26 +139,6 @@ namespace Finances.Persistence.EF
             return list;
         }
 
-        //public List<Core.Entities> ReadListByBankId(int bankId)
-        //{
-        //    List<Core.Entities.BankAccount> list = null;
-        //    try
-        //    {
-        //        using (FinanceEntities context = factory.CreateContext())
-        //        {
-        //            var ef = (from b in context.BankAccounts.Include(a => a.Bank)
-        //                      where b.BankId==bankId
-        //                      select b).ToList();
-
-        //            list = mapper.Map<List<Core.Entities.BankAccount>>(ef);
-        //        }
-        //    }
-        //    catch (DbEntityValidationException e)
-        //    {
-        //        CommonRepository.HandleDbEntityValidationException(e);
-        //    }
-        //    return list;
-        //}
 
         public List<Core.Entities.DataIdName> ReadListDataIdName()
         {
@@ -199,6 +160,30 @@ namespace Finances.Persistence.EF
             return list;
         }
 
+
+        #region Privates
+
+        //private void SetChildEntitiesState(FinanceEntities context, Transfer ef)
+        //{
+        //    if (ef.FromBankAccount != null)
+        //    {
+        //        if (ef.FromBankAccount.Bank != null)
+        //        {
+        //            context.Entry(ef.FromBankAccount.Bank).State = System.Data.EntityState.Detached;
+        //        }
+        //        context.Entry(ef.FromBankAccount).State = System.Data.EntityState.Detached;
+        //    }
+        //    if (ef.ToBankAccount != null)
+        //    {
+        //        if (ef.ToBankAccount.Bank != null)
+        //        {
+        //            context.Entry(ef.ToBankAccount.Bank).State = System.Data.EntityState.Detached;
+        //        }
+        //        context.Entry(ef.ToBankAccount).State = System.Data.EntityState.Detached;
+        //    }
+        //}
+
+        #endregion
 
     }
 }

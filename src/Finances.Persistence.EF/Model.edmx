@@ -67,8 +67,8 @@
           <Property Name="EndDate" Type="date" />
           <Property Name="Frequency" Type="varchar" Nullable="false" MaxLength="100" />
           <Property Name="IsEnabled" Type="bit" Nullable="false" />
-          <Property Name="RecordCreatedDateTime" Type="datetime" Nullable="false" />
-          <Property Name="RecordUpdatedDateTime" Type="datetime" Nullable="false" />
+          <Property Name="RecordCreatedDateTime" Type="datetime" Nullable="false" StoreGeneratedPattern="Computed" />
+          <Property Name="RecordUpdatedDateTime" Type="datetime" Nullable="false" StoreGeneratedPattern="Computed" />
         </EntityType>
         <Association Name="FK_BankAccount_BankId">
           <End Role="Bank" Type="FinanceModel.Store.Bank" Multiplicity="1" />
@@ -175,8 +175,8 @@
           <Property Name="EndDate" Type="DateTime" Precision="0" />
           <Property Name="Frequency" Type="String" Nullable="false" MaxLength="100" Unicode="false" FixedLength="false" />
           <Property Name="IsEnabled" Type="Boolean" Nullable="false" />
-          <Property Name="RecordCreatedDateTime" Type="DateTime" Nullable="false" Precision="3" />
-          <Property Name="RecordUpdatedDateTime" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="RecordCreatedDateTime" Type="DateTime" Nullable="false" Precision="3" annotation:StoreGeneratedPattern="Computed" />
+          <Property Name="RecordUpdatedDateTime" Type="DateTime" Nullable="false" Precision="3" annotation:StoreGeneratedPattern="Computed" />
           <NavigationProperty Name="FromBankAccount" Relationship="FinanceModel.FK_Transfer_FromBankAccountId" FromRole="Transfer" ToRole="BankAccount" />
           <NavigationProperty Name="ToBankAccount" Relationship="FinanceModel.FK_Transfer_ToBankAccountId" FromRole="Transfer" ToRole="BankAccount" />
         </EntityType>

@@ -6,6 +6,9 @@ using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using AutoMapper;
+using Finances.Core.Entities;
+using Finances.Core.Interfaces;
 using Finances.Core.Wpf;
 using Finances.WinClient.DomainServices;
 using Finances.WinClient.Factories;
@@ -23,17 +26,22 @@ namespace Finances.WinClient.ViewModels
 
     public class TransferListViewModel : ListViewModelBase<ITransferItemViewModel>, ITransferListViewModel
     {
-        readonly ITransferService transferService;
+        readonly ITransferRepository transferRepository;
+        readonly IMappingEngine mapper;
         readonly IDialogService dialogService;
         readonly ITransferEditorViewModelFactory transferEditorViewModelFactory;
 
+        Dictionary<int, Transfer> transfers = new Dictionary<int, Transfer>();
 
-        public TransferListViewModel(ITransferService transferService,
+        public TransferListViewModel(
+                        ITransferRepository transferRepository,
+                        IMappingEngine mapper,
                         IDialogService dialogService,
                         ITransferEditorViewModelFactory bankEditorViewModelFactory
-            )
+                        )
         {
-            this.transferService = transferService;
+            this.transferRepository = transferRepository;
+            this.mapper = mapper;
             this.dialogService = dialogService;
             this.transferEditorViewModelFactory = bankEditorViewModelFactory;
 
@@ -86,23 +94,29 @@ namespace Finances.WinClient.ViewModels
 
         private void LoadData()
         {
-            List<ITransferItemViewModel> transfers = null;
+            //List<ITransferItemViewModel> transfers = null;
 
             base.IsBusy = true;
 
             BackgroundWorker bw = new BackgroundWorker();
             bw.DoWork += (s, e) =>
             {
-                transfers = this.transferService.ReadList();
+                transfers.Clear();
+
+                var entities = this.transferRepository.ReadList();
+
+                if (entities != null)
+                    entities.ForEach(t => transfers.Add(t.TransferId, t));
+
             };
             bw.RunWorkerCompleted += (s, e) =>
             {
                 base.DataList.Clear();
                 if (transfers != null)
                 {
-                    transfers.ForEach(b =>
+                    transfers.Values.ToList().ForEach(t =>
                     {
-                        base.DataList.Add(b);
+                        base.DataList.Add(mapper.Map<TransferItemViewModel>(t));
                     });
                 }
 
@@ -123,19 +137,24 @@ namespace Finances.WinClient.ViewModels
 
             while (this.dialogService.ShowDialogView(editor))
             {
-                bool result = this.transferService.Add(editor);
+                var entity = mapper.Map<Transfer>(editor);
+
+                bool result = this.transferRepository.Add(entity) > 0;
 
                 if (result)
                 {
-                    ITransferItemViewModel newvm = new TransferItemViewModel();
-                    this.transferService.Read(editor.TransferId, newvm);
-                    base.DataList.Add(newvm);
+                    this.transfers.Add(entity.TransferId, entity);
+
+                    var vm = mapper.Map<TransferItemViewModel>(entity);
+
+                    base.DataList.Add(vm);
                     base.DataList.ToList().ForEach(i => i.IsSelected = false);
-                    newvm.IsSelected = true;
+                    vm.IsSelected = true;
                     break;
                 }
             }
 
+            this.transferEditorViewModelFactory.Release(editor);
         }
 
 
@@ -149,19 +168,26 @@ namespace Finances.WinClient.ViewModels
 
             ITransferItemViewModel vm = base.GetSelectedItems().First();
 
-            editor.InitializeForAddEdit(false);
+            Transfer transfer = this.transfers[vm.TransferId];
 
-            this.transferService.Read(vm.TransferId, editor);
+            mapper.Map<Transfer, TransferEditorViewModel>(transfer, editor as TransferEditorViewModel);
+
+            editor.InitializeForAddEdit(false);
 
             while (this.dialogService.ShowDialogView(editor))
             {
-                bool result = this.transferService.Update(editor);
+                var upd = mapper.Map<Transfer>(editor);
+
+                bool result = this.transferRepository.Update(upd);
                 if (result)
                 {
-                    this.transferService.Read(vm.TransferId, vm);
+                    this.transfers[vm.TransferId] = upd;
+                    mapper.Map<Transfer, TransferItemViewModel>(upd, vm as TransferItemViewModel);
                     break;
                 }
             }
+
+            this.transferEditorViewModelFactory.Release(editor);
 
         }
 
@@ -197,11 +223,13 @@ namespace Finances.WinClient.ViewModels
             {
                 base.IsBusy = true;
 
-                foreach (var b in sel)
+                foreach (var vm in sel)
                 {
-                    if (this.transferService.Delete(b))
+                    Transfer entity = mapper.Map<Transfer>(vm);
+                    if (this.transferRepository.Delete(entity))
                     {
-                        base.DataList.Remove(b);
+                        base.DataList.Remove(vm);
+                        this.transfers.Remove(entity.TransferId);
                     }
                     else
                         break;

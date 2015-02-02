@@ -9,6 +9,7 @@ using Finances.WinClient.DomainServices;
 using Finances.Core.Entities;
 using Finances.Core.Interfaces;
 using System.Threading.Tasks;
+using AutoMapper;
 
 
 namespace Finances.WinClient.ViewModels
@@ -35,16 +36,19 @@ namespace Finances.WinClient.ViewModels
         ObservableCollection<IBankAccountItemViewModel> bankAccounts;
         List<DataIdName> existingTransfers;
 
+        readonly ITransferRepository transferRepository;
+        readonly IMappingEngine mapper;
+        readonly IBankAccountRepository bankAccountRepository;
 
-        readonly ITransferService transferService;
-        readonly IBankAccountService bankAccountService;
-
-
-        public TransferEditorViewModel(ITransferService transferService,
-            IBankAccountService bankAccountService)
+        public TransferEditorViewModel(
+                ITransferRepository transferRepository,
+                IMappingEngine mapper,
+                IBankAccountRepository bankAccountRepository
+            )
         {
-            this.transferService = transferService;
-            this.bankAccountService = bankAccountService;
+            this.transferRepository = transferRepository;
+            this.mapper = mapper;
+            this.bankAccountRepository = bankAccountRepository;
 
             this.Amount.PropertyChanged += (s,e) =>
                 {
@@ -328,14 +332,16 @@ namespace Finances.WinClient.ViewModels
             bankAccounts = new ObservableCollection<IBankAccountItemViewModel>();
             BankAccounts.Add(BankAccountItemViewModel.Elsewhere);
             //BankAccounts.Add(null);
-            bankAccountService.ReadList().ForEach(vm => BankAccounts.Add(vm));
+
+            bankAccountRepository.ReadList().ForEach(a => BankAccounts.Add(mapper.Map<BankAccountItemViewModel>(a)));
+
         }
 
         private void LoadExistingTransfers()
         {
             Task.Factory.StartNew(() =>
                 {
-                    existingTransfers = transferService.ReadListDataIdName();
+                    existingTransfers = transferRepository.ReadListDataIdName();
                 });
 
             //existingTransfers = transferService.ReadListDataIdName();

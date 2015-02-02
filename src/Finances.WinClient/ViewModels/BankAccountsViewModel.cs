@@ -5,8 +5,12 @@ using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using AutoMapper;
+using Finances.Core.Entities;
+using Finances.Core.Interfaces;
 using Finances.Core.Wpf;
 using Finances.WinClient.DomainServices;
+using Finances.WinClient.Factories;
 
 namespace Finances.WinClient.ViewModels
 {
@@ -21,17 +25,23 @@ namespace Finances.WinClient.ViewModels
 
     public class BankAccountsViewModel : ListViewModelBase<IBankAccountItemViewModel>, IBankAccountsViewModel
     {
-        readonly IBankAccountService bankAccountService;
+        readonly IBankAccountRepository bankAccountRepository;
+        readonly IMappingEngine mapper;
         readonly IDialogService dialogService;
-        readonly IBankAccountEditorViewModel bankAccountEditorViewModel;
+        readonly IBankAccountEditorViewModelFactory bankAccountEditorViewModelFactory;
 
-        public BankAccountsViewModel(IBankAccountService bankService,
+        Dictionary<int, BankAccount> bankAccounts = new Dictionary<int, BankAccount>();
+
+        public BankAccountsViewModel(
+                        IBankAccountRepository bankAccountRepository,
+                        IMappingEngine mapper,
                         IDialogService dialogService,
-                        IBankAccountEditorViewModel bankAccountEditorViewModel)
+                        IBankAccountEditorViewModelFactory bankAccountEditorViewModelFactory)
         {
-            this.bankAccountService = bankService;
+            this.bankAccountRepository = bankAccountRepository;
+            this.mapper = mapper;
             this.dialogService = dialogService;
-            this.bankAccountEditorViewModel = bankAccountEditorViewModel;
+            this.bankAccountEditorViewModelFactory = bankAccountEditorViewModelFactory;
 
             ReloadCommand = base.AddNewCommand(new ActionCommand(Reload));
             AddCommand = base.AddNewCommand(new ActionCommand(Add));
@@ -79,23 +89,27 @@ namespace Finances.WinClient.ViewModels
 
         private void LoadBankAccounts()
         {
-            List<IBankAccountItemViewModel> banks = null;
-
             base.IsBusy = true;
 
             BackgroundWorker bw = new BackgroundWorker();
             bw.DoWork += (s, e) =>
             {
-                banks = this.bankAccountService.ReadList();
+                bankAccounts.Clear();
+
+                var entities = this.bankAccountRepository.ReadList();
+
+                if (entities != null)
+                    entities.ForEach(a => bankAccounts.Add(a.BankAccountId, a));
+
             };
             bw.RunWorkerCompleted += (s, e) =>
             {
                 base.DataList.Clear();
-                if (banks != null)
+                if (bankAccounts != null)
                 {
-                    banks.ForEach(b =>
+                    bankAccounts.Values.ToList().ForEach(a =>
                     {
-                        base.DataList.Add(b);
+                        base.DataList.Add(mapper.Map<BankAccountItemViewModel>(a));
                     });
                 }
 
@@ -110,23 +124,30 @@ namespace Finances.WinClient.ViewModels
 
         private void Add()
         {
-            this.bankAccountEditorViewModel.InitializeForAddEdit(true);
+            var editor = this.bankAccountEditorViewModelFactory.Create();
 
-            while (this.dialogService.ShowDialogView(this.bankAccountEditorViewModel))
+            editor.InitializeForAddEdit(true);
+
+            while (this.dialogService.ShowDialogView(editor))
             {
-                bool result = this.bankAccountService.Add(this.bankAccountEditorViewModel);
+                var entity = mapper.Map<BankAccount>(editor);
+
+                bool result = this.bankAccountRepository.Add(entity) > 0;
 
                 if (result)
                 {
-                    //IBankAccountItemViewModel newvm = this.bankAccountService.CreateBankAccountItemViewModel();
-                    IBankAccountItemViewModel newvm = new BankAccountItemViewModel();
-                    this.bankAccountService.Read(this.bankAccountEditorViewModel.BankAccountId, newvm);
-                    base.DataList.Add(newvm);
+                    this.bankAccounts.Add(entity.BankAccountId, entity);
+
+                    var vm = mapper.Map<BankAccountItemViewModel>(entity);
+
+                    base.DataList.Add(vm);
                     base.DataList.ToList().ForEach(i => i.IsSelected = false);
-                    newvm.IsSelected = true;
+                    vm.IsSelected = true;
                     break;
                 }
             }
+
+            this.bankAccountEditorViewModelFactory.Release(editor);
 
         }
 
@@ -139,19 +160,29 @@ namespace Finances.WinClient.ViewModels
         {
             IBankAccountItemViewModel vm = base.GetSelectedItems().First();
 
-            this.bankAccountEditorViewModel.InitializeForAddEdit(false);
+            BankAccount bankAccount = this.bankAccounts[vm.BankAccountId];
 
-            this.bankAccountService.Read(vm.BankAccountId, this.bankAccountEditorViewModel);
+            var editor = this.bankAccountEditorViewModelFactory.Create();
 
-            while (this.dialogService.ShowDialogView(this.bankAccountEditorViewModel))
+            mapper.Map<BankAccount, BankAccountEditorViewModel>(bankAccount, editor as BankAccountEditorViewModel);
+
+            editor.InitializeForAddEdit(false);
+
+            while (this.dialogService.ShowDialogView(editor))
             {
-                bool result = this.bankAccountService.Update(this.bankAccountEditorViewModel);
+                var upd = mapper.Map<BankAccount>(editor);
+
+                bool result = this.bankAccountRepository.Update(upd);
                 if (result)
                 {
-                    this.bankAccountService.Read(vm.BankAccountId, vm);
+                    this.bankAccounts[vm.BankAccountId] = this.bankAccountRepository.Read(vm.BankAccountId);
+                    mapper.Map<BankAccount, BankAccountItemViewModel>(this.bankAccounts[vm.BankAccountId], vm as BankAccountItemViewModel);
                     break;
                 }
+
             }
+
+            this.bankAccountEditorViewModelFactory.Release(editor);
         }
 
 
@@ -186,11 +217,13 @@ namespace Finances.WinClient.ViewModels
             {
                 base.IsBusy = true;
 
-                foreach (var a in sel)
+                foreach (var vm in sel)
                 {
-                    if (this.bankAccountService.Delete(a))
+                    BankAccount entity = mapper.Map<BankAccount>(vm);
+                    if (this.bankAccountRepository.Delete(entity))
                     {
-                        base.DataList.Remove(a);
+                        base.DataList.Remove(vm);
+                        this.bankAccounts.Remove(entity.BankAccountId);
                     }
                     else
                         break;

@@ -26,7 +26,7 @@ namespace Finances.IntegrationTests.MS
 
             testEntity = new Core.Entities.Transfer()
             {
-                Name = "xfer1",
+                Name = "xfer-"+Guid.NewGuid().ToString(),
                 Amount = 123,
                 AmountTolerence = 0.5M,
                 EndDate = DateTime.Now.Date,
@@ -36,42 +36,10 @@ namespace Finances.IntegrationTests.MS
                 FromBankAccount = new Core.Entities.BankAccount()
                 {
                     BankAccountId = 1
-
-                    //Bank = new Core.Entities.Bank() { BankId = 1 },
-                    //AccountNumber = "1234",
-                    //AccountOwner = "me",
-                    //Name = "TestFrom-" + Guid.NewGuid().ToString(),
-                    //LoginID = "login",
-                    //LoginURL = "abc",
-                    //PasswordHint = "hint",
-                    //OpenedDate = DateTime.Now.Date,
-                    //ClosedDate = DateTime.Now.Date.AddDays(1),
-                    //SortCode = "000010",
-                    //InitialRate = 1.1M,
-                    //PaysTaxableInterest = true,
-                    //MilestoneDate = DateTime.Now.Date.AddDays(2),
-                    //MilestoneNotes = "msnotes",
-                    //Notes = "test notes From"
                 },
                 ToBankAccount = new Core.Entities.BankAccount()
                 {
                     BankAccountId = 2
-
-                    //Bank = new Core.Entities.Bank() { BankId = 1 },
-                    //AccountNumber = "5678",
-                    //AccountOwner = "Tina",
-                    //Name = "TestTo-" + Guid.NewGuid().ToString(),
-                    //LoginID = "login",
-                    //LoginURL = "abc",
-                    //PasswordHint = "hint",
-                    //OpenedDate = DateTime.Now.Date,
-                    //ClosedDate = DateTime.Now.Date.AddDays(1),
-                    //SortCode = "000010",
-                    //InitialRate = 1.1M,
-                    //PaysTaxableInterest = true,
-                    //MilestoneDate = DateTime.Now.Date.AddDays(2),
-                    //MilestoneNotes = "msnotes",
-                    //Notes = "test notes To"
                 }
             };
 
@@ -152,6 +120,12 @@ namespace Finances.IntegrationTests.MS
 
             Assert.IsNotNull(entity1.ToBankAccount, "{0} - entity1.ToBankAccount", prefix);
             Assert.IsNotNull(entity2.ToBankAccount, "{0} - entity2.ToBankAccount", prefix);
+
+            Assert.IsNotNull(entity1.FromBankAccount.Bank, "{0} - entity1.FromBankAccount.Bank", prefix);
+            Assert.IsNotNull(entity2.FromBankAccount.Bank, "{0} - entity2.FromBankAccount.Bank", prefix);
+
+            Assert.IsNotNull(entity1.ToBankAccount.Bank, "{0} - entity1.ToBankAccount.Bank", prefix);
+            Assert.IsNotNull(entity2.ToBankAccount.Bank, "{0} - entity2.ToBankAccount.Bank", prefix);
 
             Assert.AreEqual(entity1.FromBankAccount.BankAccountId, entity2.FromBankAccount.BankAccountId, "{0} - FromBankAccount", prefix);
             Assert.AreEqual(entity1.ToBankAccount.BankAccountId, entity2.ToBankAccount.BankAccountId, "{0} - ToBankAccount", prefix);

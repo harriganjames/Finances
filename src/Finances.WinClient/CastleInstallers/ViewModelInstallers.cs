@@ -1,6 +1,7 @@
 ﻿using Castle.Windsor;
 using Castle.MicroKernel.SubSystems.Configuration;
 using Castle.MicroKernel.Registration;
+using Castle.Facilities.TypedFactory;
 
 using Finances.WinClient.ViewModels;
 using Finances.Core.Wpf;
@@ -12,23 +13,54 @@ namespace Finances.WinClient.CastleInstallers
     {
         public void Install(IWindsorContainer container, IConfigurationStore store)
         {
-            // Banks
-            container.Register(Component.For<IWorkspace>().ImplementedBy<BanksViewModelNoService>());
+            container.Kernel.AddFacility<TypedFactoryFacility>();
 
-            container.Register(Component.For<IBankEditorViewModel>().ImplementedBy<BankEditorViewModel>());
+            
+            // Banks
+            container.Register(Component.For<IWorkspace>()
+                .ImplementedBy<BanksViewModel>()
+                .LifeStyle.Transient
+                );
+            container.Register(Component.For<IBankEditorViewModel>()
+                .ImplementedBy<BankEditorViewModel>()
+                .LifeStyle.Transient
+                );
+            container.Register(Component.For<IBankEditorViewModelFactory>()
+                .AsFactory()
+                );
+            
+
+            // Bank Tree
             container.Register(Component.For<IWorkspace>().ImplementedBy<BankTreeViewModel>());
-            //container.Register(Component.For<IBankTreeViewItemViewModelFactory>().ImplementedBy<BankTreeViewItemViewModelFactory>());
             
 
             // Banks Accounts
-            container.Register(Component.For<IWorkspace>().ImplementedBy<BankAccountsViewModelNoService>());
-            container.Register(Component.For<IBankAccountEditorViewModel>().ImplementedBy<BankAccountEditorViewModel>());
+            container.Register(Component.For<IWorkspace>()
+                .ImplementedBy<BankAccountsViewModel>()
+                .LifeStyle.Transient
+                );
+            container.Register(Component.For<IBankAccountEditorViewModel>()
+                .ImplementedBy<BankAccountEditorViewModel>()
+                .LifeStyle.Transient
+                );
+            container.Register(Component.For<IBankAccountEditorViewModelFactory>()
+                .AsFactory()
+                );
+
+
 
             // Transfers
-            container.Register(Component.For<IWorkspace>().ImplementedBy<TransferListViewModel>());
-            ////container.Register(Component.For<ITransferEditorViewModel>().ImplementedBy<TransferEditorViewModel>());
-
-            container.Register(Component.For<ITransferEditorViewModelFactory>().ImplementedBy<TransferEditorViewModelFactory>());
+            container.Register(Component.For<IWorkspace>()
+                .ImplementedBy<TransferListViewModel>()
+                .LifeStyle.Transient
+                );
+            container.Register(Component.For<ITransferEditorViewModel>()
+                .ImplementedBy<TransferEditorViewModel>()
+                .LifeStyle.Transient
+                );
+            container.Register(Component.For<ITransferEditorViewModelFactory>()
+                .AsFactory()
+                );
 
 
             // Main

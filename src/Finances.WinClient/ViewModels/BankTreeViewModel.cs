@@ -5,6 +5,8 @@ using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using AutoMapper;
+using Finances.Core.Interfaces;
 using Finances.Core.Wpf;
 using Finances.WinClient.DomainServices;
 
@@ -17,14 +19,18 @@ namespace Finances.WinClient.ViewModels
 
     public class BankTreeViewModel : ListViewModelBase<IBankItemViewModel>, IBankTreeViewModel
     {
-        readonly IBankService bankService;
-        readonly IBankAccountService bankAccountService;
 
-        public BankTreeViewModel(IBankService bankService,
-                    IBankAccountService bankAccountService)
+        readonly IBankRepository bankRepository;
+        readonly IBankAccountRepository bankAccountRepository;
+        readonly IMappingEngine mapper;
+
+        public BankTreeViewModel(IBankRepository bankRepository,
+                    IBankAccountRepository bankAccountRepository,
+                    IMappingEngine mapper)
         {
-            this.bankService = bankService;
-            this.bankAccountService = bankAccountService;
+            this.bankRepository = bankRepository;
+            this.bankAccountRepository = bankAccountRepository;
+            this.mapper = mapper;
 
             ReloadCommand = base.AddNewCommand(new ActionCommand(Reload));
         }
@@ -73,14 +79,15 @@ namespace Finances.WinClient.ViewModels
 
         private void LoadBanks()
         {
-            List<IBankItemViewModel> banks = null;
+            List<BankItemViewModel> banks = null;
 
             base.IsBusy = true;
 
             BackgroundWorker bw = new BackgroundWorker();
             bw.DoWork += (s, e) =>
                 {
-                    banks = this.bankService.ReadList();
+                    var entities = this.bankRepository.ReadList();
+                    banks = mapper.Map<List<BankItemViewModel>>(entities);
                 };
             bw.RunWorkerCompleted += (s, e) =>
                 {
@@ -112,10 +119,14 @@ namespace Finances.WinClient.ViewModels
             {
                 if (bank.Children.Count == 0)
                 {
-                    this.bankAccountService.ReadListByBankId(bank.BankId).ForEach(a =>
-                        {
-                            bank.Children.Add(a);
-                        });
+                    var entities = this.bankAccountRepository.ReadListByBankId(bank.BankId);
+
+                    entities.ForEach(ent=> bank.Children.Add(this.mapper.Map<BankAccountItemViewModel>(ent)));
+
+                    //this.bankAccountService.ReadListByBankId(bank.BankId).ForEach(a =>
+                    //    {
+                    //        bank.Children.Add(a);
+                    //    });
                 }
             }
 

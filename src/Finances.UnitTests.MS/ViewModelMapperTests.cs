@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using AutoMapper;
 using Finances.Core.Entities;
 using Finances.WinClient.ViewModels;
@@ -14,7 +15,9 @@ namespace Finances.UnitTests.MS
     {
         IMappingEngine mapper;
         Bank testBankEntity;
+        Bank testBankEntity2;
         BankAccount testBankAccountEntity;
+        Transfer testTransferEntity;
 
         [TestInitialize]
         public void Initialize()
@@ -27,6 +30,13 @@ namespace Finances.UnitTests.MS
             {
                 BankId = 1,
                 Name = "HSVBC",
+                Logo = new byte[] { 1, 2, 3 }
+            };
+
+            testBankEntity2 = new Bank()
+            {
+                BankId = 2,
+                Name = "fd",
                 Logo = new byte[] { 1, 2, 3 }
             };
 
@@ -50,6 +60,20 @@ namespace Finances.UnitTests.MS
                 Notes = "test notes"
             };
 
+            testTransferEntity = new Core.Entities.Transfer()
+            {
+                TransferId = 1,
+                Name = "test transfer",
+                FromBankAccount = new BankAccount() { BankAccountId = 1 },
+                ToBankAccount = new BankAccount() { BankAccountId = 2 },
+                StartDate = DateTime.Now.Date,
+                EndDate = DateTime.Now.Date.AddDays(1),
+                Amount = 1234M,
+                AmountTolerence = 0.01M,
+                Frequency = "Monthly",
+                IsEnabled = true
+            };
+
         }
 
 
@@ -65,6 +89,11 @@ namespace Finances.UnitTests.MS
             mapper.ConfigurationProvider.AssertConfigurationIsValid();
         }
 
+
+        //
+        // Banks
+        //
+
         [TestMethod]
         public void Test_Map_Bank_to_BankItemViewModel_And_Reverse()
         {
@@ -77,6 +106,39 @@ namespace Finances.UnitTests.MS
         }
 
         [TestMethod]
+        public void Test_Map_Bank_to_BankEditorViewModel_And_Reverse()
+        {
+            IBankEditorViewModel editor = new BankEditorViewModel(null, null);
+
+            mapper.Map<Bank,IBankEditorViewModel>(testBankEntity,editor);
+
+            var b = mapper.Map<Bank>(editor);
+
+            CompareBanks(testBankEntity, b, "Test_Map_Bank_to_BankEditorViewModel_And_Reverse");
+        }
+
+
+        [TestMethod]
+        public void Test_Map_BankList_to_BankItemViewModelList()
+        {
+            List<BankItemViewModel> vms;
+
+            var entities = new List<Bank>() { testBankEntity, testBankEntity2 };
+
+            vms = mapper.Map<List<BankItemViewModel>>(entities);
+
+            Assert.IsNotNull(vms);
+
+            Assert.AreEqual(entities.Count, vms.Count);
+
+        }
+
+
+        //
+        // BankAccounts
+        //
+
+        [TestMethod]
         public void Test_Map_BankAccount_to_BankAccountItemViewModel_And_Reverse()
         {
             var bavm = mapper.Map<BankAccountItemViewModel>(testBankAccountEntity);
@@ -86,6 +148,97 @@ namespace Finances.UnitTests.MS
             CompareBankAccounts(testBankAccountEntity, ba, "Test_Map_BankAccount_to_BankAccountItemViewModel_And_Reverse");
 
         }
+
+        [TestMethod]
+        public void Test_Map_BankAccount_to_BankAccountEditorViewModel_And_Reverse()
+        {
+            IBankAccountEditorViewModel editor = new BankAccountEditorViewModel(null,null,null);
+
+            mapper.Map<BankAccount, IBankAccountEditorViewModel>(testBankAccountEntity, editor);
+
+            var ba = mapper.Map<BankAccount>(editor);
+
+            CompareBankAccounts(testBankAccountEntity, ba, "Test_Map_BankAccount_to_BankAccountEditorViewModel_And_Reverse");
+
+        }
+
+        //
+        // Transfers
+        //
+
+        [TestMethod]
+        public void Test_Map_Transfer_to_TransferItemViewModel_And_Reverse()
+        {
+            var bvm = mapper.Map<TransferItemViewModel>(testTransferEntity);
+
+            var b = mapper.Map<Transfer>(bvm);
+
+            CompareTransfers(testTransferEntity, b, "Test_Map_Transfer_to_TransferItemViewModel_And_Reverse");
+
+        }
+
+        [TestMethod]
+        public void Test_Map_Transfer_to_TransferEditorViewModel_And_Reverse()
+        {
+            ITransferEditorViewModel editor = new TransferEditorViewModel(null, null, null);
+
+            mapper.Map<Transfer, ITransferEditorViewModel>(testTransferEntity, editor);
+
+            var b = mapper.Map<Transfer>(editor);
+
+            CompareTransfers(testTransferEntity, b, "Test_Map_Transfer_to_TransferEditorViewModel_And_Reverse");
+        }
+
+        [TestMethod]
+        public void Test_Map_Transfer_to_TransferEditorViewModel_Optional_BankAccount_And_Reverse()
+        {
+            ITransferEditorViewModel editor = new TransferEditorViewModel(null, null, null);
+
+            testTransferEntity.FromBankAccount = null;
+
+            mapper.Map<Transfer, ITransferEditorViewModel>(testTransferEntity, editor);
+
+            var b = mapper.Map<Transfer>(editor);
+
+            CompareTransfers(testTransferEntity, b, "Test_Map_Transfer_to_TransferEditorViewModel_Optional_BankAccount_And_Reverse");
+
+            testTransferEntity.ToBankAccount = null;
+
+            mapper.Map<Transfer, ITransferEditorViewModel>(testTransferEntity, editor);
+
+            b = mapper.Map<Transfer>(editor);
+
+            CompareTransfers(testTransferEntity, b, "Test_Map_Transfer_to_TransferEditorViewModel_Optional_BankAccount_And_Reverse");
+        }
+
+
+        [TestMethod]
+        public void Test_Map_Transfer_to_Editor_Elsewhere()
+        {
+            // null BankAccounts in Transfer should convert to BankAccountItemViewModel.Elsewhere in editor and vice-versa
+            //
+            ITransferEditorViewModel editor = new TransferEditorViewModel(null, null, null);
+
+            testTransferEntity.FromBankAccount = null;
+            testTransferEntity.ToBankAccount = null;
+
+            mapper.Map<Transfer, ITransferEditorViewModel>(testTransferEntity, editor);
+
+            Assert.IsNotNull(editor.FromBankAccount);
+            Assert.IsNotNull(editor.ToBankAccount);
+
+            Assert.AreEqual(editor.FromBankAccount.BankAccountId, BankAccountItemViewModel.Elsewhere.BankAccountId);
+            Assert.AreEqual(editor.ToBankAccount.BankAccountId, BankAccountItemViewModel.Elsewhere.BankAccountId);
+
+            var t = mapper.Map<Transfer>(editor);
+
+            Assert.IsNull(t.FromBankAccount);
+            Assert.IsNull(t.ToBankAccount);
+
+        }
+
+
+        #region Privates
 
         private void CompareBanks(Core.Entities.Bank entity1, Core.Entities.Bank entity2, string prefix)
         {
@@ -124,5 +277,35 @@ namespace Finances.UnitTests.MS
             Assert.AreEqual(entity1.Notes, entity2.Notes, "{0} - Notes", prefix);
         }
 
+        private void CompareTransfers(Core.Entities.Transfer entity1, Core.Entities.Transfer entity2, string prefix)
+        {
+            Assert.IsNotNull(entity1, "{0} - entity1", prefix);
+            Assert.IsNotNull(entity2, "{0} - entity2", prefix);
+
+            Assert.AreEqual(entity1.TransferId, entity2.TransferId, "{0} - TransferId", prefix);
+            Assert.AreEqual(entity1.Name, entity2.Name, "{0} - Name", prefix);
+
+            Assert.IsTrue((entity1.FromBankAccount == null && entity2.FromBankAccount == null) || (entity1.FromBankAccount != null && entity2.FromBankAccount != null), "{0} - FromBankAccount null check", prefix);
+            Assert.IsTrue((entity1.ToBankAccount == null && entity2.ToBankAccount == null) || (entity1.ToBankAccount != null && entity2.ToBankAccount != null),"{0} - FromBankAccount null check", prefix);
+
+            //Assert.IsNotNull(entity1.FromBankAccount, "{0} - entity1.FromBankAccount", prefix);
+            //Assert.IsNotNull(entity2.FromBankAccount, "{0} - entity2.FromBankAccount", prefix);
+            //Assert.IsNotNull(entity1.ToBankAccount, "{0} - entity1.ToBankAccount", prefix);
+            //Assert.IsNotNull(entity2.ToBankAccount, "{0} - entity2.ToBankAccount", prefix);
+
+            if(entity1.FromBankAccount!=null)
+                Assert.AreEqual(entity1.FromBankAccount.BankAccountId, entity2.FromBankAccount.BankAccountId, "{0} - FromBankAccount.BankAccountId", prefix);
+            if(entity1.ToBankAccount!=null)
+                Assert.AreEqual(entity1.ToBankAccount.BankAccountId, entity2.ToBankAccount.BankAccountId, "{0} - ToBankAccount.BankAccountId", prefix);
+
+            Assert.AreEqual(entity1.AmountTolerence, entity2.AmountTolerence, "{0} - AmountTolerence", prefix);
+            Assert.AreEqual(entity1.Amount, entity2.Amount, "{0} - Amount", prefix);
+            Assert.AreEqual(entity1.StartDate, entity2.StartDate, "{0} - StartDate", prefix);
+            Assert.AreEqual(entity1.EndDate, entity2.EndDate, "{0} - EndDate", prefix);
+            Assert.AreEqual(entity1.Frequency, entity2.Frequency, "{0} - Frequency", prefix);
+            Assert.AreEqual(entity1.IsEnabled, entity2.IsEnabled, "{0} - IsEnabled", prefix);
+        }
+
+        #endregion
     }
 }

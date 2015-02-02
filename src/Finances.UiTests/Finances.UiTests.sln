@@ -1,0 +1,26 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Finances.UiTests", "Finances.UiTests.csproj", "{1B05A351-7DF3-4C61-882D-BF57DFFBE874}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AutomationConsole", "..\AutomationConsole\AutomationConsole.csproj", "{14CCA4D9-8243-43F5-A611-6B6A9F466DA4}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{1B05A351-7DF3-4C61-882D-BF57DFFBE874}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1B05A351-7DF3-4C61-882D-BF57DFFBE874}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1B05A351-7DF3-4C61-882D-BF57DFFBE874}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1B05A351-7DF3-4C61-882D-BF57DFFBE874}.Release|Any CPU.Build.0 = Release|Any CPU
+		{14CCA4D9-8243-43F5-A611-6B6A9F466DA4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{14CCA4D9-8243-43F5-A611-6B6A9F466DA4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{14CCA4D9-8243-43F5-A611-6B6A9F466DA4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{14CCA4D9-8243-43F5-A611-6B6A9F466DA4}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

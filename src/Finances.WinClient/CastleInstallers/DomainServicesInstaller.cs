@@ -12,11 +12,11 @@ namespace Finances.WinClient.CastleInstallers
     {
         public void Install(IWindsorContainer container, IConfigurationStore store)
         {
-            container.Register(Component.For<IBankService>().ImplementedBy<BankService>());
+            ////container.Register(Component.For<IBankService>().ImplementedBy<BankService>());
 
             //container.Register(Component.For<IBankTreeViewService>().ImplementedBy<BankTreeViewService>());
 
-            container.Register(Component.For<IBankAccountService>().ImplementedBy<BankAccountService>());
+            //container.Register(Component.For<IBankAccountService>().ImplementedBy<BankAccountService>());
 
             //container.Register(Component.For<IBankAccountTreeViewService>().ImplementedBy<BankAccountTreeViewService>());
 
@@ -26,13 +26,13 @@ namespace Finances.WinClient.CastleInstallers
 
             //container.Register(Component.For<IBankEditorViewModel>().ImplementedBy<BankEditorViewModel>());
 
-            container.Register(Component.For<ITransferService>().ImplementedBy<TransferService>());
+            //container.Register(Component.For<ITransferService>().ImplementedBy<TransferService>());
 
             // Mappings
             container.Register(Component.For<IMappingCreator>().ImplementedBy<MappingCreator>());
 
 
-            container.Kernel.ProxyFactory.AddInterceptorSelector(new DomainServiceInterceptorSelector());
+            //container.Kernel.ProxyFactory.AddInterceptorSelector(new DomainServiceInterceptorSelector());
 
         }
     }

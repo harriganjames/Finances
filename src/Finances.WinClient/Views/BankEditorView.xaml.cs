@@ -21,6 +21,14 @@ namespace Finances.WinClient.Views
         public BankEditorView()
         {
             InitializeComponent();
+
+
+            this.Loaded += BankEditorView_Loaded;
+        }
+
+        void BankEditorView_Loaded(object sender, RoutedEventArgs e)
+        {
+            int I = 1;
         }
     }
 }

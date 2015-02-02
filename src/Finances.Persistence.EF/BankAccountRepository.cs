@@ -10,7 +10,7 @@ using System.Text;
 
 namespace Finances.Persistence.EF
 {
-    public class BankAccountRepository : IBankAccountRepository
+    public class BankAccountRepository : IBankAccountRepository, IRepository
     {
         private readonly IModelContextFactory factory;
         private readonly IMappingEngine mapper;
@@ -33,11 +33,12 @@ namespace Finances.Persistence.EF
                 using (FinanceEntities context = factory.CreateContext())
                 {
                     context.Entry(ef).State = System.Data.EntityState.Added;
-                    if(ef.Bank!=null) context.Entry(ef.Bank).State = System.Data.EntityState.Unchanged;
                     context.SaveChanges();
                 }
-                mapper.Map<BankAccount, Core.Entities.BankAccount>(ef, entity);
-                //entity.BankAccountId = ef.BankAccountId;
+                //read back columns which may have changed
+                entity.BankAccountId = ef.BankAccountId;
+                entity.RecordCreatedDateTime = ef.RecordCreatedDateTime;
+                entity.RecordUpdatedDateTime = ef.RecordUpdatedDateTime;
                 id = ef.BankAccountId;
             }
             catch (DbEntityValidationException e)
@@ -55,10 +56,10 @@ namespace Finances.Persistence.EF
                 using (FinanceEntities context = factory.CreateContext())
                 {
                     context.Entry(ef).State = System.Data.EntityState.Modified;
-                    if (ef.Bank != null) context.Entry(ef.Bank).State = System.Data.EntityState.Unchanged;
                     context.SaveChanges();
                 }
-                mapper.Map<BankAccount, Core.Entities.BankAccount>(ef, entity);
+                //read back columns which may have changed
+                entity.RecordUpdatedDateTime = ef.RecordUpdatedDateTime;
             }
             catch (DbEntityValidationException e)
             {
@@ -137,8 +138,11 @@ namespace Finances.Persistence.EF
                 using (FinanceEntities context = factory.CreateContext())
                 {
                     var ef = (from b in context.BankAccounts.Include(a => a.Bank)
-                              where b.BankId==bankId
+                              where b.BankId == bankId
                               select b).ToList();
+
+                    // how to include Banks?
+                    //var ef = context.BankAccounts.SqlQuery("select * from dbo.BankAccount where BankId={0}", bankId).ToList();
 
                     list = mapper.Map<List<Core.Entities.BankAccount>>(ef);
                 }
@@ -169,6 +173,19 @@ namespace Finances.Persistence.EF
             }
             return list;
         }
+
+        #region Privates
+
+        //private void SetChildEntitiesState(FinanceEntities context, BankAccount ef)
+        //{
+        //    if (ef.Bank != null)
+        //    {
+        //        context.Entry(ef.Bank).State = System.Data.EntityState.Unchanged;
+        //    }
+        //}
+
+        #endregion
+
 
     }
 }

@@ -10,12 +10,12 @@
 
 
     <!-- Bank -->
-    <!--<DataTemplate DataType="{x:Type vm:BanksViewModel}">
-        <v:BanksView/>
-    </DataTemplate>-->
-    <DataTemplate DataType="{x:Type vm:BanksViewModelNoService}">
+    <DataTemplate DataType="{x:Type vm:BanksViewModel}">
         <v:BanksView/>
     </DataTemplate>
+    <!--<DataTemplate DataType="{x:Type vm:BanksViewModelNoService}">
+        <v:BanksView/>
+    </DataTemplate>-->
     <DataTemplate DataType="{x:Type vm:BankEditorViewModel}">
         <v:BankEditorView/>
     </DataTemplate>
@@ -27,9 +27,9 @@
     <DataTemplate DataType="{x:Type vm:BankAccountsViewModel}">
         <v:BankAccountsView/>
     </DataTemplate>
-    <DataTemplate DataType="{x:Type vm:BankAccountsViewModelNoService}">
+    <!--<DataTemplate DataType="{x:Type vm:BankAccountsViewModelNoService}">
         <v:BankAccountsView/>
-    </DataTemplate>
+    </DataTemplate>-->
     <DataTemplate DataType="{x:Type vm:BankAccountEditorViewModel}">
         <v:BankAccountEditorView/>
     </DataTemplate>
@@ -38,6 +38,9 @@
     <DataTemplate DataType="{x:Type vm:TransferListViewModel}">
         <v:TransferListView/>
     </DataTemplate>
+    <!--<DataTemplate DataType="{x:Type vm:TransferListViewModelNoService}">
+        <v:TransferListView/>
+    </DataTemplate>-->
     <DataTemplate DataType="{x:Type vm:TransferEditorViewModel}">
         <v:TransferEditorView/>
     </DataTemplate>

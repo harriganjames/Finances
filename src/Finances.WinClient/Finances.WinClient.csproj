@@ -97,28 +97,23 @@
     <Compile Include="CastleInstallers\WorkspaceInstaller.cs" />
     <Compile Include="Converters\AccountEleswhereToVisibileConverter.cs" />
     <Compile Include="Converters\AccountEleswhereToCollapsedConverter.cs" />
-    <Compile Include="DomainServices\BankAccountService.cs" />
-    <Compile Include="DomainServices\BankAgent.cs" />
-    <Compile Include="DomainServices\GenericDomainService.cs" />
     <Compile Include="DomainServices\MappingCreator.cs" />
-    <Compile Include="DomainServices\TransferService.cs" />
-    <Compile Include="DomainServices\IDomainService.cs" />
+    <Compile Include="Factories\BankEditorViewModelFactory.cs" />
+    <Compile Include="Factories\BankAccountEditorViewModelFactory.cs" />
     <Compile Include="Factories\TransferEditorViewModelFactory.cs" />
-    <Compile Include="InterceptorSelectors\DomainServiceInterceptorSelector.cs" />
+    <Compile Include="InterceptorSelectors\RepositoryInterceptorSelector.cs" />
     <Compile Include="Interceptors\ErrorHandlingInterceptor.cs" />
     <Compile Include="ViewModels\BankAccountEditorViewModel.cs" />
     <Compile Include="ViewModels\BankAccountItemViewModel.cs" />
-    <Compile Include="ViewModels\BankAccountsViewModel.cs" />
-    <Compile Include="ViewModels\BanksViewModel.cs" />
     <Compile Include="ViewModels\BankItemViewModel.cs" />
     <Compile Include="ViewModels\BankEditorViewModel.cs" />
     <Compile Include="ViewModels\BankTreeViewModel.cs" />
-    <Compile Include="ViewModels\BanksViewModelNoService.cs" />
-    <Compile Include="ViewModels\BankAccountsViewModelNoService.cs" />
+    <Compile Include="ViewModels\BanksViewModel.cs" />
+    <Compile Include="ViewModels\BankAccountsViewModel.cs" />
+    <Compile Include="ViewModels\TransferListViewModel.cs" />
     <Compile Include="ViewModels\TransferEditorViewModel.cs" />
     <Compile Include="ViewModels\TransferItemViewModel.cs" />
     <Compile Include="ViewModels\MainViewModel.cs" />
-    <Compile Include="ViewModels\TransferListViewModel.cs" />
     <Compile Include="ViewModels\WorkspaceAreaViewModel.cs" />
     <Compile Include="Views\BankAccountEditorView_old.xaml.cs">
       <DependentUpon>BankAccountEditorView_old.xaml</DependentUpon>
@@ -169,7 +164,6 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="DomainServices\BankService.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>

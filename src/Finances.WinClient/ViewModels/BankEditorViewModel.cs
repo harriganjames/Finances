@@ -29,15 +29,16 @@ namespace Finances.WinClient.ViewModels
         bool delayValidation = false; // must be false until change logic around IsValid
         List<DataIdName> existingBanks;
 
-        readonly IBankService bankService;
+        readonly IBankRepository bankRepository;
         readonly IDialogService dialogService;
 
         public BankEditorViewModel(
-                        IBankService bankService,
+                        IBankRepository bankRepository,
                         IDialogService dialogService)
         {
-            this.bankService = bankService;
+            this.bankRepository = bankRepository;
             this.dialogService = dialogService;
+
 
             ImportLogoCommand = base.AddNewCommand(new ActionCommand(this.ImportLogo));
             ClearLogoCommand = base.AddNewCommand(new ActionCommand(ClearLogo,CanClearLogo));
@@ -183,7 +184,7 @@ namespace Finances.WinClient.ViewModels
 
         private void LoadExistingBanks()
         {
-            existingBanks = bankService.ReadListDataIdName();
+            existingBanks = bankRepository.ReadListDataIdName();
         }
 
         #endregion

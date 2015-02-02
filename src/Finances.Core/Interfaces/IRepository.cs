@@ -4,11 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Finances.WinClient.DomainServices
+namespace Finances.Core.Interfaces
 {
-    // empty interface for 
-
-    public interface IDomainService
+    // primarlily used for the Windsor error handling interceptor
+    public interface IRepository
     {
     }
 }

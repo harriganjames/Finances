@@ -4,15 +4,16 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{BB8793F8-877F-42B0-82EF-0786B2C214EF}</ProjectGuid>
-    <OutputType>Library</OutputType>
+    <ProjectGuid>{14CCA4D9-8243-43F5-A611-6B6A9F466DA4}</ProjectGuid>
+    <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Finances.Core</RootNamespace>
-    <AssemblyName>Finances.Core</AssemblyName>
+    <RootNamespace>AutomationConsole</RootNamespace>
+    <AssemblyName>AutomationConsole</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -22,6 +23,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
@@ -37,33 +39,15 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
+    <Reference Include="UIAutomationClient" />
+    <Reference Include="UIAutomationTypes" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Apex.cs" />
-    <Compile Include="Connection.cs" />
-    <Compile Include="Entities\Bank.cs" />
-    <Compile Include="Entities\BankAccount.cs" />
-    <Compile Include="Entities\Transfer.cs" />
-    <Compile Include="Entities\DataIdName.cs" />
-    <Compile Include="Interfaces\IRepository.cs" />
-    <Compile Include="Interfaces\IEntityMapper.cs" />
-    <Compile Include="Interfaces\IGeneralRepository.cs" />
-    <Compile Include="Interfaces\IGenericRepository.cs" />
-    <Compile Include="Interfaces\IMappingCreator.cs" />
-    <Compile Include="Interfaces\ITransferRepository.cs" />
-    <Compile Include="Interfaces\IBankAccountRepository.cs" />
-    <Compile Include="Interfaces\IBankRepository.cs" />
-    <Compile Include="MappingsCreator.cs" />
+    <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="TODO.txt" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Finances.Core.Wpf\Finances.Core.Wpf.csproj">
-      <Project>{f6ccdae2-ffed-4016-95d2-6817230c3519}</Project>
-      <Name>Finances.Core.Wpf</Name>
-    </ProjectReference>
+    <None Include="App.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
