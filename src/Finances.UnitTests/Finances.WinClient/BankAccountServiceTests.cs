@@ -30,7 +30,7 @@
 
 //            bankAccountService = new BankAccountService(bankAccountRepository.Object, null);
 
-//            //bankAccountMapper.Setup(m => m.Map(It.IsAny<BankAccount>(), It.IsAny<IBankAccountItemViewModel>())).Callback<BankAccount, IBankAccountItemViewModel>((from, to) =>
+//            //bankAccountMapper.Setup(m => m.Map(It.IsAny<BankAccount>(), It.IsAny<BankAccountItemViewModel>())).Callback<BankAccount, BankAccountItemViewModel>((from, to) =>
 //            //{
 //            //    to.BankAccountId = from.BankAccountId;
 //            //    to.AccountName = from.Name;
@@ -89,7 +89,7 @@
 
 //    public class and_reading_a_bank_item_view_model : when_working_with_the_bank_account_service
 //    {
-//        IBankAccountItemViewModel testBankAccountVM;
+//        BankAccountItemViewModel testBankAccountVM;
 //        BankAccount testBankAccount;
 //        Bank testBank;
 
@@ -140,7 +140,7 @@
 
 //    public class and_reading_a_bank_account_view_model_list : when_working_with_the_bank_account_service
 //    {
-//        List<IBankAccountItemViewModel> testBankAccountVMList;
+//        List<BankAccountItemViewModel> testBankAccountVMList;
 //        List<BankAccount> testBankAccountList;
 //        Bank testBank;
 
@@ -252,7 +252,7 @@
 
 //    public class and_adding_a_valid_bank_account_editor_view_model : when_working_with_the_bank_account_service
 //    {
-//        IBankAccountEditorViewModel testObject;
+//        BankAccountEditorViewModel testObject;
 //        BankAccount bankAccount;
 //        bool result;
 //        int bankAccountId = 123;
@@ -272,7 +272,7 @@
 
 
 //            bankAccountRepository.Setup(r => r.Add(It.IsAny<BankAccount>())).Returns(bankAccountId).Callback<BankAccount>(a => { bankAccount = a; });
-//            //bankAccountMapper.Setup(m => m.Map(testObject, It.IsAny<BankAccount>())).Callback<IBankAccountEditorViewModel,BankAccount>((from, to) =>
+//            //bankAccountMapper.Setup(m => m.Map(testObject, It.IsAny<BankAccount>())).Callback<BankAccountEditorViewModel,BankAccount>((from, to) =>
 //            //    {
 //            //        to.BankAccountId = from.BankAccountId;
 //            //        to.Name = from.AccountName;
@@ -314,7 +314,7 @@
 
 //    public class and_updating_a_valid_bank_account_editor_view_model : when_working_with_the_bank_account_service
 //    {
-//        IBankAccountEditorViewModel testObject;
+//        BankAccountEditorViewModel testObject;
 //        BankAccount bankAccount;
 //        bool result;
 
@@ -333,13 +333,13 @@
 
 
 //            bankAccountRepository.Setup(r => r.Update(It.IsAny<BankAccount>())).Returns(true).Callback<BankAccount>(a => { bankAccount = a; });
-//            //bankAccountMapper.Setup(m => m.Map(testObject, It.IsAny<BankAccount>())).Callback<IBankAccountEditorViewModel, BankAccount>((from, to) =>
+//            //bankAccountMapper.Setup(m => m.Map(testObject, It.IsAny<BankAccount>())).Callback<BankAccountEditorViewModel, BankAccount>((from, to) =>
 //            //{
 //            //    to.BankAccountId = from.BankAccountId;
 //            //    to.Name = from.AccountName;
 //            //    to.Bank.BankId = from.Bank.BankId;
 //            //    to.Bank.Name = from.Bank.Name;
-//            //}).Returns<IBankAccountEditorViewModel, BankAccount>((f,t) => t);
+//            //}).Returns<BankAccountEditorViewModel, BankAccount>((f,t) => t);
 
 //        }
 
@@ -373,7 +373,7 @@
 
 //    public class and_reading_a_valid_bank_account_editor_view_model : when_working_with_the_bank_account_service
 //    {
-//        IBankAccountEditorViewModel testObject;
+//        BankAccountEditorViewModel testObject;
 //        BankAccount bankAccount;
 //        bool result;
 
@@ -394,13 +394,13 @@
 
 
 //            bankAccountRepository.Setup(r => r.Read(bankAccount.BankAccountId)).Returns(bankAccount);
-//            //bankAccountMapper.Setup(m => m.Map(bankAccount, testObject)).Callback<BankAccount, IBankAccountEditorViewModel>((from, to) =>
+//            //bankAccountMapper.Setup(m => m.Map(bankAccount, testObject)).Callback<BankAccount, BankAccountEditorViewModel>((from, to) =>
 //            //{
 //            //    to.BankAccountId = from.BankAccountId;
 //            //    to.AccountName = from.Name;
 //            //    to.Bank.BankId = from.Bank.BankId;
 //            //    to.Bank.Name = from.Bank.Name;
-//            //}).Returns<BankAccount, IBankAccountEditorViewModel>((f, t) => t);
+//            //}).Returns<BankAccount, BankAccountEditorViewModel>((f, t) => t);
 
 //        }
 

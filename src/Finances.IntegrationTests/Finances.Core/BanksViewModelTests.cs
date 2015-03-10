@@ -39,8 +39,8 @@ namespace Finances.IntegrationTests.Finances.Core
 
     //public class and_adding_and_reading_a_bank_editor_view_model : when_using_the_banks_view_model
     //{
-    //    IBankEditorViewModel _result;
-    //    IBankEditorViewModel _expected;
+    //    BankEditorViewModel _result;
+    //    BankEditorViewModel _expected;
 
     //    public void MainSetup()
     //    {

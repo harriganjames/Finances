@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Finances.Core.Wpf;
+using Finances.Core.Wpf.Validation;
 
 namespace Finances.WinClient.ViewModels
 {
@@ -12,7 +14,7 @@ namespace Finances.WinClient.ViewModels
     // HasValue
     // IsValid
     //
-    public class InputDecimal : NotifyBase, INotifyDataErrorInfo
+    public class InputDecimal : NotifyBase, INotifyDataErrorInfo, IValidationHelperObject
     {
         //  User-defined conversion from string to InputDecimal
         //public static implicit operator InputDecimal(string s)
@@ -31,6 +33,8 @@ namespace Finances.WinClient.ViewModels
         //    return input;
         //}
 
+        CultureInfo culture = CultureInfo.CreateSpecificCulture("en-GB");
+
         public InputDecimal()
         {
             this.FormatString = "n2";
@@ -40,6 +44,8 @@ namespace Finances.WinClient.ViewModels
         public string FormatString { get; set; }
 
         public bool Mandatory { get; set; }
+
+        public Action<Decimal> ValueChangedAction { get; set; }
 
 
         string input;
@@ -58,12 +64,9 @@ namespace Finances.WinClient.ViewModels
                     HasValue = false;
                     IsNumeric = true;
                 }
-                else if (Decimal.TryParse(value, out test))
+                else if (Decimal.TryParse(value,NumberStyles.Currency,this.culture, out test))
                 {
                     this.Value = test;
-                    //this.input = this.value.ToString(this.FormatString);
-                    //HasValue = true;
-                    //IsValid = true;
                 }
                 else
                 {
@@ -87,6 +90,8 @@ namespace Finances.WinClient.ViewModels
                 this.input = this.value.ToString(this.FormatString);
                 HasValue = true;
                 IsNumeric = true;
+                if (ValueChangedAction != null)
+                    ValueChangedAction(this.value);
                 NotifyPropertyChanged(() => this.Input);
             }
         }
@@ -113,19 +118,28 @@ namespace Finances.WinClient.ViewModels
 
         public System.Collections.IEnumerable GetErrors(string propertyName)
         {
-            string result=null;
-            if (!IsNumeric)
-                result = "Value is not numeric";
-            else if (!HasValue && this.Mandatory)
-                result = "Valie is mandatory";
-            return new string[] { result };
+            return new string[] { this.error };
         }
 
         public bool HasErrors
         {
-            get { return !IsValid; }
+            get { return !String.IsNullOrEmpty(error); }
         }
 
         #endregion
+
+
+
+        string error;
+
+        public void Clear()
+        {
+            error = null;
+        }
+
+        public void AddError(string error)
+        {
+            this.error = error;
+        }
     }
 }

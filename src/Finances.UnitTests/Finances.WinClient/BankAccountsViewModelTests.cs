@@ -33,8 +33,8 @@
 
 //    public class and_loading_a_list_of_bank_account_view_models : when_working_with_the_bank_accounts_view_model
 //    {
-//        List<IBankAccountItemViewModel> testBankAccountVMList;
-//        ObservableCollection<IBankAccountItemViewModel> testResult;
+//        List<BankAccountItemViewModel> testBankAccountVMList;
+//        ObservableCollection<BankAccountItemViewModel> testResult;
 
 //        public void MainSetup()
 //        {
@@ -52,7 +52,7 @@
 //            base.Establish_context();
 
 
-//            testBankAccountVMList = new List<IBankAccountItemViewModel>() 
+//            testBankAccountVMList = new List<BankAccountItemViewModel>() 
 //            {
 //                new BankAccountItemViewModel() { BankAccountId=1, AccountName="One", Bank=new BankItemViewModel() { BankId=1, Name="HSBC" } },
 //                new BankAccountItemViewModel() { BankAccountId=2, AccountName="Two", Bank=new BankItemViewModel() { BankId=1, Name="HSBC" } },

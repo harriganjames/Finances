@@ -10,22 +10,22 @@ using Finances.Core.Wpf;
 
 namespace Finances.WinClient.ViewModels
 {
-    public interface ITransferItemViewModel : IItemViewModelBase, IEntityMapper<Transfer>
-    {
-        int TransferId { get; set; }
-        string Name { get; set; }
-        IBankAccountItemViewModel FromBankAccount { get; set; }
-        IBankAccountItemViewModel ToBankAccount { get; set; }
-        decimal Amount { get; set; }
-        decimal AmountTolerence { get; set; }
-        DateTime StartDate { get; set; }
-        Nullable<DateTime> EndDate { get; set; }
-        string Frequency { get; set; }
-        bool IsEnabled { get; set; }
-        //ITransferItemViewModel MapIn(Transfer from);
-    }
+    //public interface TransferItemViewModel : IItemViewModelBase, IEntityMapper<Transfer>
+    //{
+    //    int TransferId { get; set; }
+    //    string Name { get; set; }
+    //    BankAccountItemViewModel FromBankAccount { get; set; }
+    //    BankAccountItemViewModel ToBankAccount { get; set; }
+    //    decimal Amount { get; set; }
+    //    decimal AmountTolerence { get; set; }
+    //    DateTime StartDate { get; set; }
+    //    Nullable<DateTime> EndDate { get; set; }
+    //    string Frequency { get; set; }
+    //    bool IsEnabled { get; set; }
+    //    //TransferItemViewModel MapIn(Transfer from);
+    //}
 
-    public class TransferItemViewModel : ItemViewModelBase, ITransferItemViewModel
+    public class TransferItemViewModel : ItemViewModelBase//, TransferItemViewModel
     {
 
         public TransferItemViewModel()
@@ -63,8 +63,8 @@ namespace Finances.WinClient.ViewModels
         }
 
 
-        IBankAccountItemViewModel fromBankAccount;
-        public IBankAccountItemViewModel FromBankAccount
+        BankAccountItemViewModel fromBankAccount;
+        public BankAccountItemViewModel FromBankAccount
         {
             get
             {
@@ -79,8 +79,8 @@ namespace Finances.WinClient.ViewModels
             }
         }
 
-        IBankAccountItemViewModel toBankAccount;
-        public IBankAccountItemViewModel ToBankAccount
+        BankAccountItemViewModel toBankAccount;
+        public BankAccountItemViewModel ToBankAccount
         {
             get
             {
@@ -181,7 +181,7 @@ namespace Finances.WinClient.ViewModels
 
 
 
-        //public ITransferItemViewModel MapIn(Transfer from)
+        //public TransferItemViewModel MapIn(Transfer from)
         //{
         //    this.TransferId = from.TransferId;
         //    this.Name = from.Name;
@@ -197,45 +197,45 @@ namespace Finances.WinClient.ViewModels
         //}
 
 
-        #region IEntityMapper
+        //#region IEntityMapper
 
-        public void MapIn(Transfer entity)
-        {
-            this.TransferId = entity.TransferId;
-            this.Name = entity.Name;
+        //public void MapIn(Transfer entity)
+        //{
+        //    this.TransferId = entity.TransferId;
+        //    this.Name = entity.Name;
 
-            if (entity.FromBankAccount == null)
-                this.FromBankAccount = null;
-            else
-            {
-                this.FromBankAccount = new BankAccountItemViewModel();
-                this.FromBankAccount.MapIn(entity.FromBankAccount);
-            }
+        //    if (entity.FromBankAccount == null)
+        //        this.FromBankAccount = null;
+        //    else
+        //    {
+        //        this.FromBankAccount = new BankAccountItemViewModel();
+        //        this.FromBankAccount.MapIn(entity.FromBankAccount);
+        //    }
 
-            if (entity.ToBankAccount == null)
-                this.ToBankAccount = null;
-            else
-            {
-                this.ToBankAccount = new BankAccountItemViewModel();
-                this.ToBankAccount.MapIn(entity.ToBankAccount); ;
-            }
+        //    if (entity.ToBankAccount == null)
+        //        this.ToBankAccount = null;
+        //    else
+        //    {
+        //        this.ToBankAccount = new BankAccountItemViewModel();
+        //        this.ToBankAccount.MapIn(entity.ToBankAccount); ;
+        //    }
 
-            this.Amount = entity.Amount;
-            this.AmountTolerence = entity.AmountTolerence;
-            this.StartDate = entity.StartDate;
-            this.EndDate = entity.EndDate;
-            this.Frequency = entity.Frequency;
-            this.IsEnabled = entity.IsEnabled;
-        }
+        //    this.Amount = entity.Amount;
+        //    this.AmountTolerence = entity.AmountTolerence;
+        //    this.StartDate = entity.StartDate;
+        //    this.EndDate = entity.EndDate;
+        //    this.Frequency = entity.Frequency;
+        //    this.IsEnabled = entity.IsEnabled;
+        //}
 
-        public void MapOut(Transfer entity)
-        {
-            entity.TransferId = this.TransferId;
-        }
+        //public void MapOut(Transfer entity)
+        //{
+        //    entity.TransferId = this.TransferId;
+        //}
 
-        #endregion
+        //#endregion
 
-        //ITransferItemViewModel ITransferItemViewModel.MapIn(Transfer from)
+        //TransferItemViewModel TransferItemViewModel.MapIn(Transfer from)
         //{
         //    throw new NotImplementedException();
         //}

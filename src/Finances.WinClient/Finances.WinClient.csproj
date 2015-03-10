@@ -97,9 +97,11 @@
     <Compile Include="CastleInstallers\WorkspaceInstaller.cs" />
     <Compile Include="Converters\AccountEleswhereToVisibileConverter.cs" />
     <Compile Include="Converters\AccountEleswhereToCollapsedConverter.cs" />
+    <Compile Include="DomainServices\CashflowAgent.cs" />
     <Compile Include="DomainServices\MappingCreator.cs" />
     <Compile Include="Factories\BankEditorViewModelFactory.cs" />
     <Compile Include="Factories\BankAccountEditorViewModelFactory.cs" />
+    <Compile Include="Factories\CashflowEditorViewModelFactory.cs" />
     <Compile Include="Factories\TransferEditorViewModelFactory.cs" />
     <Compile Include="InterceptorSelectors\RepositoryInterceptorSelector.cs" />
     <Compile Include="Interceptors\ErrorHandlingInterceptor.cs" />
@@ -110,14 +112,17 @@
     <Compile Include="ViewModels\BankTreeViewModel.cs" />
     <Compile Include="ViewModels\BanksViewModel.cs" />
     <Compile Include="ViewModels\BankAccountsViewModel.cs" />
+    <Compile Include="ViewModels\CashflowBankAccountItemViewModel.cs" />
+    <Compile Include="ViewModels\CashflowItemViewModel.cs" />
+    <Compile Include="ViewModels\CashflowListViewModel.cs" />
+    <Compile Include="ViewModels\CashflowEditorViewModelOld.cs" />
+    <Compile Include="ViewModels\CashflowEditorViewModel.cs" />
+    <Compile Include="ViewModels\DashboardViewModel.cs" />
     <Compile Include="ViewModels\TransferListViewModel.cs" />
     <Compile Include="ViewModels\TransferEditorViewModel.cs" />
     <Compile Include="ViewModels\TransferItemViewModel.cs" />
     <Compile Include="ViewModels\MainViewModel.cs" />
     <Compile Include="ViewModels\WorkspaceAreaViewModel.cs" />
-    <Compile Include="Views\BankAccountEditorView_old.xaml.cs">
-      <DependentUpon>BankAccountEditorView_old.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Views\BankAccountsView.xaml.cs">
       <DependentUpon>BankAccountsView.xaml</DependentUpon>
     </Compile>
@@ -127,14 +132,20 @@
     <Compile Include="Views\BanksView.xaml.cs">
       <DependentUpon>BanksView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\BankAccountEditorView_old2.xaml.cs">
-      <DependentUpon>BankAccountEditorView_old2.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Views\BankAccountEditorView.xaml.cs">
       <DependentUpon>BankAccountEditorView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\BankTreeView.xaml.cs">
       <DependentUpon>BankTreeView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\CashflowListView.xaml.cs">
+      <DependentUpon>CashflowListView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\CashflowEditorView.xaml.cs">
+      <DependentUpon>CashflowEditorView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\DashboardView.xaml.cs">
+      <DependentUpon>DashboardView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\MainView.xaml.cs">
       <DependentUpon>MainView.xaml</DependentUpon>
@@ -184,10 +195,6 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Views\BankAccountEditorView_old.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="Views\BankAccountsView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -200,15 +207,23 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Views\BankAccountEditorView_old2.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
     <Page Include="Views\BankAccountEditorView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Views\BankTreeView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\CashflowListView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\CashflowEditorView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\DashboardView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -275,9 +290,20 @@
       <Name>Finances.Persistence.FNH</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Resource Include="Images\AddNewItem_6273.png" />
+  </ItemGroup>
   <ItemGroup>
     <Resource Include="Images\base_exclamationmark_32.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\Money.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\Money.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\Money.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\AutoMapper.3.2.1\tools\AutoMapper.targets" Condition="Exists('..\packages\AutoMapper.3.2.1\tools\AutoMapper.targets')" />

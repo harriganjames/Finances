@@ -7,6 +7,8 @@ using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using System.Data.Entity.Validation;
 using System.Text;
+using System.Data.Entity;
+using System.Data;
 
 namespace Finances.Persistence.EF
 {
@@ -23,7 +25,7 @@ namespace Finances.Persistence.EF
         //{
         //    using (FinanceEntities context = factory.CreateContext())
         //    {
-        //        context.Entry(ef).State = System.Data.EntityState.Added;
+        //        context.Entry(ef).State = EntityState.Added;
         //        context.SaveChanges();
         //    }
         //    return true;
@@ -34,7 +36,7 @@ namespace Finances.Persistence.EF
         {
             using (FinanceEntities context = factory.CreateContext())
             {
-                context.Entry(ef).State = System.Data.EntityState.Added;
+                context.Entry(ef).State = EntityState.Added;
                 context.SaveChanges();
             }
             return true;

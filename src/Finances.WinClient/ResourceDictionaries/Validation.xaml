@@ -79,7 +79,8 @@
 
 
     <!--This places the validation error in the tooltip of the control in error-->
-    <Style TargetType="Control" x:Key="myErrorTemplate">
+    <!--However it generates an error when state moves from invalid to valid. e.g. when type chr into a mand box-->
+    <!--<Style TargetType="Control" x:Key="myErrorTemplate">
         <Style.Triggers>
             <Trigger Property="Validation.HasError" Value="true">
                 <Setter Property="ToolTip"
@@ -91,7 +92,7 @@
     <Style TargetType="TextBox" BasedOn="{StaticResource myErrorTemplate}" />
     <Style TargetType="CheckBox" BasedOn="{StaticResource myErrorTemplate}" />
     <Style TargetType="ComboBox" BasedOn="{StaticResource myErrorTemplate}" />
-    <Style TargetType="DatePicker" BasedOn="{StaticResource myErrorTemplate}" />
+    <Style TargetType="DatePicker" BasedOn="{StaticResource myErrorTemplate}" />-->
 
 
 </ResourceDictionary>

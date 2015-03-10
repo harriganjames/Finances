@@ -24,9 +24,12 @@ namespace Finances.WinClient.CastleInstallers
 
             //container.Register(Component.For<IBanksViewModel>().ImplementedBy<BanksViewModel>());
 
-            //container.Register(Component.For<IBankEditorViewModel>().ImplementedBy<BankEditorViewModel>());
+            //container.Register(Component.For<BankEditorViewModel>().ImplementedBy<BankEditorViewModel>());
 
             //container.Register(Component.For<ITransferService>().ImplementedBy<TransferService>());
+
+            container.Register(Component.For<ICashflowAgent>().ImplementedBy<CashflowAgent>());
+
 
             // Mappings
             container.Register(Component.For<IMappingCreator>().ImplementedBy<MappingCreator>());

@@ -66,6 +66,8 @@
     <Content Include="SQL\ResetINT.sql" />
     <Content Include="SQL\Queries.sql" />
     <Content Include="SQL\Tables.sql" />
+    <Content Include="SQL\Tables\Cashflow.sql" />
+    <Content Include="SQL\Tables\CashflowBankAccount.sql" />
     <Content Include="SQL\Tables\Transfer.sql" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

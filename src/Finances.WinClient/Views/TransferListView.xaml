@@ -96,6 +96,7 @@
                     <ListView.Resources>
                         <Style TargetType="{x:Type ListViewItem}">
                             <Setter Property="IsSelected" Value="{Binding IsSelected, Mode=TwoWay}"/>
+                            <Setter Property="HorizontalContentAlignment" Value="Stretch" />
                         </Style>
                     </ListView.Resources>
 
@@ -118,7 +119,14 @@
                                     </DataTemplate>
                                 </GridViewColumn.CellTemplate>
                             </GridViewColumn>
-                            <GridViewColumn DisplayMemberBinding="{Binding Amount, StringFormat=c}" Header="Amount" />
+                            <GridViewColumn Header="Amount">
+                                <GridViewColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <TextBlock  TextAlignment="Right"
+                                                    Text="{Binding Amount, StringFormat=c}"/>
+                                    </DataTemplate>
+                                </GridViewColumn.CellTemplate>
+                            </GridViewColumn>
                             <GridViewColumn DisplayMemberBinding="{Binding StartDate, StringFormat=yyyy-MM-dd}" Header="Start" />
                             <GridViewColumn DisplayMemberBinding="{Binding EndDate, StringFormat=yyyy-MM-dd}" Header="End" />
                             <GridViewColumn DisplayMemberBinding="{Binding Frequency}" Header="Frequency" />

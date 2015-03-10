@@ -12,12 +12,12 @@ using Finances.WinClient.DomainServices;
 
 namespace Finances.WinClient.ViewModels
 {
-    public interface IBankTreeViewModel : IListViewModelBase<IBankItemViewModel>
-    {
-        ObservableCollection<IBankItemViewModel> Banks { get; }
-    }
+    //public interface IBankTreeViewModel : IListViewModelBase<BankItemViewModel>
+    //{
+    //    ObservableCollection<BankItemViewModel> Banks { get; }
+    //}
 
-    public class BankTreeViewModel : ListViewModelBase<IBankItemViewModel>, IBankTreeViewModel
+    public class BankTreeViewModel : ListViewModelBase<BankItemViewModel>//, IBankTreeViewModel
     {
 
         readonly IBankRepository bankRepository;
@@ -39,7 +39,7 @@ namespace Finances.WinClient.ViewModels
 
         public ActionCommand ReloadCommand { get; set; }
 
-        public ObservableCollection<IBankItemViewModel> Banks
+        public ObservableCollection<BankItemViewModel> Banks
         {
             get
             {

@@ -68,11 +68,13 @@
             <Grid Margin="{StaticResource Spacer}">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" SharedSizeGroup="label"/>
-                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
 
                 <Label      Content="Bank"/>
                 <ComboBox   Name="lstBank2"
+                            MinWidth="150"
                             Width="Auto"
                             Grid.Column="1"
                             ItemsSource="{Binding BankList}"
@@ -91,6 +93,10 @@
                         </DataTemplate>
                     </ComboBox.ItemTemplate>
                 </ComboBox>
+                <Button     Grid.Column="2"
+                            Content="New Bank"
+                            Margin="20,0,0,0"
+                            Command="{Binding NewBankCommand}"/>
 
             </Grid>
 

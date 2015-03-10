@@ -10,9 +10,9 @@ using Finances.WinClient.ViewModels;
 //using Finances.WinClient.Mappers;
 
 
-//in progress Bank Map(IBankEditorViewModel from, Bank to);
-//done IBankAccountItemViewModel Map(BankAccount from, IBankAccountItemViewModel to);
-//IBankEditorViewModel Map(Bank from, IBankEditorViewModel to);
+//in progress Bank Map(BankEditorViewModel from, Bank to);
+//done BankAccountItemViewModel Map(BankAccount from, BankAccountItemViewModel to);
+//BankEditorViewModel Map(Bank from, BankEditorViewModel to);
 
 namespace Finances.UnitTests.Finances.WinClient.BankAccountMapperTests
 {
@@ -38,7 +38,7 @@ namespace Finances.UnitTests.Finances.WinClient.BankAccountMapperTests
     //public class and_mapping_a_bank_account_to_a_bank_account_item_VM : when_working_with_the_bank_account_mapper
     //{
     //    BankAccount from;
-    //    IBankAccountItemViewModel to;
+    //    BankAccountItemViewModel to;
 
     //    protected override void Establish_context()
     //    {
@@ -83,7 +83,7 @@ namespace Finances.UnitTests.Finances.WinClient.BankAccountMapperTests
     //public class and_mapping_a_bank_account_editor_VM_to_a_bank_account : when_working_with_the_bank_account_mapper
     //{
     //    BankAccount to;
-    //    IBankAccountEditorViewModel from;
+    //    BankAccountEditorViewModel from;
 
     //    protected override void Establish_context()
     //    {
@@ -138,7 +138,7 @@ namespace Finances.UnitTests.Finances.WinClient.BankAccountMapperTests
     //public class and_mapping_a_bank_account_to_a_bank_editor_VM : when_working_with_the_bank_account_mapper
     //{
     //    BankAccount from;
-    //    IBankAccountEditorViewModel to;
+    //    BankAccountEditorViewModel to;
 
     //    protected override void Establish_context()
     //    {

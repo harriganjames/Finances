@@ -13,18 +13,18 @@ using Finances.WinClient.DomainServices;
 
 namespace Finances.WinClient.ViewModels
 {
-    public interface IBankEditorViewModel : IEditorViewModelBase, IEntityMapper<Bank>
-    {
-        int BankId { get; set; }
-        string Name { get; set; }
-        byte[] LogoRaw { get; set; }
-        BitmapSource Logo { get; }
-        void InitializeForAddEdit(bool AddEdit);
-        ActionCommand ImportLogoCommand { get; set; }
-        ActionCommand ClearLogoCommand { get; set; }
-    }
+    //public interface BankEditorViewModel : IEditorViewModelBase, IEntityMapper<Bank>
+    //{
+    //    int BankId { get; set; }
+    //    string Name { get; set; }
+    //    byte[] LogoRaw { get; set; }
+    //    BitmapSource Logo { get; }
+    //    void InitializeForAddEdit(bool AddEdit);
+    //    ActionCommand ImportLogoCommand { get; set; }
+    //    ActionCommand ClearLogoCommand { get; set; }
+    //}
 
-    public class BankEditorViewModel : EditorViewModelBase, IBankEditorViewModel
+    public class BankEditorViewModel : EditorViewModelBase//, BankEditorViewModel
     {
         bool delayValidation = false; // must be false until change logic around IsValid
         List<DataIdName> existingBanks;
@@ -190,24 +190,24 @@ namespace Finances.WinClient.ViewModels
         #endregion
 
 
-        #region Map
+        //#region Map
 
-        public void MapOut(Bank to)
-        {
-            to.BankId = this.BankId;
-            to.Name = this.Name;
-            to.Logo = this.LogoRaw;
-        }
+        //public void MapOut(Bank to)
+        //{
+        //    to.BankId = this.BankId;
+        //    to.Name = this.Name;
+        //    to.Logo = this.LogoRaw;
+        //}
 
-        public void MapIn(Bank from)
-        {
-            this.BankId = from.BankId;
-            this.Name = from.Name;
-            this.LogoRaw = from.Logo;
-        }
+        //public void MapIn(Bank from)
+        //{
+        //    this.BankId = from.BankId;
+        //    this.Name = from.Name;
+        //    this.LogoRaw = from.Logo;
+        //}
 
 
-        #endregion
+        //#endregion
 
 
         #region Validation

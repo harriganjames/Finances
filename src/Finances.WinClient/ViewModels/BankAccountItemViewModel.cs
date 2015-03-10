@@ -10,30 +10,30 @@ using Finances.Core.Wpf;
 
 namespace Finances.WinClient.ViewModels
 {
-    public interface IBankAccountItemViewModel : ITreeViewItemViewModelBase, IEntityMapper<BankAccount>
-    {
-        ICommand GoOnlineCommand { get; set; }
+    //public interface BankAccountItemViewModel : ITreeViewItemViewModelBase, IEntityMapper<BankAccount>
+    //{
+    //    ICommand GoOnlineCommand { get; set; }
 
-        int BankAccountId { get; set; }
-        string AccountName { get; set; }
-        string AccountNumber { get; set; }
-        string AccountOwner { get; set; }
-        IBankItemViewModel Bank { get; set; }
-        DateTime? ClosedDate { get; set; }
-        decimal? InitialRate { get; set; }
-        string LoginId { get; set; }
-        string LoginUrl { get; set; }
-        DateTime? MilestoneDate { get; set; }
-        string MilestoneNotes { get; set; }
-        string Notes { get; set; }
-        DateTime OpenedDate { get; set; }
-        string PasswordHint { get; set; }
-        bool PaysTaxableInterest { get; set; }
-        string SortCode { get; set; }
-        //IBankAccountItemViewModel MapIn(BankAccount from);
-    }
+    //    int BankAccountId { get; set; }
+    //    string AccountName { get; set; }
+    //    string AccountNumber { get; set; }
+    //    string AccountOwner { get; set; }
+    //    BankItemViewModel Bank { get; set; }
+    //    DateTime? ClosedDate { get; set; }
+    //    decimal? InitialRate { get; set; }
+    //    string LoginId { get; set; }
+    //    string LoginUrl { get; set; }
+    //    DateTime? MilestoneDate { get; set; }
+    //    string MilestoneNotes { get; set; }
+    //    string Notes { get; set; }
+    //    DateTime OpenedDate { get; set; }
+    //    string PasswordHint { get; set; }
+    //    bool PaysTaxableInterest { get; set; }
+    //    string SortCode { get; set; }
+    //    //BankAccountItemViewModel MapIn(BankAccount from);
+    //}
 
-    public class BankAccountItemViewModel : TreeViewItemViewModelBase, IBankAccountItemViewModel
+    public class BankAccountItemViewModel : TreeViewItemViewModelBase//, BankAccountItemViewModel
     {
         //readonly IEventPublisher eventPublisher;
 
@@ -46,8 +46,10 @@ namespace Finances.WinClient.ViewModels
         }
 
 
-        static IBankAccountItemViewModel elsewhere;
-        public static IBankAccountItemViewModel Elsewhere 
+        #region Static
+
+        static BankAccountItemViewModel elsewhere;
+        public static BankAccountItemViewModel Elsewhere 
         {
             get
             {
@@ -58,6 +60,7 @@ namespace Finances.WinClient.ViewModels
         }
 
 
+        #endregion
 
         int bankAccountId;
         public int BankAccountId
@@ -71,15 +74,10 @@ namespace Finances.WinClient.ViewModels
         {
             get { return accountName; }
             set {
-                int i=0;
-
-
-                if (value == "Fred22" && accountName == "<Elsewhere>")
-                    i = 1;
-
                 accountName = value; 
                 
-                NotifyPropertyChanged(); }
+                NotifyPropertyChanged();
+            }
         }
 
         //int bankId;
@@ -89,8 +87,8 @@ namespace Finances.WinClient.ViewModels
         //    set { bankId = value; NotifyPropertyChanged(); }
         //}
 
-        IBankItemViewModel bank;
-        public IBankItemViewModel Bank
+        BankItemViewModel bank;
+        public BankItemViewModel Bank
         {
             get 
             {
@@ -203,34 +201,34 @@ namespace Finances.WinClient.ViewModels
             //this.eventPublisher.SendMessage<OpenBrowserEvent>(ev);
         }
 
-        #region IEntityMapper
+        //#region IEntityMapper
 
-        public void MapIn(BankAccount entity)
-        {
-            this.BankAccountId = entity.BankAccountId;
-            this.AccountName = entity.Name;
-            this.Bank.MapIn(entity.Bank);
-            this.AccountNumber = entity.AccountNumber;
-            this.SortCode = entity.SortCode;
-            this.AccountOwner = entity.AccountOwner;
-            this.OpenedDate = entity.OpenedDate;
-            this.ClosedDate = entity.ClosedDate;
-            this.InitialRate = entity.InitialRate;
-            this.LoginId = entity.LoginID;
-            this.LoginUrl = entity.LoginURL;
-            this.MilestoneDate = entity.MilestoneDate;
-            this.MilestoneNotes = entity.MilestoneNotes;
-            this.Notes = entity.Notes;
-            this.PasswordHint = entity.PasswordHint;
-            this.PaysTaxableInterest = entity.PaysTaxableInterest;
-        }
+        //public void MapIn(BankAccount entity)
+        //{
+        //    this.BankAccountId = entity.BankAccountId;
+        //    this.AccountName = entity.Name;
+        //    this.Bank.MapIn(entity.Bank);
+        //    this.AccountNumber = entity.AccountNumber;
+        //    this.SortCode = entity.SortCode;
+        //    this.AccountOwner = entity.AccountOwner;
+        //    this.OpenedDate = entity.OpenedDate;
+        //    this.ClosedDate = entity.ClosedDate;
+        //    this.InitialRate = entity.InitialRate;
+        //    this.LoginId = entity.LoginID;
+        //    this.LoginUrl = entity.LoginURL;
+        //    this.MilestoneDate = entity.MilestoneDate;
+        //    this.MilestoneNotes = entity.MilestoneNotes;
+        //    this.Notes = entity.Notes;
+        //    this.PasswordHint = entity.PasswordHint;
+        //    this.PaysTaxableInterest = entity.PaysTaxableInterest;
+        //}
 
-        public void MapOut(BankAccount entity)
-        {
-            entity.BankAccountId = this.BankAccountId;
-        }
+        //public void MapOut(BankAccount entity)
+        //{
+        //    entity.BankAccountId = this.BankAccountId;
+        //}
 
-        #endregion
+        //#endregion
 
     }
 }

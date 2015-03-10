@@ -8,17 +8,17 @@ namespace Finances.WinClient.Factories
 {
     public interface IBankAccountEditorViewModelFactory
     {
-        IBankAccountEditorViewModel Create();
-        void Release(IBankAccountEditorViewModel vm);
+        BankAccountEditorViewModel Create();
+        void Release(BankAccountEditorViewModel vm);
     }
 
-    //public class BankAccountEditorViewModelFactory : IBankAccountEditorViewModelFactory
+    //public class IBankAccountEditorViewModelFactory : IBankAccountEditorViewModelFactory
     //{
     //    readonly IBankRepository bankRepository;
     //    readonly IMappingEngine mapper;
     //    readonly IBankAccountRepository bankAccountRepository;
 
-    //    public BankAccountEditorViewModelFactory(
+    //    public IBankAccountEditorViewModelFactory(
     //            IBankAccountRepository bankAccountRepository,
     //            IBankRepository bankRepository,
     //            IMappingEngine mapper
@@ -29,7 +29,7 @@ namespace Finances.WinClient.Factories
     //        this.mapper = mapper;
     //    }
 
-    //    public IBankAccountEditorViewModel Create()
+    //    public BankAccountEditorViewModel Create()
     //    {
     //        return new BankAccountEditorViewModel(bankAccountRepository, bankRepository, mapper);
     //    }

@@ -18,6 +18,9 @@ namespace Finances.WinClient.CastleInstallers
 
             container.Register(Component.For<ITransferRepository>().ImplementedBy<Finances.Persistence.EF.TransferRepository>());
 
+            container.Register(Component.For<ICashflowRepository>().ImplementedBy<Finances.Persistence.EF.CashflowRepository>());
+
+
             // Mappings
             container.Register(Component.For<IMappingCreator>().ImplementedBy<MappingCreator>());
 

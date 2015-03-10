@@ -7,6 +7,7 @@ using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using System.Data.Entity.Validation;
 using System.Text;
+using System.Data;
 
 namespace Finances.Persistence.EF
 {
@@ -32,7 +33,7 @@ namespace Finances.Persistence.EF
                 var ef = mapper.Map<Transfer>(entity);
                 using (FinanceEntities context = factory.CreateContext())
                 {
-                    context.Entry(ef).State = System.Data.EntityState.Added;
+                    context.Entry(ef).State = EntityState.Added;
                     context.SaveChanges();
                 }
                 //read back columns which may have changed
@@ -55,7 +56,7 @@ namespace Finances.Persistence.EF
                 var ef = mapper.Map<Transfer>(entity);
                 using (FinanceEntities context = factory.CreateContext())
                 {
-                    context.Entry(ef).State = System.Data.EntityState.Modified;
+                    context.Entry(ef).State = EntityState.Modified;
                     context.SaveChanges();
                 }
                 //read back columns which may have changed
@@ -76,7 +77,7 @@ namespace Finances.Persistence.EF
                 var ef = mapper.Map<Transfer>(entity);
                 using (FinanceEntities context = factory.CreateContext())
                 {
-                    context.Entry(ef).State = System.Data.EntityState.Deleted;
+                    context.Entry(ef).State = EntityState.Deleted;
                     context.SaveChanges();
                 }
             }
@@ -147,10 +148,14 @@ namespace Finances.Persistence.EF
             {
                 using (FinanceEntities context = factory.CreateContext())
                 {
-                    var ef = (from b in context.Transfers
-                              select b).ToList();
+                    //var ef = (from b in context.Transfers
+                    //          select b).ToList();
 
-                    list = mapper.Map<List<Core.Entities.DataIdName>>(ef);
+                    //list = mapper.Map<List<Core.Entities.DataIdName>>(ef);
+
+                    list = (from b in context.Transfers
+                            select b).Project(mapper).To<Core.Entities.DataIdName>().ToList();
+
                 }
             }
             catch (DbEntityValidationException e)
@@ -169,17 +174,17 @@ namespace Finances.Persistence.EF
         //    {
         //        if (ef.FromBankAccount.Bank != null)
         //        {
-        //            context.Entry(ef.FromBankAccount.Bank).State = System.Data.EntityState.Detached;
+        //            context.Entry(ef.FromBankAccount.Bank).State = EntityState.Detached;
         //        }
-        //        context.Entry(ef.FromBankAccount).State = System.Data.EntityState.Detached;
+        //        context.Entry(ef.FromBankAccount).State = EntityState.Detached;
         //    }
         //    if (ef.ToBankAccount != null)
         //    {
         //        if (ef.ToBankAccount.Bank != null)
         //        {
-        //            context.Entry(ef.ToBankAccount.Bank).State = System.Data.EntityState.Detached;
+        //            context.Entry(ef.ToBankAccount.Bank).State = EntityState.Detached;
         //        }
-        //        context.Entry(ef.ToBankAccount).State = System.Data.EntityState.Detached;
+        //        context.Entry(ef.ToBankAccount).State = EntityState.Detached;
         //    }
         //}
 

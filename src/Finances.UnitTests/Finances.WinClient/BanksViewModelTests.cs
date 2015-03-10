@@ -36,8 +36,8 @@ namespace Finances.UnitTests.Finances.WinClient.BankViewModelTests
 
     //public class and_loading_a_list_of_bank_view_models : when_working_with_the_banks_view_model
     //{
-    //    List<IBankItemViewModel> testBankVMList;
-    //    ObservableCollection<IBankItemViewModel> testResult;
+    //    List<BankItemViewModel> testBankVMList;
+    //    ObservableCollection<BankItemViewModel> testResult;
 
     //    public void MainSetup()
     //    {
@@ -55,7 +55,7 @@ namespace Finances.UnitTests.Finances.WinClient.BankViewModelTests
     //        base.Establish_context();
 
 
-    //        testBankVMList = new List<IBankItemViewModel>() 
+    //        testBankVMList = new List<BankItemViewModel>() 
     //        {
     //            new BankItemViewModel() { BankId=1, Name="One" },
     //            new BankItemViewModel() { BankId=2, Name="Two" },

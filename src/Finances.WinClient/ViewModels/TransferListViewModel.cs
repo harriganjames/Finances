@@ -15,16 +15,18 @@ using Finances.WinClient.Factories;
 
 namespace Finances.WinClient.ViewModels
 {
-    public interface ITransferListViewModel : IListViewModelBase<ITransferItemViewModel>
+    public interface ITransferListViewModel //: IListViewModelBase<TransferItemViewModel>
     {
-        ActionCommand AddCommand { get; set; }
-        ActionCommand EditCommand { get; set; }
-        ActionCommand DeleteCommand { get; set; }
-        ActionCommand ReloadCommand { get; set; }
-        ObservableCollection<ITransferItemViewModel> Transfers { get; }
+    //    ActionCommand AddCommand { get; set; }
+    //    ActionCommand EditCommand { get; set; }
+    //    ActionCommand DeleteCommand { get; set; }
+    //    ActionCommand ReloadCommand { get; set; }
+    //    ObservableCollection<TransferItemViewModel> Transfers { get; }
+        void Open();
+        void Close();
     }
 
-    public class TransferListViewModel : ListViewModelBase<ITransferItemViewModel>, ITransferListViewModel
+    public class TransferListViewModel : ListViewModelBase<TransferItemViewModel>, ITransferListViewModel
     {
         readonly ITransferRepository transferRepository;
         readonly IMappingEngine mapper;
@@ -64,7 +66,7 @@ namespace Finances.WinClient.ViewModels
 
         #region PublicProperties
 
-        public ObservableCollection<ITransferItemViewModel> Transfers
+        public ObservableCollection<TransferItemViewModel> Transfers
         {
             get
             {
@@ -77,12 +79,21 @@ namespace Finances.WinClient.ViewModels
 
         public override void WorkspaceOpened()
         {
-
-
-            LoadData();
+            Open();
         }
 
         public override void WorkspaceClosed()
+        {
+            Close();
+        }
+
+
+        public void Open()
+        {
+            LoadData();
+        }
+
+        public void Close()
         {
             base.DataList.Clear();
         }
@@ -94,7 +105,7 @@ namespace Finances.WinClient.ViewModels
 
         private void LoadData()
         {
-            //List<ITransferItemViewModel> transfers = null;
+            //List<TransferItemViewModel> transfers = null;
 
             base.IsBusy = true;
 
@@ -166,7 +177,7 @@ namespace Finances.WinClient.ViewModels
         {
             var editor = this.transferEditorViewModelFactory.Create();
 
-            ITransferItemViewModel vm = base.GetSelectedItems().First();
+            TransferItemViewModel vm = base.GetSelectedItems().First();
 
             Transfer transfer = this.transfers[vm.TransferId];
 
@@ -200,7 +211,7 @@ namespace Finances.WinClient.ViewModels
         {
             string title;
             string message;
-            List<ITransferItemViewModel> sel = base.GetSelectedItems().ToList();
+            List<TransferItemViewModel> sel = base.GetSelectedItems().ToList();
 
             if (sel.Count() == 0)
             {

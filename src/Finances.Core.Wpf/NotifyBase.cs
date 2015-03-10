@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Linq.Expressions;
 using System.Runtime.CompilerServices;
 
@@ -13,6 +14,7 @@ namespace Finances.Core.Wpf
         // parameter causes the property name of the caller to be substituted as an argument. 
         public virtual void NotifyPropertyChanged([CallerMemberName] String propertyName = "")
         {
+            Debug.WriteLine("NotifyPropertyChanged({0})",(object)propertyName);
             if (PropertyChanged != null)
             {
                 PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
@@ -34,6 +36,7 @@ namespace Finances.Core.Wpf
 
         public virtual void NotifyAllPropertiesChanged()
         {
+            Debug.WriteLine("NotifyAllPropertiesChanged");
             if (PropertyChanged != null)
             {
                 PropertyChanged(this, new PropertyChangedEventArgs(""));

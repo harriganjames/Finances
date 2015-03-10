@@ -139,7 +139,13 @@ namespace Finances.Core.Wpf
             get { return dialogAcceptCommand; }
         }
 
+        public virtual void DialogOkClicked()
+        {
+        }
+
         #endregion
+
+
 
     }
 }

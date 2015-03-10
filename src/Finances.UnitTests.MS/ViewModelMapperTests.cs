@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Collections.Generic;
 using AutoMapper;
 using Finances.Core.Entities;
@@ -18,6 +19,7 @@ namespace Finances.UnitTests.MS
         Bank testBankEntity2;
         BankAccount testBankAccountEntity;
         Transfer testTransferEntity;
+        Cashflow testCashflowEntity;
 
         [TestInitialize]
         public void Initialize()
@@ -74,20 +76,54 @@ namespace Finances.UnitTests.MS
                 IsEnabled = true
             };
 
+
+            testCashflowEntity = new Core.Entities.Cashflow()
+            {
+                CashflowId = 1,
+                Name = "test cashflow",
+                OpeningBalance = 123M,
+                StartDate = DateTime.Now.Date,
+                CashflowBankAccounts = new List<Core.Entities.CashflowBankAccount>() { 
+                    new Core.Entities.CashflowBankAccount()
+                        {
+                            CashflowBankAccountId = 1,
+                            BankAccount = testBankAccountEntity
+                        }
+                    }
+            };
+
+
+
         }
+
+
+        //[TestMethod]
+        //public void Test_Map_InputDecimal_to_decimal_And_Reverse()
+        //{
+        //    var ind = new InputDecimal() { Value = 123M };
+
+        //    var dec = Mapper.Map<decimal>(ind);
+
+        //    Assert.AreEqual(dec, ind.Value);
+
+        //    var newind = Mapper.Map<InputDecimal>(dec);
+
+        //    Assert.AreEqual(dec, newind.Value);
+        //}
+
 
 
         // Bank -> BankItemViewModel
-        // Bank -> IBankItemViewModel
+        // Bank -> BankItemViewModel
         // BankItemViewModel -> Bank
-        // IBankItemViewModel -> Bank
+        // BankItemViewModel -> Bank
 
 
-        [TestMethod]
-        public void Test_AutoMapper_ConfigurationIsValid()
-        {
-            mapper.ConfigurationProvider.AssertConfigurationIsValid();
-        }
+        //[TestMethod]
+        //public void Test_AutoMapper_ConfigurationIsValid()
+        //{
+        //    mapper.ConfigurationProvider.AssertConfigurationIsValid();
+        //}
 
 
         //
@@ -108,9 +144,9 @@ namespace Finances.UnitTests.MS
         [TestMethod]
         public void Test_Map_Bank_to_BankEditorViewModel_And_Reverse()
         {
-            IBankEditorViewModel editor = new BankEditorViewModel(null, null);
+            BankEditorViewModel editor = new BankEditorViewModel(null, null);
 
-            mapper.Map<Bank,IBankEditorViewModel>(testBankEntity,editor);
+            mapper.Map<Bank,BankEditorViewModel>(testBankEntity,editor);
 
             var b = mapper.Map<Bank>(editor);
 
@@ -152,9 +188,9 @@ namespace Finances.UnitTests.MS
         [TestMethod]
         public void Test_Map_BankAccount_to_BankAccountEditorViewModel_And_Reverse()
         {
-            IBankAccountEditorViewModel editor = new BankAccountEditorViewModel(null,null,null);
+            BankAccountEditorViewModel editor = new BankAccountEditorViewModel(null,null,null,null,null);
 
-            mapper.Map<BankAccount, IBankAccountEditorViewModel>(testBankAccountEntity, editor);
+            mapper.Map<BankAccount, BankAccountEditorViewModel>(testBankAccountEntity, editor);
 
             var ba = mapper.Map<BankAccount>(editor);
 
@@ -180,9 +216,9 @@ namespace Finances.UnitTests.MS
         [TestMethod]
         public void Test_Map_Transfer_to_TransferEditorViewModel_And_Reverse()
         {
-            ITransferEditorViewModel editor = new TransferEditorViewModel(null, null, null);
+            TransferEditorViewModel editor = new TransferEditorViewModel(null, null, null, null, null);
 
-            mapper.Map<Transfer, ITransferEditorViewModel>(testTransferEntity, editor);
+            mapper.Map<Transfer, TransferEditorViewModel>(testTransferEntity, editor);
 
             var b = mapper.Map<Transfer>(editor);
 
@@ -192,11 +228,11 @@ namespace Finances.UnitTests.MS
         [TestMethod]
         public void Test_Map_Transfer_to_TransferEditorViewModel_Optional_BankAccount_And_Reverse()
         {
-            ITransferEditorViewModel editor = new TransferEditorViewModel(null, null, null);
+            TransferEditorViewModel editor = new TransferEditorViewModel(null, null, null, null, null);
 
             testTransferEntity.FromBankAccount = null;
 
-            mapper.Map<Transfer, ITransferEditorViewModel>(testTransferEntity, editor);
+            mapper.Map<Transfer, TransferEditorViewModel>(testTransferEntity, editor);
 
             var b = mapper.Map<Transfer>(editor);
 
@@ -204,7 +240,7 @@ namespace Finances.UnitTests.MS
 
             testTransferEntity.ToBankAccount = null;
 
-            mapper.Map<Transfer, ITransferEditorViewModel>(testTransferEntity, editor);
+            mapper.Map<Transfer, TransferEditorViewModel>(testTransferEntity, editor);
 
             b = mapper.Map<Transfer>(editor);
 
@@ -217,12 +253,12 @@ namespace Finances.UnitTests.MS
         {
             // null BankAccounts in Transfer should convert to BankAccountItemViewModel.Elsewhere in editor and vice-versa
             //
-            ITransferEditorViewModel editor = new TransferEditorViewModel(null, null, null);
+            TransferEditorViewModel editor = new TransferEditorViewModel(null, null, null, null, null);
 
             testTransferEntity.FromBankAccount = null;
             testTransferEntity.ToBankAccount = null;
 
-            mapper.Map<Transfer, ITransferEditorViewModel>(testTransferEntity, editor);
+            mapper.Map<Transfer, TransferEditorViewModel>(testTransferEntity, editor);
 
             Assert.IsNotNull(editor.FromBankAccount);
             Assert.IsNotNull(editor.ToBankAccount);
@@ -235,6 +271,48 @@ namespace Finances.UnitTests.MS
             Assert.IsNull(t.FromBankAccount);
             Assert.IsNull(t.ToBankAccount);
 
+        }
+
+        [TestMethod]
+        public void Test_Map_Cashflow_to_CashflowItemViewModel_And_Reverse()
+        {
+            var vm = mapper.Map<CashflowItemViewModel>(testCashflowEntity);
+
+            var e = mapper.Map<Cashflow>(vm);
+
+            CompareCashflows(testCashflowEntity, e, "Test_Map_Cashflow_to_CashflowItemViewModel_And_Reverse");
+
+        }
+
+        [TestMethod]
+        public void Test_Map_Cashflow_to_CashflowItemViewModel_NoAccounts_And_Reverse()
+        {
+            testCashflowEntity.CashflowBankAccounts.Clear();
+
+            var vm = mapper.Map<CashflowItemViewModel>(testCashflowEntity);
+
+            Assert.IsTrue(vm.CashflowBankAccounts.Count == 0, "vm.CashflowBankAccounts.Count == 0");
+
+            var e = mapper.Map<Cashflow>(vm);
+
+            CompareCashflows(testCashflowEntity, e, "Test_Map_Cashflow_to_CashflowItemViewModel_NoAccounts_And_Reverse");
+
+        }
+
+
+        //maybe use after/before map to populate collection?
+
+
+        [TestMethod]
+        public void Test_Map_Cashflow_to_CashflowEditorViewModel_And_Reverse()
+        {
+            CashflowEditorViewModel editor = new CashflowEditorViewModel(null, null, null, null);
+
+            mapper.Map<Cashflow, CashflowEditorViewModel>(testCashflowEntity, editor);
+
+            var b = mapper.Map<Cashflow>(editor);
+
+            CompareCashflows(testCashflowEntity, b, "Test_Map_Cashflow_to_CashflowEditorViewModel_And_Reverse");
         }
 
 
@@ -305,6 +383,39 @@ namespace Finances.UnitTests.MS
             Assert.AreEqual(entity1.Frequency, entity2.Frequency, "{0} - Frequency", prefix);
             Assert.AreEqual(entity1.IsEnabled, entity2.IsEnabled, "{0} - IsEnabled", prefix);
         }
+
+
+        private void CompareCashflows(Core.Entities.Cashflow entity1, Core.Entities.Cashflow entity2, string prefix)
+        {
+            Assert.AreEqual(entity1.CashflowId, entity2.CashflowId, "{0} - CashflowId");
+            Assert.AreEqual(entity1.Name, entity2.Name, "{0} - Cashflow Name");
+            Assert.AreEqual(entity1.OpeningBalance, entity2.OpeningBalance, "{0} - OpeningBalance");
+            Assert.AreEqual(entity1.StartDate, entity2.StartDate, "{0} - StartDate");
+            Assert.AreEqual(entity1.RecordCreatedDateTime, entity2.RecordCreatedDateTime, "{0} - RecordCreatedDateTime");
+            Assert.AreEqual(entity1.RecordUpdatedDateTime, entity2.RecordUpdatedDateTime, "{0} - RecordUpdatedDateTime");
+
+            Assert.IsNotNull(entity1.CashflowBankAccounts, "{0} - entity1 CashflowBankAccounts null");
+            Assert.IsNotNull(entity2.CashflowBankAccounts, "{0} - entity2 CashflowBankAccounts null");
+            Assert.AreEqual(entity1.CashflowBankAccounts.Count, entity2.CashflowBankAccounts.Count, "{0} - CashflowBankAccounts qty");
+
+            foreach (var e1cba in entity1.CashflowBankAccounts)
+            {
+                Assert.IsTrue(e1cba.BankAccount.BankAccountId > 0, "{0} - e1cba.BankAccount.BankAccountId > 0");
+                var e2cba = entity2.CashflowBankAccounts.FirstOrDefault(o => o.BankAccount.BankAccountId == e1cba.BankAccount.BankAccountId);
+                Assert.IsNotNull(e2cba, "{0} - entity1 BankAccount not found in entity2");
+
+                CompareCashflowBankAccounts(e1cba, e2cba, prefix);
+            }
+        }
+
+        private void CompareCashflowBankAccounts(Core.Entities.CashflowBankAccount entity1, Core.Entities.CashflowBankAccount entity2, string prefix)
+        {
+            Assert.AreEqual(entity1.CashflowBankAccountId, entity2.CashflowBankAccountId, "{0} - CashflowBankAccountId");
+            CompareBankAccounts(entity1.BankAccount, entity2.BankAccount, prefix);
+            Assert.AreEqual(entity1.RecordCreatedDateTime, entity2.RecordCreatedDateTime, "{0} - cba RecordCreatedDateTime");
+        }
+
+
 
         #endregion
     }

@@ -72,8 +72,6 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
-    <Compile Include="BankAccountMapperTests.cs" />
-    <Compile Include="TransferServiceTests.cs" />
     <Compile Include="ViewModelMapperTests.cs" />
     <Compile Include="OrmEntityMapperTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -14,16 +14,18 @@ using Finances.WinClient.Factories;
 
 namespace Finances.WinClient.ViewModels
 {
-    public interface IBanksViewModel : IListViewModelBase<IBankItemViewModel>
+    public interface IBanksViewModel //: IListViewModelBase<BankItemViewModel>
     {
-        ActionCommand AddCommand { get; set; }
-        ActionCommand EditCommand { get; set; }
-        ActionCommand DeleteCommand { get; set; }
-        ActionCommand ReloadCommand { get; set; }
-        ObservableCollection<IBankItemViewModel> Banks { get; }
+        //ActionCommand AddCommand { get; set; }
+        //ActionCommand EditCommand { get; set; }
+        //ActionCommand DeleteCommand { get; set; }
+        //ActionCommand ReloadCommand { get; set; }
+        //ObservableCollection<BankItemViewModel> Banks { get; }
+        void Open();
+        void Close();
     }
 
-    public class BanksViewModel : ListViewModelBase<IBankItemViewModel>, IBanksViewModel
+    public class BanksViewModel : ListViewModelBase<BankItemViewModel>, IBanksViewModel
     {
         //readonly IBankService bankService;
         readonly IBankRepository bankRepository;
@@ -66,7 +68,7 @@ namespace Finances.WinClient.ViewModels
 
         #region PublicProperties
 
-        public ObservableCollection<IBankItemViewModel> Banks
+        public ObservableCollection<BankItemViewModel> Banks
         {
             get
             {
@@ -79,13 +81,25 @@ namespace Finances.WinClient.ViewModels
 
         public override void WorkspaceOpened()
         {
-            LoadBanks();
+            Open();
         }
 
         public override void WorkspaceClosed()
         {
+            Close();
+        }
+
+
+        public void Open()
+        {
+            LoadBanks();
+        }
+
+        public void Close()
+        {
             base.DataList.Clear();
         }
+
 
         private void Reload()
         {
@@ -94,7 +108,7 @@ namespace Finances.WinClient.ViewModels
 
         private void LoadBanks()
         {
-            //List<IBankItemViewModel> banks = null;
+            //List<BankItemViewModel> banks = null;
 
             base.IsBusy = true;
 
@@ -200,7 +214,7 @@ namespace Finances.WinClient.ViewModels
         private void Edit()
         {
             // get item VM being editing
-            IBankItemViewModel vm = base.GetSelectedItems().First();
+            BankItemViewModel vm = base.GetSelectedItems().First();
             
             // locate the corresponding entity in the internal list
             Bank bank = this.banks[vm.BankId];
@@ -245,7 +259,7 @@ namespace Finances.WinClient.ViewModels
         {
             string title;
             string message;
-            List<IBankItemViewModel> sel = base.GetSelectedItems().ToList();
+            List<BankItemViewModel> sel = base.GetSelectedItems().ToList();
 
             if (sel.Count() == 0)
             {

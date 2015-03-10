@@ -8,10 +8,20 @@
         <EntityContainer Name="FinanceModelStoreContainer">
           <EntitySet Name="Bank" EntityType="FinanceModel.Store.Bank" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="BankAccount" EntityType="FinanceModel.Store.BankAccount" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="Cashflow" EntityType="FinanceModel.Store.Cashflow" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="CashflowBankAccount" EntityType="FinanceModel.Store.CashflowBankAccount" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="Transfer" EntityType="FinanceModel.Store.Transfer" store:Type="Tables" Schema="dbo" />
           <AssociationSet Name="FK_BankAccount_BankId" Association="FinanceModel.Store.FK_BankAccount_BankId">
             <End Role="Bank" EntitySet="Bank" />
             <End Role="BankAccount" EntitySet="BankAccount" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CashflowBankAccount_BankAccountId" Association="FinanceModel.Store.FK_CashflowBankAccount_BankAccountId">
+            <End Role="BankAccount" EntitySet="BankAccount" />
+            <End Role="CashflowBankAccount" EntitySet="CashflowBankAccount" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CashflowBankAccount_CashflowId" Association="FinanceModel.Store.FK_CashflowBankAccount_CashflowId">
+            <End Role="Cashflow" EntitySet="Cashflow" />
+            <End Role="CashflowBankAccount" EntitySet="CashflowBankAccount" />
           </AssociationSet>
           <AssociationSet Name="FK_Transfer_FromBankAccountId" Association="FinanceModel.Store.FK_Transfer_FromBankAccountId">
             <End Role="BankAccount" EntitySet="BankAccount" />
@@ -53,6 +63,26 @@
           <Property Name="RecordCreatedDateTime" Type="datetime" Nullable="false" StoreGeneratedPattern="Computed" />
           <Property Name="RecordUpdatedDateTime" Type="datetime" Nullable="false" StoreGeneratedPattern="Computed" />
         </EntityType>
+        <EntityType Name="Cashflow">
+          <Key>
+            <PropertyRef Name="CashflowId" />
+          </Key>
+          <Property Name="CashflowId" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="varchar" Nullable="false" MaxLength="100" />
+          <Property Name="OpeningBalance" Type="money" Nullable="false" />
+          <Property Name="StartDate" Type="date" Nullable="false" />
+          <Property Name="RecordCreatedDateTime" Type="datetime" Nullable="false" StoreGeneratedPattern="Computed" />
+          <Property Name="RecordUpdatedDateTime" Type="datetime" Nullable="false" StoreGeneratedPattern="Computed" />
+        </EntityType>
+        <EntityType Name="CashflowBankAccount">
+          <Key>
+            <PropertyRef Name="CashflowBankAccountId" />
+          </Key>
+          <Property Name="CashflowBankAccountId" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="CashflowId" Type="int" Nullable="false" />
+          <Property Name="BankAccountId" Type="int" Nullable="false" />
+          <Property Name="RecordCreatedDateTime" Type="datetime" Nullable="false" StoreGeneratedPattern="Computed" />
+        </EntityType>
         <EntityType Name="Transfer">
           <Key>
             <PropertyRef Name="TransferId" />
@@ -79,6 +109,30 @@
             </Principal>
             <Dependent Role="BankAccount">
               <PropertyRef Name="BankId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_CashflowBankAccount_BankAccountId">
+          <End Role="BankAccount" Type="FinanceModel.Store.BankAccount" Multiplicity="1" />
+          <End Role="CashflowBankAccount" Type="FinanceModel.Store.CashflowBankAccount" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="BankAccount">
+              <PropertyRef Name="BankAccountId" />
+            </Principal>
+            <Dependent Role="CashflowBankAccount">
+              <PropertyRef Name="BankAccountId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_CashflowBankAccount_CashflowId">
+          <End Role="Cashflow" Type="FinanceModel.Store.Cashflow" Multiplicity="1" />
+          <End Role="CashflowBankAccount" Type="FinanceModel.Store.CashflowBankAccount" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Cashflow">
+              <PropertyRef Name="CashflowId" />
+            </Principal>
+            <Dependent Role="CashflowBankAccount">
+              <PropertyRef Name="CashflowId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -128,6 +182,16 @@
             <End Role="Transfer" EntitySet="Transfers" />
           </AssociationSet>
           <FunctionImport Name="GetDataTest" ReturnType="Collection(FinanceModel.GetDataTest_Result)" />
+          <EntitySet Name="Cashflows" EntityType="FinanceModel.Cashflow" />
+          <EntitySet Name="CashflowBankAccounts" EntityType="FinanceModel.CashflowBankAccount" />
+          <AssociationSet Name="FK_CashflowBankAccount_BankAccountId" Association="FinanceModel.FK_CashflowBankAccount_BankAccountId">
+            <End Role="BankAccount" EntitySet="BankAccounts" />
+            <End Role="CashflowBankAccount" EntitySet="CashflowBankAccounts" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CashflowBankAccount_CashflowId" Association="FinanceModel.FK_CashflowBankAccount_CashflowId">
+            <End Role="Cashflow" EntitySet="Cashflows" />
+            <End Role="CashflowBankAccount" EntitySet="CashflowBankAccounts" />
+          </AssociationSet>
         </EntityContainer>
         <EntityType Name="Bank" a:TypeAccess="Public" xmlns:a="http://schemas.microsoft.com/ado/2006/04/codegeneration">
           <Key>
@@ -221,6 +285,55 @@
           <Property Type="String" Name="Name" Nullable="true" MaxLength="100" />
           <Property Type="Binary" Name="Logo" Nullable="true" />
         </ComplexType>
+        <EntityType Name="Cashflow">
+          <Key>
+            <PropertyRef Name="CashflowId" />
+          </Key>
+          <Property Type="Int32" Name="CashflowId" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="String" Name="Name" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Type="Decimal" Name="OpeningBalance" Nullable="false" Precision="19" Scale="4" />
+          <Property Type="DateTime" Name="StartDate" Nullable="false" Precision="0" />
+          <Property Type="DateTime" Name="RecordCreatedDateTime" Nullable="false" Precision="3" annotation:StoreGeneratedPattern="Computed" />
+          <Property Type="DateTime" Name="RecordUpdatedDateTime" Nullable="false" Precision="3" annotation:StoreGeneratedPattern="Computed" />
+          <NavigationProperty Name="CashflowBankAccounts" Relationship="FinanceModel.FK_CashflowBankAccount_CashflowId" FromRole="Cashflow" ToRole="CashflowBankAccount" />
+        </EntityType>
+        <EntityType Name="CashflowBankAccount">
+          <Key>
+            <PropertyRef Name="CashflowBankAccountId" />
+          </Key>
+          <Property Type="Int32" Name="CashflowBankAccountId" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="Int32" Name="CashflowId" Nullable="false" />
+          <Property Type="Int32" Name="BankAccountId" Nullable="false" />
+          <Property Type="DateTime" Name="RecordCreatedDateTime" Nullable="false" Precision="3" annotation:StoreGeneratedPattern="Computed" />
+          <NavigationProperty Name="BankAccount" Relationship="FinanceModel.FK_CashflowBankAccount_BankAccountId" FromRole="CashflowBankAccount" ToRole="BankAccount" />
+          <NavigationProperty Name="Cashflow" Relationship="FinanceModel.FK_CashflowBankAccount_CashflowId" FromRole="CashflowBankAccount" ToRole="Cashflow" />
+        </EntityType>
+        <Association Name="FK_CashflowBankAccount_BankAccountId">
+          <End Type="FinanceModel.BankAccount" Role="BankAccount" Multiplicity="1" />
+          <End Type="FinanceModel.CashflowBankAccount" Role="CashflowBankAccount" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="BankAccount">
+              <PropertyRef Name="BankAccountId" />
+            </Principal>
+            <Dependent Role="CashflowBankAccount">
+              <PropertyRef Name="BankAccountId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_CashflowBankAccount_CashflowId">
+          <End Type="FinanceModel.Cashflow" Role="Cashflow" Multiplicity="1" >
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="FinanceModel.CashflowBankAccount" Role="CashflowBankAccount" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Cashflow">
+              <PropertyRef Name="CashflowId" />
+            </Principal>
+            <Dependent Role="CashflowBankAccount">
+              <PropertyRef Name="CashflowId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -287,6 +400,28 @@
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
+          <EntitySetMapping Name="Cashflows">
+            <EntityTypeMapping TypeName="FinanceModel.Cashflow">
+              <MappingFragment StoreEntitySet="Cashflow">
+                <ScalarProperty Name="RecordUpdatedDateTime" ColumnName="RecordUpdatedDateTime" />
+                <ScalarProperty Name="RecordCreatedDateTime" ColumnName="RecordCreatedDateTime" />
+                <ScalarProperty Name="StartDate" ColumnName="StartDate" />
+                <ScalarProperty Name="OpeningBalance" ColumnName="OpeningBalance" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="CashflowId" ColumnName="CashflowId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="CashflowBankAccounts">
+            <EntityTypeMapping TypeName="FinanceModel.CashflowBankAccount">
+              <MappingFragment StoreEntitySet="CashflowBankAccount">
+                <ScalarProperty Name="RecordCreatedDateTime" ColumnName="RecordCreatedDateTime" />
+                <ScalarProperty Name="BankAccountId" ColumnName="BankAccountId" />
+                <ScalarProperty Name="CashflowId" ColumnName="CashflowId" />
+                <ScalarProperty Name="CashflowBankAccountId" ColumnName="CashflowBankAccountId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

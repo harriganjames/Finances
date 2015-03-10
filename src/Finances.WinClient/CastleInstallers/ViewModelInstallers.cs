@@ -18,10 +18,10 @@ namespace Finances.WinClient.CastleInstallers
             
             // Banks
             container.Register(Component.For<IWorkspace>()
+                .Forward<IBanksViewModel>()
                 .ImplementedBy<BanksViewModel>()
-                .LifeStyle.Transient
                 );
-            container.Register(Component.For<IBankEditorViewModel>()
+            container.Register(Component.For<BankEditorViewModel>()
                 .ImplementedBy<BankEditorViewModel>()
                 .LifeStyle.Transient
                 );
@@ -36,10 +36,10 @@ namespace Finances.WinClient.CastleInstallers
 
             // Banks Accounts
             container.Register(Component.For<IWorkspace>()
+                .Forward<IBankAccountsViewModel>()
                 .ImplementedBy<BankAccountsViewModel>()
-                .LifeStyle.Transient
                 );
-            container.Register(Component.For<IBankAccountEditorViewModel>()
+            container.Register(Component.For<BankAccountEditorViewModel>()
                 .ImplementedBy<BankAccountEditorViewModel>()
                 .LifeStyle.Transient
                 );
@@ -51,15 +51,36 @@ namespace Finances.WinClient.CastleInstallers
 
             // Transfers
             container.Register(Component.For<IWorkspace>()
+                .Forward<ITransferListViewModel>() // for dashboard
                 .ImplementedBy<TransferListViewModel>()
-                .LifeStyle.Transient
                 );
-            container.Register(Component.For<ITransferEditorViewModel>()
+            container.Register(Component.For<TransferEditorViewModel>()
                 .ImplementedBy<TransferEditorViewModel>()
                 .LifeStyle.Transient
                 );
             container.Register(Component.For<ITransferEditorViewModelFactory>()
                 .AsFactory()
+                );
+
+
+            // Cashflows
+            container.Register(Component.For<IWorkspace>()
+                .Forward<ICashflowListViewModel>() // for dashboard
+                .ImplementedBy<CashflowListViewModel>()
+                );
+            container.Register(Component.For<CashflowEditorViewModel>()
+                .ImplementedBy<CashflowEditorViewModel>()
+                .LifeStyle.Transient
+                );
+            container.Register(Component.For<ICashflowEditorViewModelFactory>()
+                .AsFactory()
+                );
+
+
+
+            // Dashboard
+            container.Register(Component.For<IWorkspace>()
+                .ImplementedBy<DashboardViewModel>()
                 );
 
 

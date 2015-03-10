@@ -16,7 +16,7 @@
 //{
 //    public class when_working_with_the_bank_account_editor_view_model : Specification
 //    {
-//        protected IBankAccountEditorViewModel bankAccountEditorViewModel;
+//        protected BankAccountEditorViewModel bankAccountEditorViewModel;
 
 //        protected Mock<IBankAccountService> bankAccountService;
 //        //protected Mock<IDialogService> dialogService;
@@ -48,7 +48,7 @@
 
 //            base.bankAccountService.Setup(bs => bs.ReadListDataIdName()).Returns(dataList);
 
-//            List<IBankItemViewModel> banks = new List<IBankItemViewModel>();
+//            List<BankItemViewModel> banks = new List<BankItemViewModel>();
 
 //            base.bankAccountService.Setup(bs => bs.ReadBankList()).Returns(banks);
 

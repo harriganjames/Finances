@@ -42,8 +42,8 @@
 
 //    public class and_attempting_to_add_and_read_a_value_from_the_service : when_using_the_bank_service
 //    {
-//        IBankEditorViewModel _result;
-//        IBankEditorViewModel _expected;
+//        BankEditorViewModel _result;
+//        BankEditorViewModel _expected;
 
 //        public void MainSetup()
 //        {

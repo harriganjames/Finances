@@ -10,23 +10,25 @@ using Finances.WinClient.DomainServices;
 
 namespace Finances.WinClient.ViewModels
 {
-    public interface IBankItemViewModel : ITreeViewItemViewModelBase, IEntityMapper<Bank>
-    {
-        int BankId { get; set; }
-        string Name { get; set; }
-        byte[] LogoRaw { get; set; }
-        //byte[] Logo { get; }
-        BitmapSource Logo { get; }
+    //public interface BankItemViewModel : ITreeViewItemViewModelBase, IEntityMapper<Bank>
+    //{
+    //    int BankId { get; set; }
+    //    string Name { get; set; }
+    //    byte[] LogoRaw { get; set; }
+    //    //byte[] Logo { get; }
+    //    BitmapSource Logo { get; }
 
-        //IBankItemViewModel MapIn(Bank from);
-    }
+    //    //BankItemViewModel MapIn(Bank from);
+    //}
 
-    public class BankItemViewModel : TreeViewItemViewModelBase, IBankItemViewModel
+    public class BankItemViewModel : TreeViewItemViewModelBase//, BankItemViewModel
     {
 
         public BankItemViewModel()
         {
         }
+
+
 
         #region PublicProperties
 
@@ -77,8 +79,8 @@ namespace Finances.WinClient.ViewModels
         }
 
 
-        //ObservableCollection<IBankAccountItemViewModel> bankAccounts = new ObservableCollection<IBankAccountItemViewModel>();
-        //public ObservableCollection<IBankAccountItemViewModel> BankAccounts 
+        //ObservableCollection<BankAccountItemViewModel> bankAccounts = new ObservableCollection<BankAccountItemViewModel>();
+        //public ObservableCollection<BankAccountItemViewModel> BankAccounts 
         //{
         //    get
         //    {
@@ -89,17 +91,17 @@ namespace Finances.WinClient.ViewModels
         #endregion
 
 
-        public void MapIn(Bank from)
-        {
-            this.BankId = from.BankId;
-            this.Name = from.Name;
-            this.LogoRaw = from.Logo;
-        }
+        //public void MapIn(Bank from)
+        //{
+        //    this.BankId = from.BankId;
+        //    this.Name = from.Name;
+        //    this.LogoRaw = from.Logo;
+        //}
 
-        public void MapOut(Bank entity)
-        {
-            entity.BankId = this.BankId;
-        }
+        //public void MapOut(Bank entity)
+        //{
+        //    entity.BankId = this.BankId;
+        //}
 
 
         public override string ToString()

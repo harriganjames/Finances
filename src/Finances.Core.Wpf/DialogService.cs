@@ -13,6 +13,7 @@ namespace Finances.Core.Wpf
     public interface IDialog
     {
         ICommand DialogAcceptCommand { get; }
+        void DialogOkClicked();
     }
 
     public interface IDialogService
@@ -68,7 +69,10 @@ namespace Finances.Core.Wpf
             w.Owner = _wpfWindow;
             w.DataContext = vm;
             w.Content = vm;
-            w.CommandBindings.Add(new CommandBinding(vm.DialogAcceptCommand, (sender, e) => w.DialogResult = true));
+            w.CommandBindings.Add(new CommandBinding(vm.DialogAcceptCommand, (sender, e) => {
+                vm.DialogOkClicked();    
+                w.DialogResult = true;
+                }));
             return w.ShowDialog().GetValueOrDefault(false);
         }
 
@@ -84,7 +88,11 @@ namespace Finances.Core.Wpf
             w.Owner = _wpfWindow;
             w.DataContext = vm;
             w.Content = dc;
-            w.CommandBindings.Add(new CommandBinding(vm.DialogAcceptCommand, (sender, e) => w.DialogResult = true));
+            w.CommandBindings.Add(new CommandBinding(vm.DialogAcceptCommand, (sender, e) =>
+            {
+                vm.DialogOkClicked();
+                w.DialogResult = true;
+            }));
             return w.ShowDialog().GetValueOrDefault(false);
         }
 
@@ -100,7 +108,11 @@ namespace Finances.Core.Wpf
             w.Owner = _wpfWindow;
             w.DataContext = vm;
             w.Content = vm;
-            w.CommandBindings.Add(new CommandBinding(vm.DialogAcceptCommand, (sender, e) => w.DialogResult = true));
+            w.CommandBindings.Add(new CommandBinding(vm.DialogAcceptCommand, (sender, e) =>
+            {
+                vm.DialogOkClicked();
+                w.DialogResult = true;
+            }));
             w.Show();
         }
 
@@ -127,7 +139,11 @@ namespace Finances.Core.Wpf
         public MessageBoxResultEnum ShowMessageBox(string title, string message, MessageBoxButtonEnum buttons)
         {
             var b = (MessageBoxButton)buttons;
-            var r = MessageBox.Show(message, title, b);
+            //var r = MessageBox.Show(message, title, b);
+            MessageBoxResult r;
+            r = _wpfWindow.Dispatcher.Invoke(() =>
+                    MessageBox.Show(_wpfWindow, message, title, b, MessageBoxImage.Exclamation)
+                    );
             return (MessageBoxResultEnum)r;
         }
 

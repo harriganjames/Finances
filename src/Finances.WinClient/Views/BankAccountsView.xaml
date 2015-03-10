@@ -8,9 +8,9 @@
              xmlns:eii="clr-namespace:Microsoft.Expression.Interactivity.Input;assembly=Microsoft.Expression.Interactions"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300"
-            FocusManager.FocusedElement="{Binding ElementName=Items}"
             >
 
+    <!--FocusManager.FocusedElement="{Binding ElementName=Items}"-->
 
     <tool:BusyIndicator IsBusy="{Binding IsBusy}">
         <Grid>

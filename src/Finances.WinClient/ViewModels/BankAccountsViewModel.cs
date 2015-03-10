@@ -14,16 +14,18 @@ using Finances.WinClient.Factories;
 
 namespace Finances.WinClient.ViewModels
 {
-    public interface IBankAccountsViewModel : IListViewModelBase<IBankAccountItemViewModel>
+    public interface IBankAccountsViewModel //: IListViewModelBase<BankAccountItemViewModel>
     {
-        ActionCommand AddCommand { get; set; }
-        ActionCommand EditCommand { get; set; }
-        ActionCommand DeleteCommand { get; set; }
-        ActionCommand ReloadCommand { get; set; }
-        ObservableCollection<IBankAccountItemViewModel> BankAccounts { get; }
+        //ActionCommand AddCommand { get; set; }
+        //ActionCommand EditCommand { get; set; }
+        //ActionCommand DeleteCommand { get; set; }
+        //ActionCommand ReloadCommand { get; set; }
+        //ObservableCollection<BankAccountItemViewModel> BankAccounts { get; }
+        void Open();
+        void Close();
     }
 
-    public class BankAccountsViewModel : ListViewModelBase<IBankAccountItemViewModel>, IBankAccountsViewModel
+    public class BankAccountsViewModel : ListViewModelBase<BankAccountItemViewModel>, IBankAccountsViewModel
     {
         readonly IBankAccountRepository bankAccountRepository;
         readonly IMappingEngine mapper;
@@ -61,7 +63,7 @@ namespace Finances.WinClient.ViewModels
 
         #region PublicProperties
 
-        public ObservableCollection<IBankAccountItemViewModel> BankAccounts
+        public ObservableCollection<BankAccountItemViewModel> BankAccounts
         {
             get
             {
@@ -74,10 +76,21 @@ namespace Finances.WinClient.ViewModels
 
         public override void WorkspaceOpened()
         {
-            LoadBankAccounts();
+            Open();
         }
 
         public override void WorkspaceClosed()
+        {
+            Close();
+        }
+
+
+        public void Open()
+        {
+            LoadBankAccounts();
+        }
+
+        public void Close()
         {
             base.DataList.Clear();
         }
@@ -158,7 +171,7 @@ namespace Finances.WinClient.ViewModels
         }
         private void Edit()
         {
-            IBankAccountItemViewModel vm = base.GetSelectedItems().First();
+            BankAccountItemViewModel vm = base.GetSelectedItems().First();
 
             BankAccount bankAccount = this.bankAccounts[vm.BankAccountId];
 
@@ -194,7 +207,7 @@ namespace Finances.WinClient.ViewModels
         {
             string title;
             string message;
-            List<IBankAccountItemViewModel> sel = base.GetSelectedItems().ToList();
+            List<BankAccountItemViewModel> sel = base.GetSelectedItems().ToList();
 
             if (sel.Count() == 0)
             {

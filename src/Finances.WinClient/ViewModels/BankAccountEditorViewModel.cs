@@ -9,55 +9,66 @@ using Finances.WinClient.DomainServices;
 using Finances.Core.Entities;
 using Finances.Core.Interfaces;
 using AutoMapper;
+using Finances.WinClient.Factories;
+using System.Diagnostics;
 
 
 namespace Finances.WinClient.ViewModels
 {
-    public interface IBankAccountEditorViewModel : IEditorViewModelBase, IEntityMapper<BankAccount>
-    {
-        void InitializeForAddEdit(bool AddEdit);
+    //public interface BankAccountEditorViewModel : IEditorViewModelBase, IEntityMapper<BankAccount>
+    //{
+    //    void InitializeForAddEdit(bool AddEdit);
 
-        string AccountName { get; set; }
-        string AccountNumber { get; set; }
-        string AccountOwner { get; set; }
-        IBankItemViewModel Bank { get; set; }
-        int BankAccountId { get; set; }
-        int BankId { get; set; }
-        DateTime? OpenedDate { get; set; }
-        DateTime? ClosedDate { get; set; }
-        decimal? InitialRate { get; set; }
-        string LoginId { get; set; }
-        string LoginUrl { get; set; }
-        DateTime? MilestoneDate { get; set; }
-        string MilestoneNotes { get; set; }
-        string Notes { get; set; }
-        string PasswordHint { get; set; }
-        bool PaysTaxableInterest { get; set; }
-        string SortCode { get; set; }
-    }
+    //    string AccountName { get; set; }
+    //    string AccountNumber { get; set; }
+    //    string AccountOwner { get; set; }
+    //    BankItemViewModel Bank { get; set; }
+    //    int BankAccountId { get; set; }
+    //    int BankId { get; set; }
+    //    DateTime? OpenedDate { get; set; }
+    //    DateTime? ClosedDate { get; set; }
+    //    decimal? InitialRate { get; set; }
+    //    string LoginId { get; set; }
+    //    string LoginUrl { get; set; }
+    //    DateTime? MilestoneDate { get; set; }
+    //    string MilestoneNotes { get; set; }
+    //    string Notes { get; set; }
+    //    string PasswordHint { get; set; }
+    //    bool PaysTaxableInterest { get; set; }
+    //    string SortCode { get; set; }
+    //}
 
-    public class BankAccountEditorViewModel : EditorViewModelBase, IBankAccountEditorViewModel
+    public class BankAccountEditorViewModel : EditorViewModelBase//, BankAccountEditorViewModel
     {
         bool delayValidation = false; // must be false until change logic around IsValid
-        ObservableCollection<IBankItemViewModel> bankList;
+        ObservableCollection<BankItemViewModel> bankList;
         List<DataIdName> existingBankAccounts;
 
         readonly IBankAccountRepository bankAccountRepository;
         readonly IBankRepository bankRepository;
         readonly IMappingEngine mapper;
+        readonly IDialogService dialogService;
+        readonly IBankEditorViewModelFactory bankEditorViewModelFactory;
 
 
         public BankAccountEditorViewModel(
                         IBankAccountRepository bankAccountRepository,
                         IBankRepository bankRepository,
-                        IMappingEngine mapper
+                        IMappingEngine mapper,
+                        IDialogService dialogService,
+                        IBankEditorViewModelFactory bankEditorViewModelFactory
                         )
         {
             this.bankRepository = bankRepository;
             this.bankAccountRepository = bankAccountRepository;
             this.mapper = mapper;
+            this.dialogService = dialogService;
+            this.bankEditorViewModelFactory = bankEditorViewModelFactory;
+
+            NewBankCommand = base.AddNewCommand(new ActionCommand(this.NewBank));
         }
 
+        public ActionCommand NewBankCommand { get; set; }
 
 
         #region Publics
@@ -106,10 +117,12 @@ namespace Finances.WinClient.ViewModels
         }
 
 
-        public ObservableCollection<IBankItemViewModel> BankList
+        public ObservableCollection<BankItemViewModel> BankList
         {
             get
             {
+                if (this.bankList == null)
+                    this.bankList = new ObservableCollection<BankItemViewModel>();
                 return this.bankList;
             }
         }
@@ -159,8 +172,8 @@ namespace Finances.WinClient.ViewModels
             }
         }
 
-        IBankItemViewModel bank;
-        public IBankItemViewModel Bank
+        BankItemViewModel bank;
+        public BankItemViewModel Bank
         {
             get 
             {
@@ -170,7 +183,7 @@ namespace Finances.WinClient.ViewModels
 
                 if (this.BankList!=null && !this.BankList.Contains(bank))
                 {
-                    IBankItemViewModel find = this.BankList.FirstOrDefault(b => b.BankId == bank.BankId);
+                    BankItemViewModel find = this.BankList.FirstOrDefault(b => b.BankId == bank.BankId);
                     if (find != null)
                         bank = find;
                 }
@@ -194,6 +207,7 @@ namespace Finances.WinClient.ViewModels
                 {
                     bank = value;
                 }
+                Debug.WriteLine("Bank - set({0})",value);
                 NotifyPropertyChangedAndValidate();
             }
         }
@@ -304,21 +318,55 @@ namespace Finances.WinClient.ViewModels
             
         #endregion
 
+
+        
         #region Privates
 
         private void LoadBanksList()
         {
-            bankList = new ObservableCollection<IBankItemViewModel>();
-            //bankAccountService.ReadBankList().ForEach(vm => bankList.Add(vm));
-
-            bankRepository.ReadList().ForEach(b => bankList.Add(mapper.Map<BankItemViewModel>(b)));
+            Debug.WriteLine("LoadBanksList - start");
+            BankList.Clear();
+            bankRepository.ReadList().ForEach(b => BankList.Add(mapper.Map<BankItemViewModel>(b)));
+            Debug.WriteLine("LoadBanksList - end");
         }
 
         private void LoadExistingBankAccounts()
         {
-            //existingBankAccounts = bankAccountService.ReadListDataIdName();
             existingBankAccounts = bankAccountRepository.ReadListDataIdName();
         }
+
+        private void NewBank()
+        {
+            var editor = this.bankEditorViewModelFactory.Create();
+
+            // prepare Editor
+            editor.InitializeForAddEdit(true);
+
+            // open Editor for adding
+            while (this.dialogService.ShowDialogView(editor))
+            {
+                // map the Editor into an entity
+                var newbank = mapper.Map<Bank>(editor);
+
+                // save the entity and get result
+                bool result = this.bankRepository.Add(newbank) > 0;
+
+                if (result)
+                {
+                    LoadBanksList();
+
+                    this.Bank = this.BankList.FirstOrDefault(b => b.BankId == newbank.BankId);
+
+                    base.Validate();
+
+                    break;
+                }
+            }
+
+            this.bankEditorViewModelFactory.Release(editor);
+
+        }
+
 
         #endregion
 
@@ -330,6 +378,8 @@ namespace Finances.WinClient.ViewModels
 
         protected override void ValidateData()
         {
+            Debug.WriteLine("ValidateData - start");
+
             // Bank Account exists
             if (existingBankAccounts != null)
             {
@@ -342,59 +392,21 @@ namespace Finances.WinClient.ViewModels
 
 
             // Bank
-            if(this.bankList!=null)
+            if (this.bankList != null)
             {
                 if (!this.BankList.Contains(this.bank))
+                {
                     base.ValidationHelper.AddValidationMessage("Invalid Bank", "Bank");
+                    Debug.WriteLine("InvalidBank - (BankId={0}, qty={1})",this.bank.BankId,this.BankList.Count);
+                
+                }
             }
+
+            Debug.WriteLine("ValidateData - end");
         }
 
         #endregion
 
 
-        #region IEntityMapper
-
-        public void MapIn(BankAccount entity)
-        {
-            this.BankAccountId = entity.BankAccountId;
-            this.AccountName = entity.Name;
-            this.Bank.MapIn(entity.Bank);
-            this.AccountNumber = entity.AccountNumber;
-            this.SortCode = entity.SortCode;
-            this.AccountOwner = entity.AccountOwner;
-            this.OpenedDate = entity.OpenedDate;
-            this.ClosedDate = entity.ClosedDate;
-            this.InitialRate = entity.InitialRate;
-            this.LoginId = entity.LoginID;
-            this.LoginUrl = entity.LoginURL;
-            this.MilestoneDate = entity.MilestoneDate;
-            this.MilestoneNotes = entity.MilestoneNotes;
-            this.Notes = entity.Notes;
-            this.PasswordHint = entity.PasswordHint;
-            this.PaysTaxableInterest = entity.PaysTaxableInterest;
-        }
-
-        public void MapOut(BankAccount entity)
-        {
-            entity.BankAccountId = this.BankAccountId;
-            entity.Name = this.AccountName;
-            entity.Bank.BankId = this.Bank.BankId; // only need BankId for persisting
-            entity.AccountNumber = this.AccountNumber;
-            entity.SortCode = this.SortCode;
-            entity.AccountOwner = this.AccountOwner;
-            entity.OpenedDate = this.OpenedDate.GetValueOrDefault(DateTime.MinValue);
-            entity.ClosedDate = this.ClosedDate;
-            entity.InitialRate = this.InitialRate;
-            entity.LoginID = this.LoginId;
-            entity.LoginURL = this.LoginUrl;
-            entity.MilestoneDate = this.MilestoneDate;
-            entity.MilestoneNotes = this.MilestoneNotes;
-            entity.Notes = this.Notes;
-            entity.PasswordHint = this.PasswordHint;
-            entity.PaysTaxableInterest = this.PaysTaxableInterest;
-        }
-
-
-        #endregion
     }
 }

@@ -36,13 +36,13 @@ namespace Finances.Core.Wpf
 
         public void NotifyPropertyChangedAndValidate([CallerMemberName] String propertyName = "")
         {
-            base.NotifyPropertyChanged(propertyName);
             this.Validate();
+            base.NotifyPropertyChanged(propertyName);
         }
         public void NotifyPropertyChangedAndValidate(Expression<Func<object>> propertyExpression)
         {
-            base.NotifyPropertyChanged(propertyExpression);
             this.Validate();
+            base.NotifyPropertyChanged(propertyExpression);
         }
 
 
@@ -79,18 +79,22 @@ namespace Finances.Core.Wpf
         {
             get
             {
+                Debug.WriteLine("Errors - qty={0}", _validationHelper.Errors.Count());
+
                 return _validationHelper.Errors;
             }
         }
 
         protected void Validate()
         {
+            Debug.WriteLine("Validate(base) - start");
             _validationHelper.Enabled = true;
             _validationHelper.Validate();   // attribute validation
             this.ValidateData();            // custom validation
             base.RefreshCommands();
             this.IsValid = _validationHelper.Errors.Count() == 0;
             NotifyPropertyChanged(() => this.Errors);
+            Debug.WriteLine("Validate(base) - end");
 
             return;
         }
@@ -122,13 +126,16 @@ namespace Finances.Core.Wpf
 
             //if (propertyName == null)  Debug.WriteLine(String.Format("GetErrors(null)"));
 
-            if (propertyName == null) return lst;
+            if (propertyName != null)
+            {
+                string err = _validationHelper.GetPropertyError(propertyName);
+                if (err.Length > 0) lst.Add(err);
 
-            string err = _validationHelper.GetPropertyError(propertyName);
-            if (err.Length > 0) lst.Add(err);
+                //Debug.WriteLine(String.Format("GetErrors({0} - qty {1})", propertyName, lst.Count));
+            }
 
-            //Debug.WriteLine(String.Format("GetErrors({0} - qty {1})", propertyName, lst.Count));
-            
+            Debug.WriteLine("GetErrors({0}) - qty={1}",propertyName,lst.Count);
+
             return lst;
         }
 
@@ -136,7 +143,7 @@ namespace Finances.Core.Wpf
         {
             get
             {
-                //Debug.WriteLine(String.Format("HasErrors = {0}", _validationHelper.HasErrors));
+                Debug.WriteLine(String.Format("HasErrors = {0}", _validationHelper.HasErrors));
                 return _validationHelper.HasErrors;
             }
         }

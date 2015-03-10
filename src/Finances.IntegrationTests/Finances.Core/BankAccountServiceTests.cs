@@ -49,8 +49,8 @@
 
 //    public class and_attempting_to_read_a_value_from_the_service : when_using_the_bank_account_service
 //    {
-//        IBankAccountItemViewModel _result;
-//        //IBankEditorViewModel _expected;
+//        BankAccountItemViewModel _result;
+//        //BankEditorViewModel _expected;
 
 //        public void MainSetup()
 //        {
@@ -88,8 +88,8 @@
 
 //    public class and_attempting_to_read_a_list_of_values_from_the_service : when_using_the_bank_account_service
 //    {
-//        List<IBankAccountItemViewModel> _result;
-//        //IBankEditorViewModel _expected;
+//        List<BankAccountItemViewModel> _result;
+//        //BankEditorViewModel _expected;
 
 //        public void MainSetup()
 //        {

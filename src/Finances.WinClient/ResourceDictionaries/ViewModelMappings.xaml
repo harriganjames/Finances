@@ -38,13 +38,24 @@
     <DataTemplate DataType="{x:Type vm:TransferListViewModel}">
         <v:TransferListView/>
     </DataTemplate>
-    <!--<DataTemplate DataType="{x:Type vm:TransferListViewModelNoService}">
-        <v:TransferListView/>
-    </DataTemplate>-->
     <DataTemplate DataType="{x:Type vm:TransferEditorViewModel}">
         <v:TransferEditorView/>
     </DataTemplate>
 
+    <!--Cashflows-->
+    <DataTemplate DataType="{x:Type vm:CashflowListViewModel}">
+        <v:CashflowListView/>
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type vm:CashflowEditorViewModel}">
+        <v:CashflowEditorView/>
+    </DataTemplate>
+
+
+    <!-- Dashboard -->
+    <DataTemplate DataType="{x:Type vm:DashboardViewModel}">
+        <v:DashboardView/>
+    </DataTemplate>
+    
     <!--Main-->
     <DataTemplate DataType="{x:Type vm:MainViewModel}">
         <v:MainView/>

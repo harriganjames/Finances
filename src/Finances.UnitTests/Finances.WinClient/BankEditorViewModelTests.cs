@@ -16,7 +16,7 @@ namespace Finances.UnitTests.Finances.WinClient.BankEditorViewModelTests
 {
     public class when_working_with_the_bank_editor_view_model : Specification
     {
-        protected IBankEditorViewModel bankEditorViewModel;
+        protected BankEditorViewModel bankEditorViewModel;
 
         //protected Mock<IBankService> bankService;
         protected Mock<IBankRepository> bankRepository;

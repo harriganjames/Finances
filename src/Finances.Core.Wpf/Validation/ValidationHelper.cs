@@ -1,12 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace Finances.Core.Wpf.Validation
 {
+
+    public interface IValidationHelperObject
+    {
+        void Clear();
+        void AddError(string error); 
+    }
+
 
     public class ValidationHelper
     {
@@ -54,6 +62,15 @@ namespace Finances.Core.Wpf.Validation
             validationResults.Clear();
         }
 
+
+        public void AddValidationMessage(string msg, IValidationHelperObject vho)
+        {
+            var v = instances.FirstOrDefault(o => o == vho) as IValidationHelperObject;
+            if (v != null)
+                v.AddError(msg);
+            validationResults.Add(new ValidationResult(msg));
+        }
+
         public void AddValidationMessage(string msg, string memberName = null)
         {
             ValidationResult vr;
@@ -66,9 +83,12 @@ namespace Finances.Core.Wpf.Validation
 
         public void Validate()
         {
+            Debug.WriteLine("Validate(helper) - start");
+
             if (!_enabled)
                 return;
 
+            Debug.WriteLine("Validate(helper) - clear");
             // clear all ValidationResults
             validationResults.Clear();
 
@@ -76,7 +96,14 @@ namespace Finances.Core.Wpf.Validation
             {
                 // validate the objects and their members
                 Validator.TryValidateObject(instance, new ValidationContext(instance, null, null), validationResults, true);
+
+                var vho = instance as IValidationHelperObject;
+                if (vho != null)
+                    vho.Clear();
+
             }
+
+            Debug.WriteLine("Validate(helper) - start");
         }
 
 

@@ -8,18 +8,18 @@ namespace Finances.WinClient.Factories
 {
     public interface ITransferEditorViewModelFactory
     {
-        ITransferEditorViewModel Create();
-        void Release(ITransferEditorViewModel vm);
+        TransferEditorViewModel Create();
+        void Release(TransferEditorViewModel vm);
     }
 
-    //public class TransferEditorViewModelFactory : ITransferEditorViewModelFactory
+    //public class ITransferEditorViewModelFactory : ITransferEditorViewModelFactory
     //{
 
     //    readonly ITransferRepository transferRepository;
     //    readonly IMappingEngine mapper;
     //    readonly IBankAccountRepository bankAccountRepository;
 
-    //    public TransferEditorViewModelFactory(
+    //    public ITransferEditorViewModelFactory(
     //            ITransferRepository transferRepository,
     //            IMappingEngine mapper,
     //            IBankAccountRepository bankAccountRepository
@@ -30,7 +30,7 @@ namespace Finances.WinClient.Factories
     //        this.bankAccountRepository = bankAccountRepository;
     //    }
 
-    //    public ITransferEditorViewModel Create()
+    //    public TransferEditorViewModel Create()
     //    {
     //        return new TransferEditorViewModel(transferRepository, mapper, bankAccountRepository);
     //    }

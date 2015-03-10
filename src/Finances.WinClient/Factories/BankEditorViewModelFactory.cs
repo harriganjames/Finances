@@ -9,16 +9,16 @@ namespace Finances.WinClient.Factories
 {
     public interface IBankEditorViewModelFactory
     {
-        IBankEditorViewModel Create();
-        void Release(IBankEditorViewModel vm);
+        BankEditorViewModel Create();
+        void Release(BankEditorViewModel vm);
     }
 
-    //public class BankEditorViewModelFactory : IBankEditorViewModelFactory
+    //public class IBankEditorViewModelFactory : IBankEditorViewModelFactory
     //{
     //    readonly IBankRepository bankRepository;
     //    readonly IDialogService dialogService;
 
-    //    public BankEditorViewModelFactory(
+    //    public IBankEditorViewModelFactory(
     //            IBankRepository bankRepository,
     //            IDialogService dialogService
     //            )
@@ -27,7 +27,7 @@ namespace Finances.WinClient.Factories
     //        this.dialogService = dialogService;
     //    }
 
-    //    public IBankEditorViewModel Create()
+    //    public BankEditorViewModel Create()
     //    {
     //        return new BankEditorViewModel(bankRepository, dialogService);
     //    }

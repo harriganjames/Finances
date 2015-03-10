@@ -60,9 +60,9 @@
   <ItemGroup>
     <Compile Include="BankRepositoryEFTests.cs" />
     <Compile Include="BankAccountRepositoryEFTests.cs" />
+    <Compile Include="CashflowRepositoryEFTests.cs" />
     <Compile Include="TransferRepositoryEFTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="AccountRepository.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Finances.Core.Wpf\Finances.Core.Wpf.csproj">

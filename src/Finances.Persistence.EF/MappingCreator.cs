@@ -24,7 +24,8 @@ namespace Finances.Persistence.EF
         
             Mapper.CreateMap<BankAccount, Core.Entities.DataIdName>()
                 .ForMember(d => d.Id, opt => opt.MapFrom(s => s.BankAccountId))
-                .ForMember(d => d.Name, opt => opt.MapFrom(s => String.Format("{0} ({1})", s.Name, s.Bank.Name)));
+                //.ForMember(d => d.Name, opt => opt.MapFrom(s => String.Format("{0} ({1})", s.Name, s.Bank.Name)));
+                .ForMember(d => d.Name, opt => opt.MapFrom(s => s.Name + " (" + s.Bank.Name + ")"));
 
 
             // Transfers
@@ -37,6 +38,25 @@ namespace Finances.Persistence.EF
 
             Mapper.CreateMap<Transfer, Core.Entities.DataIdName>()
                 .ForMember(d => d.Id, opt => opt.MapFrom(s => s.TransferId))
+                .ForMember(d => d.Name, opt => opt.MapFrom(s => s.Name));
+
+            // Cashflows
+            Mapper.CreateMap<CashflowBankAccount, Core.Entities.CashflowBankAccount>()
+                .ReverseMap()
+                .ForMember(t => t.BankAccountId, opt => opt.MapFrom(s => s.BankAccount.BankAccountId))
+                .ForMember(t => t.BankAccount, opt => opt.Ignore());
+            
+            Mapper.CreateMap<Cashflow, Core.Entities.Cashflow>()
+                .ReverseMap()
+                .AfterMap((s,d) => {
+                        foreach (var cba in d.CashflowBankAccounts)
+                        {
+                            cba.CashflowId = s.CashflowId;
+                        }
+                    });
+
+            Mapper.CreateMap<Cashflow, Core.Entities.DataIdName>()
+                .ForMember(d => d.Id, opt => opt.MapFrom(s => s.CashflowId))
                 .ForMember(d => d.Name, opt => opt.MapFrom(s => s.Name));
 
 

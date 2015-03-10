@@ -13,7 +13,7 @@ namespace Finances.WinClient.Converters
     {
         public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
         {
-            var account = value as IBankAccountItemViewModel;
+            var account = value as BankAccountItemViewModel;
 
             return (account == null || account.BankAccountId == -1) ? Visibility.Visible : Visibility.Collapsed;
         }

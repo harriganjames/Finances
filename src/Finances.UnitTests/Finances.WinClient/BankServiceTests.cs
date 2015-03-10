@@ -82,7 +82,7 @@ namespace Finances.UnitTests.Finances.WinClient.BankServiceTests
 
     //        bankRepository.Setup(r => r.Update(It.IsAny<Bank>())).Callback<Bank>(b => { testBank = b; }).Returns(true);
 
-    //        //bankMapper.Setup(m => m.Map(It.IsAny<IBankEditorViewModel>(), It.IsAny<Bank>())).Callback<IBankEditorViewModel, Bank>((vm, b) =>
+    //        //bankMapper.Setup(m => m.Map(It.IsAny<BankEditorViewModel>(), It.IsAny<Bank>())).Callback<BankEditorViewModel, Bank>((vm, b) =>
     //        //    {
     //        //        b.BankId = vm.BankId;
     //        //        b.Name = vm.Name;
@@ -176,7 +176,7 @@ namespace Finances.UnitTests.Finances.WinClient.BankServiceTests
 
     //public class and_reading_a_bank_item_view_model : when_working_with_the_bank_service
     //{
-    //    IBankItemViewModel testBankVM;
+    //    BankItemViewModel testBankVM;
     //    Bank testBank;
 
     //    protected override void Establish_context()
@@ -186,7 +186,7 @@ namespace Finances.UnitTests.Finances.WinClient.BankServiceTests
     //        testBank = new Bank() { BankId = 123, Name = "test" };
 
     //        bankRepository.Setup(r => r.Read(testBank.BankId)).Returns(testBank);
-    //        //bankMapper.Setup(m => m.Map(It.IsAny<Bank>(), It.IsAny<IBankItemViewModel>())).Callback<Bank, IBankItemViewModel>((from, to) =>
+    //        //bankMapper.Setup(m => m.Map(It.IsAny<Bank>(), It.IsAny<BankItemViewModel>())).Callback<Bank, BankItemViewModel>((from, to) =>
     //        //{
     //        //    to.BankId = from.BankId;
     //        //    to.Name = from.Name;
@@ -223,7 +223,7 @@ namespace Finances.UnitTests.Finances.WinClient.BankServiceTests
 
     //public class and_reading_a_bank_view_model_list : when_working_with_the_bank_service
     //{
-    //    List<IBankItemViewModel> testBankVMList;
+    //    List<BankItemViewModel> testBankVMList;
     //    List<Bank> testBankList;
 
     //    protected override void Establish_context()
@@ -236,7 +236,7 @@ namespace Finances.UnitTests.Finances.WinClient.BankServiceTests
     //            new Bank() { BankId = 3, Name = "test3" } };
 
     //        bankRepository.Setup(r => r.ReadList()).Returns(testBankList);
-    //        //bankMapper.Setup(m => m.Map(It.IsAny<Bank>(), It.IsAny<IBankItemViewModel>())).Callback<Bank, IBankItemViewModel>((from, to) =>
+    //        //bankMapper.Setup(m => m.Map(It.IsAny<Bank>(), It.IsAny<BankItemViewModel>())).Callback<Bank, BankItemViewModel>((from, to) =>
     //        //{
     //        //    to.BankId = from.BankId;
     //        //    to.Name = from.Name;
