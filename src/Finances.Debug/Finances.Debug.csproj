@@ -65,18 +65,6 @@
       <Project>{bb8793f8-877f-42b0-82ef-0786b2c214ef}</Project>
       <Name>Finances.Core</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Finances.IntegrationTests\Finances.IntegrationTests.csproj">
-      <Project>{eaa485c0-edba-4e75-ae82-19bddb4de63b}</Project>
-      <Name>Finances.IntegrationTests</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Finances.Persistence.FNH\Finances.Persistence.FNH.csproj">
-      <Project>{c32d7189-fe4d-4335-8ee1-6cb4e9c0c8e8}</Project>
-      <Name>Finances.Persistence.FNH</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Finances.UnitTests\Finances.UnitTests.csproj">
-      <Project>{810540f3-3726-4674-b97c-7dd6918c9a2f}</Project>
-      <Name>Finances.UnitTests</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Finances.WinClient\Finances.WinClient.csproj">
       <Project>{d481adf1-4007-40d7-9e05-2daaf3d89d90}</Project>
       <Name>Finances.WinClient</Name>

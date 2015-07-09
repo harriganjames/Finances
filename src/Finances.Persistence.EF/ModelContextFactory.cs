@@ -18,7 +18,6 @@ namespace Finances.Persistence.EF
         public ModelContextFactory(string connectionString)
         {
             this.EFConnectionString = String.Format("metadata=res://*/Model.csdl|res://*/Model.ssdl|res://*/Model.msl;provider=System.Data.SqlClient;provider connection string=\"{0}\";",connectionString);
-;
         }
 
         public FinanceEntities CreateContext()

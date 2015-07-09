@@ -1,17 +1,21 @@
 ﻿using Finances.Core.Interfaces;
 using Finances.Core.Wpf;
-
+using Finances.Core.Entities;
 
 namespace Finances.WinClient.ViewModels
 {
     public class CashflowBankAccountItemViewModel : TreeViewItemViewModelBase
     {
+        CashflowBankAccount entity;
 
-        int cashflowBankAccountId;
+        public CashflowBankAccountItemViewModel(CashflowBankAccount entity)
+        {
+            this.entity = entity;
+        }
+
         public int CashflowBankAccountId
         {
-            get { return cashflowBankAccountId; }
-            set { cashflowBankAccountId = value; NotifyPropertyChanged(); }
+            get { return entity.CashflowBankAccountId; }
         }
 
         private BankAccountItemViewModel bankAccount;
@@ -20,12 +24,10 @@ namespace Finances.WinClient.ViewModels
             get 
             {
                 if (bankAccount == null)
-                    bankAccount = new BankAccountItemViewModel();
+                    bankAccount = new BankAccountItemViewModel(entity.BankAccount);
                 return bankAccount; 
             }
-            set { bankAccount = value; NotifyPropertyChanged(); }
         }
-
 
 
 

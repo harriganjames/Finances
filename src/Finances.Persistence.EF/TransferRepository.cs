@@ -88,6 +88,28 @@ namespace Finances.Persistence.EF
             return true;
         }
 
+        public bool Delete(List<int> ids)
+        {
+            try
+            {
+                using (FinanceEntities context = factory.CreateContext())
+                {
+                    foreach (var id in ids)
+                    {
+                        var ef = new Transfer() { TransferId = id };
+                        context.Entry(ef).State = EntityState.Deleted;
+                    }
+                    context.SaveChanges();
+                }
+            }
+            catch (DbEntityValidationException e)
+            {
+                CommonRepository.HandleDbEntityValidationException(e);
+            }
+            return true;
+        }
+
+
         public Core.Entities.Transfer Read(int id)
         {
             Core.Entities.Transfer entity = null;
@@ -100,6 +122,7 @@ namespace Finances.Persistence.EF
                                     .Include(a => a.FromBankAccount.Bank)
                                     .Include(a => a.ToBankAccount)
                                     .Include(a => a.ToBankAccount.Bank)
+                                    .Include(a => a.TransferCategory)
                               where b.TransferId==id
                               select b).FirstOrDefault();
 
@@ -125,6 +148,7 @@ namespace Finances.Persistence.EF
                                     .Include(a => a.FromBankAccount.Bank)
                                     .Include(a => a.ToBankAccount)
                                     .Include(a => a.ToBankAccount.Bank)
+                                    .Include(a => a.TransferCategory)
                               select b).ToList();
 
                     list = mapper.Map<List<Core.Entities.Transfer>>(ef);
@@ -164,6 +188,28 @@ namespace Finances.Persistence.EF
             }
             return list;
         }
+
+
+        public List<Core.Entities.TransferCategory> ReadListTransferCategories()
+        {
+            List<Core.Entities.TransferCategory> list = null;
+            try
+            {
+                using (FinanceEntities context = factory.CreateContext())
+                {
+                    var ef = (from b in context.TransferCategories
+                              select b).ToList();
+
+                    list = mapper.Map<List<Core.Entities.TransferCategory>>(ef);
+                }
+            }
+            catch (DbEntityValidationException e)
+            {
+                CommonRepository.HandleDbEntityValidationException(e);
+            }
+            return list;
+        }
+
 
 
         #region Privates

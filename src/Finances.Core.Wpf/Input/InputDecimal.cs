@@ -39,6 +39,7 @@ namespace Finances.WinClient.ViewModels
         {
             this.FormatString = "n2";
             this.Mandatory = true;
+            this.AllowInvalid = true;
         }
 
         public string FormatString { get; set; }
@@ -67,11 +68,19 @@ namespace Finances.WinClient.ViewModels
                 else if (Decimal.TryParse(value,NumberStyles.Currency,this.culture, out test))
                 {
                     this.Value = test;
+                    // re-parse to conform to Format
+                    Decimal.TryParse(input, NumberStyles.Currency, this.culture, out test);
+                    this.Value = test;
+
                 }
                 else
                 {
                     HasValue = false;
                     IsNumeric = false;
+                }
+                if (!AllowInvalid && !HasValue)
+                {
+                    Value = 0;
                 }
                 NotifyPropertyChanged(() => this.Input);
             }
@@ -111,6 +120,8 @@ namespace Finances.WinClient.ViewModels
                 return this.Mandatory ? this.IsNumeric && this.HasValue : this.IsNumeric;
             }
         }
+
+        public bool AllowInvalid { set; get; }
 
         #region INotifyDataErrorInfo
 

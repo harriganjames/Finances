@@ -18,6 +18,7 @@ namespace Finances.Persistence.EF
         public string Name { get; set; }
         public Nullable<int> FromBankAccountId { get; set; }
         public Nullable<int> ToBankAccountId { get; set; }
+        public int TransferCategoryId { get; set; }
         public decimal Amount { get; set; }
         public decimal AmountTolerence { get; set; }
         public System.DateTime StartDate { get; set; }
@@ -29,5 +30,6 @@ namespace Finances.Persistence.EF
     
         public virtual BankAccount FromBankAccount { get; set; }
         public virtual BankAccount ToBankAccount { get; set; }
+        public virtual TransferCategory TransferCategory { get; set; }
     }
 }

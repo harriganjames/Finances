@@ -8,6 +8,7 @@ namespace Finances.Core.Interfaces
         int Add(BankAccount account);
         bool Update(BankAccount account);
         bool Delete(BankAccount account);
+        bool Delete(List<int> ids);
         BankAccount Read(int accountId);
         List<BankAccount> ReadList();
         List<BankAccount> ReadListByBankId(int bankId);

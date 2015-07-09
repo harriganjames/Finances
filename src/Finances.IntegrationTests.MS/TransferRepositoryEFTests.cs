@@ -26,7 +26,7 @@ namespace Finances.IntegrationTests.MS
 
             testEntity = new Core.Entities.Transfer()
             {
-                Name = "xfer-"+Guid.NewGuid().ToString(),
+                Name = "xfer-" + Guid.NewGuid().ToString(),
                 Amount = 123,
                 AmountTolerence = 0.5M,
                 EndDate = DateTime.Now.Date,
@@ -40,7 +40,10 @@ namespace Finances.IntegrationTests.MS
                 ToBankAccount = new Core.Entities.BankAccount()
                 {
                     BankAccountId = 2
-                }
+                },
+                Category = new Core.Entities.TransferCategory()
+                {
+                    TransferCategoryId = 1                }
             };
 
         }
@@ -65,6 +68,8 @@ namespace Finances.IntegrationTests.MS
             Assert.IsNotNull(read.ToBankAccount.Name);
             Assert.IsNotNull(read.ToBankAccount.Bank);
             Assert.IsNotNull(read.ToBankAccount.Bank.Name);
+            Assert.IsNotNull(read.Category);
+            Assert.IsNotNull(read.Category.Name);
             
             CompareTransfers(entity, read, "Read");
 
@@ -87,6 +92,7 @@ namespace Finances.IntegrationTests.MS
             var list = _repository.ReadList();
             Assert.IsNotNull(list);
             Assert.IsTrue(list.Count > 0);
+            Assert.IsNotNull(list[0].Category);
         }
 
 
@@ -98,6 +104,18 @@ namespace Finances.IntegrationTests.MS
             Assert.IsTrue(list.Count > 0);
 
             Assert.IsTrue(list.Count(d => d.Id > 0) == list.Count);
+            Assert.IsTrue(list.Count(d => !String.IsNullOrEmpty(d.Name)) == list.Count);
+        }
+
+        [TestMethod]
+        public void TestReadListTransferCategory()
+        {
+            var list = _repository.ReadListTransferCategories();
+            Assert.IsNotNull(list);
+            Assert.IsTrue(list.Count > 0);
+
+            Assert.IsTrue(list.Count(d => d.TransferCategoryId > 0) == list.Count);
+            Assert.IsTrue(list.Count(d => !String.IsNullOrEmpty(d.Code)) == list.Count);
             Assert.IsTrue(list.Count(d => !String.IsNullOrEmpty(d.Name)) == list.Count);
         }
 
@@ -130,7 +148,10 @@ namespace Finances.IntegrationTests.MS
             Assert.AreEqual(entity1.FromBankAccount.BankAccountId, entity2.FromBankAccount.BankAccountId, "{0} - FromBankAccount", prefix);
             Assert.AreEqual(entity1.ToBankAccount.BankAccountId, entity2.ToBankAccount.BankAccountId, "{0} - ToBankAccount", prefix);
 
+            Assert.IsNotNull(entity1.Category, "{0} - entity1.Category", prefix);
+            Assert.IsNotNull(entity2.Category, "{0} - entity2.Category", prefix);
 
+            Assert.AreEqual(entity1.Category.TransferCategoryId, entity2.Category.TransferCategoryId, "{0} - Category", prefix);
 
 
             //CompareBankAccounts(entity1.FromBankAccount, entity2.FromBankAccount, String.Format("{0} - FromBankAccount", prefix));

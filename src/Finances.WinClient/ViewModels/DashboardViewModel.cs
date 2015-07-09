@@ -17,13 +17,13 @@ namespace Finances.WinClient.ViewModels
 
     public class DashboardViewModel : Workspace
     {
-        readonly IBanksViewModel banksViewModel;
-        readonly IBankAccountsViewModel bankAccountsViewModel;
+        readonly IBankListViewModel banksViewModel;
+        readonly IBankAccountListViewModel bankAccountsViewModel;
         readonly ITransferListViewModel transferListViewModel;
 
         public DashboardViewModel(
-                    IBanksViewModel banksViewModel,
-                    IBankAccountsViewModel bankAccountsViewModel,
+                    IBankListViewModel banksViewModel,
+                    IBankAccountListViewModel bankAccountsViewModel,
                     ITransferListViewModel transferListViewModel
                     )
         {
@@ -51,7 +51,7 @@ namespace Finances.WinClient.ViewModels
 
 
 
-        public IBanksViewModel BanksViewModel
+        public IBankListViewModel BanksViewModel
         {
           get 
           { 
@@ -59,7 +59,7 @@ namespace Finances.WinClient.ViewModels
           }
         }
 
-        public IBankAccountsViewModel BankAccountsViewModel
+        public IBankAccountListViewModel BankAccountsViewModel
         {
             get
             {

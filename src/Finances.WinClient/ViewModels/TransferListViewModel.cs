@@ -15,13 +15,8 @@ using Finances.WinClient.Factories;
 
 namespace Finances.WinClient.ViewModels
 {
-    public interface ITransferListViewModel //: IListViewModelBase<TransferItemViewModel>
+    public interface ITransferListViewModel
     {
-    //    ActionCommand AddCommand { get; set; }
-    //    ActionCommand EditCommand { get; set; }
-    //    ActionCommand DeleteCommand { get; set; }
-    //    ActionCommand ReloadCommand { get; set; }
-    //    ObservableCollection<TransferItemViewModel> Transfers { get; }
         void Open();
         void Close();
     }
@@ -29,23 +24,17 @@ namespace Finances.WinClient.ViewModels
     public class TransferListViewModel : ListViewModelBase<TransferItemViewModel>, ITransferListViewModel
     {
         readonly ITransferRepository transferRepository;
-        readonly IMappingEngine mapper;
-        readonly IDialogService dialogService;
-        readonly ITransferEditorViewModelFactory transferEditorViewModelFactory;
+        readonly ITransferAgent transferAgent;
 
         Dictionary<int, Transfer> transfers = new Dictionary<int, Transfer>();
 
         public TransferListViewModel(
                         ITransferRepository transferRepository,
-                        IMappingEngine mapper,
-                        IDialogService dialogService,
-                        ITransferEditorViewModelFactory bankEditorViewModelFactory
+                        ITransferAgent transferAgent
                         )
         {
             this.transferRepository = transferRepository;
-            this.mapper = mapper;
-            this.dialogService = dialogService;
-            this.transferEditorViewModelFactory = bankEditorViewModelFactory;
+            this.transferAgent = transferAgent;
 
             ReloadCommand = base.AddNewCommand(new ActionCommand(Reload));
             AddCommand = base.AddNewCommand(new ActionCommand(Add));
@@ -105,8 +94,6 @@ namespace Finances.WinClient.ViewModels
 
         private void LoadData()
         {
-            //List<TransferItemViewModel> transfers = null;
-
             base.IsBusy = true;
 
             BackgroundWorker bw = new BackgroundWorker();
@@ -127,7 +114,7 @@ namespace Finances.WinClient.ViewModels
                 {
                     transfers.Values.ToList().ForEach(t =>
                     {
-                        base.DataList.Add(mapper.Map<TransferItemViewModel>(t));
+                        base.DataList.Add(new TransferItemViewModel(t));
                     });
                 }
 
@@ -139,33 +126,23 @@ namespace Finances.WinClient.ViewModels
         }
 
 
-
         private void Add()
         {
-            var editor = this.transferEditorViewModelFactory.Create();
-
-            editor.InitializeForAddEdit(true);
-
-            while (this.dialogService.ShowDialogView(editor))
+            int id = this.transferAgent.Add();
+            if (id > 0)
             {
-                var entity = mapper.Map<Transfer>(editor);
+                var entity = this.transferRepository.Read(id);
 
-                bool result = this.transferRepository.Add(entity) > 0;
+                this.transfers.Add(entity.TransferId, entity);
 
-                if (result)
-                {
-                    this.transfers.Add(entity.TransferId, entity);
+                var vm = new TransferItemViewModel(entity);
 
-                    var vm = mapper.Map<TransferItemViewModel>(entity);
+                base.DataList.Add(vm);
+                base.DataList.ToList().ForEach(i => i.IsSelected = false);
+                vm.IsSelected = true;
 
-                    base.DataList.Add(vm);
-                    base.DataList.ToList().ForEach(i => i.IsSelected = false);
-                    vm.IsSelected = true;
-                    break;
-                }
             }
 
-            this.transferEditorViewModelFactory.Release(editor);
         }
 
 
@@ -175,80 +152,48 @@ namespace Finances.WinClient.ViewModels
         }
         private void Edit()
         {
-            var editor = this.transferEditorViewModelFactory.Create();
+            var vm = base.GetSelectedItems().First();
 
-            TransferItemViewModel vm = base.GetSelectedItems().First();
+            int id = vm.TransferId;
 
-            Transfer transfer = this.transfers[vm.TransferId];
+            bool result = this.transferAgent.Edit(id);
 
-            mapper.Map<Transfer, TransferEditorViewModel>(transfer, editor as TransferEditorViewModel);
-
-            editor.InitializeForAddEdit(false);
-
-            while (this.dialogService.ShowDialogView(editor))
+            if (result)
             {
-                var upd = mapper.Map<Transfer>(editor);
+                this.transfers[id] = this.transferRepository.Read(id);
 
-                bool result = this.transferRepository.Update(upd);
-                if (result)
-                {
-                    this.transfers[vm.TransferId] = upd;
-                    mapper.Map<Transfer, TransferItemViewModel>(upd, vm as TransferItemViewModel);
-                    break;
-                }
+                vm.Entity = this.transfers[id];
             }
 
-            this.transferEditorViewModelFactory.Release(editor);
-
         }
+
 
 
         private bool CanDelete()
         {
             return base.GetQtySelected() > 0;
         }
+
         private void Delete()
         {
-            string title;
-            string message;
-            List<TransferItemViewModel> sel = base.GetSelectedItems().ToList();
+            var vms = base.GetSelectedItems().ToList();
+            List<int> ids = vms.Select(vm => vm.TransferId).ToList();
 
-            if (sel.Count() == 0)
-            {
-                throw new Exception("Delete Transfer: nothing selected");
-            }
-
-            if (sel.Count() == 1)
-            {
-                title = "Delete Transfer";
-                message = String.Format("Please confirm deletion of transfer: {0}", sel.First().Name);
-            }
-            else
-            {
-                title = "Delete Transfers";
-                message = String.Format("Please confirm deletion of {0} trransfers?", sel.Count());
-            }
-
-
-            if (this.dialogService.ShowMessageBox(title, message, MessageBoxButtonEnum.YesNo) == MessageBoxResultEnum.Yes)
+            if (this.transferAgent.Delete(ids))
             {
                 base.IsBusy = true;
 
-                foreach (var vm in sel)
+                foreach (var vm in vms)
                 {
-                    Transfer entity = mapper.Map<Transfer>(vm);
-                    if (this.transferRepository.Delete(entity))
-                    {
-                        base.DataList.Remove(vm);
-                        this.transfers.Remove(entity.TransferId);
-                    }
-                    else
-                        break;
+                    base.DataList.Remove(vm);
                 }
 
                 base.IsBusy = false;
+
             }
+
         }
+
 
 
         public override string Caption

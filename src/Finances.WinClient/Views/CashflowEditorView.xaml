@@ -3,11 +3,24 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
+             xmlns:eic="clr-namespace:Microsoft.Expression.Interactivity.Core;assembly=Microsoft.Expression.Interactions"
              mc:Ignorable="d" 
              MinWidth="350"
              MinHeight="180"
+             VerticalAlignment="Stretch"
              >
-    
+    <i:Interaction.Triggers>
+        <i:EventTrigger EventName="Loaded">
+            <eic:ChangePropertyAction PropertyName="SizeToContent"  
+                                          TargetObject="{Binding RelativeSource={RelativeSource FindAncestor,AncestorType=Window}}" 
+                                          Value="Width"/>
+            <eic:ChangePropertyAction PropertyName="Height"  
+                                          TargetObject="{Binding RelativeSource={RelativeSource FindAncestor,AncestorType=Window}}" 
+                                          Value="400"/>
+        </i:EventTrigger>
+    </i:Interaction.Triggers>
+
     <UserControl.Resources>
         <DataTemplate x:Key="BankAccountTemplate">
             <Grid>
@@ -109,21 +122,41 @@
                                 />
             </Grid>
 
+            <!--All Accounts-->
+            <Grid Margin="{StaticResource Spacer}">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" SharedSizeGroup="label"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <Label      Content="All Accounts"/>
+                <CheckBox   Grid.Column="1"
+                            x:Name="AllAccounts"
+                            VerticalAlignment="Center"
+                            IsChecked="{Binding AllAccounts}"
+                            />
+            </Grid>
+
+
         </StackPanel>
 
         <!--Outside of StackPanel to allow vertical resizing-->
         <!--Bank Accounts-->
-        <Grid Grid.Row="1">
+        <Grid Grid.Row="1"
+              IsEnabled="{Binding ElementName=AllAccounts, Path=IsChecked, Converter={StaticResource ToogleBooleanConverter}}"
+              >
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" SharedSizeGroup="label"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
 
             <Label      Content="Bank Accounts"
                         VerticalAlignment="Top"/>
 
             <ListBox Grid.Column="1"
-                     MinHeight="80"
                      ItemsSource="{Binding BankAccounts}"
                      ItemTemplate="{StaticResource SelectableBankAccountDataTemplate}"
                      >

@@ -44,6 +44,8 @@ namespace Finances.Core.Wpf
                 SelectedChanged(this, new BooleanResultEventArgs(selectedChanged));
         }
 
+        //public T MyProperty { get; set; }
+
 
     }
 }

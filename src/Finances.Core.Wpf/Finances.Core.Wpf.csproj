@@ -55,6 +55,8 @@
     <Compile Include="ContainerWindow.xaml.cs">
       <DependentUpon>ContainerWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\ListViewScroll.cs" />
+    <Compile Include="Converters\ToggleBooleanConverter.cs" />
     <Compile Include="Converters\NullToCollapsedConverter.cs" />
     <Compile Include="Converters\NegativeVisibilityConverter.cs" />
     <Compile Include="Converters\NullToVisibleConverter.cs" />

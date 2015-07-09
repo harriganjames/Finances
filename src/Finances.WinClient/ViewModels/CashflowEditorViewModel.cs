@@ -20,27 +20,22 @@ namespace Finances.WinClient.ViewModels
     {
         bool delayValidation = false; // must be false until change logic around IsValid
         ObservableCollection<BankAccountItemViewModel> bankAccounts;
-        ObservableCollection<CashflowBankAccountItemViewModel> cashflowBankAccounts;
         List<DataIdName> existingCashflows;
         Dictionary<int, BankAccount> allBankAccounts = new Dictionary<int,BankAccount>();
         Cashflow entity;
 
         readonly ICashflowRepository cashflowRepository;
-        readonly IMappingEngine mapper;
         readonly IBankAccountRepository bankAccountRepository;
-        readonly IDialogService dialogService;
 
         public CashflowEditorViewModel(
                 ICashflowRepository cashflowRepository,
-                IMappingEngine mapper,
                 IBankAccountRepository bankAccountRepository,
-                IDialogService dialogService
+                Cashflow entity
             )
         {
             this.cashflowRepository = cashflowRepository;
-            this.mapper = mapper;
             this.bankAccountRepository = bankAccountRepository;
-            this.dialogService = dialogService;
+            this.entity = entity;
 
             this.OpeningBalance.PropertyChanged += (s,e) =>
                 {
@@ -56,12 +51,10 @@ namespace Finances.WinClient.ViewModels
         #region Publics
 
 
-        public void InitializeForAddEdit(bool addMode, Cashflow entity)
+        public void InitializeForAddEdit(bool addMode)
         {
             base.ValidationHelper.Enabled = !delayValidation;
             base.ValidationHelper.Reset();
-
-            this.entity = entity;
 
             LoadBankAccountList();
             LoadExistingCashflows();
@@ -74,6 +67,8 @@ namespace Finances.WinClient.ViewModels
             this.OpeningBalance.Value = entity.OpeningBalance;
             this.OpeningBalance.ValueChangedAction = v => this.entity.OpeningBalance = v;
 
+            this.AllAccounts = entity.CashflowBankAccounts.Count == 0;
+
         }
 
         public string DialogTitle
@@ -84,6 +79,20 @@ namespace Finances.WinClient.ViewModels
             }
         }
 
+
+        bool allAccounts;
+        public bool AllAccounts
+        {
+            get
+            {
+                return allAccounts;
+            }
+            set
+            {
+                allAccounts = value;
+                NotifyPropertyChangedAndValidate();
+            }
+        }
 
         // used by View to capture accounts
         public ObservableCollection<BankAccountItemViewModel> BankAccounts
@@ -96,19 +105,7 @@ namespace Finances.WinClient.ViewModels
             }
         }
 
-        // use by mapper to get accounts in/out
-        //public ObservableCollection<CashflowBankAccountItemViewModel> CashflowBankAccounts
-        //{
-        //    get
-        //    {
-        //        if (this.cashflowBankAccounts == null)
-        //            this.cashflowBankAccounts = new ObservableCollection<CashflowBankAccountItemViewModel>();
-        //        return this.cashflowBankAccounts;
-        //    }
-        //}
 
-
-        //int cashflowId;
         public int CashflowId
         {
             get { return entity.CashflowId; }
@@ -116,7 +113,6 @@ namespace Finances.WinClient.ViewModels
         }
 
 
-        string name;
         [Required(ErrorMessage = "Cashflow Name is mandatory")]
         public string Name
         {
@@ -134,11 +130,6 @@ namespace Finances.WinClient.ViewModels
 
 
         InputDecimal openingBalance;
-        // = new InputDecimal() 
-            //{ 
-            //    FormatString = "c2", 
-            //    Mandatory = true
-            //};
         public InputDecimal OpeningBalance
         {
             get
@@ -148,24 +139,15 @@ namespace Finances.WinClient.ViewModels
                     openingBalance = new InputDecimal()
                     {
                         FormatString = "c2",
-                        Mandatory = true//,
-                        //ValueChangedAction = v => this.entity.OpeningBalance = v,
+                        Mandatory = true,
                     };
                 }
                 return openingBalance;
             }
-            //set
-            //{
-            //    openingBalance = value;
-            //    openingBalance.FormatString = "n2";
-            //    openingBalance.Mandatory = true;
-            //    NotifyPropertyChangedAndValidate();
-            //}
         }
 
 
 
-        //DateTime? startDate;
         [Required(ErrorMessage = "Start Date is mandatory")]
         public DateTime? StartDate
         {
@@ -183,6 +165,7 @@ namespace Finances.WinClient.ViewModels
 
         #endregion
 
+
         #region Privates
 
         private void LoadBankAccountList()
@@ -193,7 +176,7 @@ namespace Finances.WinClient.ViewModels
 
             // populate collection for View
             BankAccounts.Clear();
-            allBankAccounts.Values.ToList().ForEach(a => BankAccounts.Add(mapper.Map<BankAccountItemViewModel>(a)));
+            allBankAccounts.Values.ToList().ForEach(a => BankAccounts.Add(new BankAccountItemViewModel(a)));
 
             // Flag selected items
             foreach (var cfa in this.entity.CashflowBankAccounts)
@@ -222,30 +205,36 @@ namespace Finances.WinClient.ViewModels
             // need to copy incrementally
             // then check this in repo
 
-
-            // add new accounts
-            this.BankAccounts.Where(a => a.IsSelected).ToList().ForEach(s =>
+            if (this.AllAccounts)
             {
-                if (entity.CashflowBankAccounts.Count(e => e.BankAccount.BankAccountId == s.BankAccountId) == 0)
+                entity.CashflowBankAccounts.Clear();
+            }
+            else
+            {
+
+                // add new accounts
+                this.BankAccounts.Where(a => a.IsSelected).ToList().ForEach(s =>
                 {
-                    entity.CashflowBankAccounts.Add(new CashflowBankAccount()
+                    if (entity.CashflowBankAccounts.Count(e => e.BankAccount.BankAccountId == s.BankAccountId) == 0)
                     {
-                        BankAccount = allBankAccounts[s.BankAccountId]
-                    });
+                        entity.CashflowBankAccounts.Add(new CashflowBankAccount()
+                        {
+                            BankAccount = allBankAccounts[s.BankAccountId]
+                        });
+                    }
                 }
-            }
-            );
+                );
 
-            // remove deleted accounts
-            entity.CashflowBankAccounts.ToList().ForEach(e =>
-            {
-                if (BankAccounts.Count(a => a.BankAccountId == e.BankAccount.BankAccountId && a.IsSelected)==0)
+                // remove deleted accounts
+                entity.CashflowBankAccounts.ToList().ForEach(e =>
                 {
-                    entity.CashflowBankAccounts.Remove(e);
+                    if (BankAccounts.Count(a => a.BankAccountId == e.BankAccount.BankAccountId && a.IsSelected) == 0)
+                    {
+                        entity.CashflowBankAccounts.Remove(e);
+                    }
                 }
+                );
             }
-            );
-
 
 
         }

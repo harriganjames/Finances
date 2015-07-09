@@ -12,27 +12,13 @@ namespace Finances.WinClient.CastleInstallers
     {
         public void Install(IWindsorContainer container, IConfigurationStore store)
         {
-            ////container.Register(Component.For<IBankService>().ImplementedBy<BankService>());
+            container.Register(Component.For<IBankAgent>().ImplementedBy<BankAgent>());
 
-            //container.Register(Component.For<IBankTreeViewService>().ImplementedBy<BankTreeViewService>());
+            container.Register(Component.For<IBankAccountAgent>().ImplementedBy<BankAccountAgent>());
 
-            //container.Register(Component.For<IBankAccountService>().ImplementedBy<BankAccountService>());
-
-            //container.Register(Component.For<IBankAccountTreeViewService>().ImplementedBy<BankAccountTreeViewService>());
-
-            //container.Register(Component.For<IBankViewModelFactory>().ImplementedBy<BankViewModelFactory>());
-
-            //container.Register(Component.For<IBanksViewModel>().ImplementedBy<BanksViewModel>());
-
-            //container.Register(Component.For<BankEditorViewModel>().ImplementedBy<BankEditorViewModel>());
-
-            //container.Register(Component.For<ITransferService>().ImplementedBy<TransferService>());
+            container.Register(Component.For<ITransferAgent>().ImplementedBy<TransferAgent>());
 
             container.Register(Component.For<ICashflowAgent>().ImplementedBy<CashflowAgent>());
-
-
-            // Mappings
-            container.Register(Component.For<IMappingCreator>().ImplementedBy<MappingCreator>());
 
 
             //container.Kernel.ProxyFactory.AddInterceptorSelector(new DomainServiceInterceptorSelector());

@@ -130,6 +130,24 @@
                 </Button>
             </Grid>
 
+            <!--Category-->
+            <Grid Margin="{StaticResource Spacer}">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" SharedSizeGroup="label"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <Label      Content="Category"/>
+                <ComboBox   Width="100"
+                            HorizontalAlignment="Left"
+                            Grid.Column="1"
+                            ItemsSource="{Binding Categories}"
+                            SelectedItem="{Binding Category}"
+                            DisplayMemberPath="Name">
+                </ComboBox>
+            </Grid>
+
+
             <!--Amount-->
             <Grid Margin="{StaticResource Spacer}">
                 <Grid.ColumnDefinitions>
@@ -139,7 +157,7 @@
 
                 <Label      Content="Amount"/>
                 <TextBox    Grid.Column="1"
-                            Width="80"
+                            Width="100"
                             
                             HorizontalContentAlignment="Right"
                             Text="{Binding Amount.Input, UpdateSourceTrigger=LostFocus}"/>

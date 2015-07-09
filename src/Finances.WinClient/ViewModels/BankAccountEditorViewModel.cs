@@ -15,55 +15,29 @@ using System.Diagnostics;
 
 namespace Finances.WinClient.ViewModels
 {
-    //public interface BankAccountEditorViewModel : IEditorViewModelBase, IEntityMapper<BankAccount>
-    //{
-    //    void InitializeForAddEdit(bool AddEdit);
-
-    //    string AccountName { get; set; }
-    //    string AccountNumber { get; set; }
-    //    string AccountOwner { get; set; }
-    //    BankItemViewModel Bank { get; set; }
-    //    int BankAccountId { get; set; }
-    //    int BankId { get; set; }
-    //    DateTime? OpenedDate { get; set; }
-    //    DateTime? ClosedDate { get; set; }
-    //    decimal? InitialRate { get; set; }
-    //    string LoginId { get; set; }
-    //    string LoginUrl { get; set; }
-    //    DateTime? MilestoneDate { get; set; }
-    //    string MilestoneNotes { get; set; }
-    //    string Notes { get; set; }
-    //    string PasswordHint { get; set; }
-    //    bool PaysTaxableInterest { get; set; }
-    //    string SortCode { get; set; }
-    //}
-
-    public class BankAccountEditorViewModel : EditorViewModelBase//, BankAccountEditorViewModel
+    public class BankAccountEditorViewModel : EditorViewModelBase
     {
         bool delayValidation = false; // must be false until change logic around IsValid
         ObservableCollection<BankItemViewModel> bankList;
         List<DataIdName> existingBankAccounts;
+        BankAccount entity;
 
         readonly IBankAccountRepository bankAccountRepository;
         readonly IBankRepository bankRepository;
-        readonly IMappingEngine mapper;
-        readonly IDialogService dialogService;
-        readonly IBankEditorViewModelFactory bankEditorViewModelFactory;
+        readonly IBankAgent bankAgent;
 
 
         public BankAccountEditorViewModel(
                         IBankAccountRepository bankAccountRepository,
                         IBankRepository bankRepository,
-                        IMappingEngine mapper,
-                        IDialogService dialogService,
-                        IBankEditorViewModelFactory bankEditorViewModelFactory
+                        IBankAgent bankAgent,
+                        BankAccount entity
                         )
         {
             this.bankRepository = bankRepository;
             this.bankAccountRepository = bankAccountRepository;
-            this.mapper = mapper;
-            this.dialogService = dialogService;
-            this.bankEditorViewModelFactory = bankEditorViewModelFactory;
+            this.bankAgent = bankAgent;
+            this.entity = entity;
 
             NewBankCommand = base.AddNewCommand(new ActionCommand(this.NewBank));
         }
@@ -87,23 +61,7 @@ namespace Finances.WinClient.ViewModels
 
             if (addMode)
             {
-                this.BankAccountId = 0;
-                this.AccountName = "";
-                this.Bank = null;
-                this.AccountNumber = "";
-                this.SortCode = "";
-                this.AccountOwner = "";
                 this.OpenedDate = DateTime.Now.Date;
-                this.ClosedDate = null;
-                this.InitialRate = 0;
-                this.LoginId = "";
-                this.LoginUrl = "";
-                this.MilestoneDate = null;
-                this.MilestoneNotes = "";
-                this.Notes = "";
-                this.PasswordHint = "";
-                this.PaysTaxableInterest = false;
-
             }
 
         }
@@ -128,30 +86,28 @@ namespace Finances.WinClient.ViewModels
         }
 
 
-        int bankAccountId;
         public int BankAccountId 
         { 
-            get { return this.bankAccountId; }
+            get { return entity.BankAccountId; }
             set
             {
-                if (this.bankAccountId != value)
+                if (entity.BankAccountId != value)
                 {
-                    this.bankAccountId = value;
+                    entity.BankAccountId = value;
                     NotifyPropertyChangedAndValidate();
                 }
             }
         }
 
-        string accountName;
         [Required(ErrorMessage = "Account Name is mandatory")]
         public string AccountName
         {
-            get { return accountName; }
+            get { return entity.Name; }
             set
             {
-                if (accountName != value)
+                if (entity.Name != value)
                 {
-                    accountName = value;
+                    entity.Name = value;
                     NotifyPropertyChangedAndValidate();
                 }
             }
@@ -163,13 +119,6 @@ namespace Finances.WinClient.ViewModels
             { 
                 return this.Bank==null?0:this.Bank.BankId; 
             }
-            set 
-            {   
-
-
-//                this.Bank = this.BankList.First(b => b.BankId == value);
-                NotifyPropertyChangedAndValidate();
-            }
         }
 
         BankItemViewModel bank;
@@ -178,7 +127,7 @@ namespace Finances.WinClient.ViewModels
             get 
             {
                 if (bank == null)
-                    bank = new BankItemViewModel();
+                    bank = new BankItemViewModel(entity.Bank);
 
 
                 if (this.BankList!=null && !this.BankList.Contains(bank))
@@ -196,12 +145,8 @@ namespace Finances.WinClient.ViewModels
                 {
                     bank = value;
 
-                    //bank = this.BankList.First(b => b.BankId == value.BankId);
+                    entity.Bank = bank.Entity;
 
-                    //if (this.BankList.Contains(value))
-                    //    bank = value;
-                    //else
-                    //    this.Bank = this.BankList.First(b => b.BankId == value.BankId);
                 }
                 else
                 {
@@ -213,107 +158,93 @@ namespace Finances.WinClient.ViewModels
         }
 
 
-        string sortCode;
         [MaxLength(6, ErrorMessage="Sort Code max length is 6")]
         public string SortCode
         {
-            get { return sortCode; }
+            get { return entity.SortCode; }
             set
             {
-                sortCode = value; 
+                entity.SortCode = value; 
                 NotifyPropertyChangedAndValidate();
             }
         }
 
-        string accountNumber;
         [MaxLength(8, ErrorMessage = "Account Number max length is 8")]
         public string AccountNumber
         {
-            get { return accountNumber; }
-            set { accountNumber = value; NotifyPropertyChangedAndValidate(); }
+            get { return entity.AccountNumber; }
+            set { entity.AccountNumber = value; NotifyPropertyChangedAndValidate(); }
         }
 
 
 
-        string accountOwner;
         public string AccountOwner
         {
-            get { return accountOwner; }
-            set { accountOwner = value; NotifyPropertyChangedAndValidate(); }
+            get { return entity.AccountOwner; }
+            set { entity.AccountOwner = value; NotifyPropertyChangedAndValidate(); }
         }
 
-        bool paysTaxableInterest;
         public bool PaysTaxableInterest
         {
-            get { return paysTaxableInterest; }
-            set { paysTaxableInterest = value; NotifyPropertyChangedAndValidate(); }
+            get { return entity.PaysTaxableInterest; }
+            set { entity.PaysTaxableInterest = value; NotifyPropertyChangedAndValidate(); }
         }
 
 
-        string loginUrl;
         public string LoginUrl
         {
-            get { return loginUrl; }
-            set { loginUrl = value; NotifyPropertyChangedAndValidate(); }
+            get { return entity.LoginURL; }
+            set { entity.LoginURL = value; NotifyPropertyChangedAndValidate(); }
         }
 
-        string loginId;
         public string LoginId
         {
-            get { return loginId; }
-            set { loginId = value; NotifyPropertyChangedAndValidate(); }
+            get { return entity.LoginID; }
+            set { entity.LoginID = value; NotifyPropertyChangedAndValidate(); }
         }
 
-        string passwordHint;
         public string PasswordHint
         {
-            get { return passwordHint; }
-            set { passwordHint = value; NotifyPropertyChangedAndValidate(); }
+            get { return entity.PasswordHint; }
+            set { entity.PasswordHint = value; NotifyPropertyChangedAndValidate(); }
         }
 
 
-        DateTime? openedDate;
         [Required(ErrorMessage = "Date Opened is mandatory")]
-        public DateTime? OpenedDate
+        public DateTime OpenedDate
         {
-            get { return openedDate.HasValue ? openedDate.Value.Date : openedDate; }
-            set { openedDate = value.HasValue ? value.Value.Date : value; NotifyPropertyChangedAndValidate(); }
+            get { return entity.OpenedDate; }
+            set { entity.OpenedDate = value; NotifyPropertyChangedAndValidate(); }
         }
 
-        DateTime? closedDate;
         public DateTime? ClosedDate
         {
-            get { return closedDate.HasValue ? closedDate.Value.Date : closedDate; }
-            set { closedDate = value.HasValue ? value.Value.Date : value; NotifyPropertyChangedAndValidate(); }
+            get { return entity.ClosedDate; }
+            set { entity.ClosedDate = value; NotifyPropertyChangedAndValidate(); }
         }
 
-        decimal? initialRate;
         public decimal? InitialRate
         {
-            get { return initialRate; }
-            set { initialRate = value; NotifyPropertyChangedAndValidate(); }
+            get { return entity.InitialRate; }
+            set { entity.InitialRate = value; NotifyPropertyChangedAndValidate(); }
         }
 
-
-        DateTime? milestoneDate;
         public DateTime? MilestoneDate
         {
-            get { return milestoneDate; }
-            set { milestoneDate = value; NotifyPropertyChanged(); }
+            get { return entity.MilestoneDate; }
+            set { entity.MilestoneDate = value; NotifyPropertyChanged(); }
         }
 
-        string milestoneNotes;
         public string MilestoneNotes
         {
-            get { return milestoneNotes; }
-            set { milestoneNotes = value; NotifyPropertyChanged(); }
+            get { return entity.MilestoneNotes; }
+            set { entity.MilestoneNotes = value; NotifyPropertyChanged(); }
         }
 
-        string notes;
         public string Notes
         {
-            get { return notes; }
-            set { notes = value; NotifyPropertyChanged(); }
+            get { return entity.Notes; }
+            set { entity.Notes = value; NotifyPropertyChanged(); }
         }
             
         #endregion
@@ -326,7 +257,7 @@ namespace Finances.WinClient.ViewModels
         {
             Debug.WriteLine("LoadBanksList - start");
             BankList.Clear();
-            bankRepository.ReadList().ForEach(b => BankList.Add(mapper.Map<BankItemViewModel>(b)));
+            bankRepository.ReadList().ForEach(b => BankList.Add(new BankItemViewModel(b)));
             Debug.WriteLine("LoadBanksList - end");
         }
 
@@ -335,36 +266,20 @@ namespace Finances.WinClient.ViewModels
             existingBankAccounts = bankAccountRepository.ReadListDataIdName();
         }
 
+
+
         private void NewBank()
         {
-            var editor = this.bankEditorViewModelFactory.Create();
-
-            // prepare Editor
-            editor.InitializeForAddEdit(true);
-
-            // open Editor for adding
-            while (this.dialogService.ShowDialogView(editor))
+            int id = this.bankAgent.Add();
+            if (id > 0)
             {
-                // map the Editor into an entity
-                var newbank = mapper.Map<Bank>(editor);
+                LoadBanksList();
 
-                // save the entity and get result
-                bool result = this.bankRepository.Add(newbank) > 0;
+                this.Bank = this.BankList.FirstOrDefault(b => b.BankId == id);
 
-                if (result)
-                {
-                    LoadBanksList();
+                base.Validate();
 
-                    this.Bank = this.BankList.FirstOrDefault(b => b.BankId == newbank.BankId);
-
-                    base.Validate();
-
-                    break;
-                }
             }
-
-            this.bankEditorViewModelFactory.Release(editor);
-
         }
 
 

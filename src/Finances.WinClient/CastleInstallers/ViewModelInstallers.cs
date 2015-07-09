@@ -18,8 +18,9 @@ namespace Finances.WinClient.CastleInstallers
             
             // Banks
             container.Register(Component.For<IWorkspace>()
-                .Forward<IBanksViewModel>()
-                .ImplementedBy<BanksViewModel>()
+                .Forward<IBankListViewModel>()
+                .ImplementedBy<BankListViewModel>()
+                .LifeStyle.Transient
                 );
             container.Register(Component.For<BankEditorViewModel>()
                 .ImplementedBy<BankEditorViewModel>()
@@ -36,8 +37,9 @@ namespace Finances.WinClient.CastleInstallers
 
             // Banks Accounts
             container.Register(Component.For<IWorkspace>()
-                .Forward<IBankAccountsViewModel>()
-                .ImplementedBy<BankAccountsViewModel>()
+                .Forward<IBankAccountListViewModel>()
+                .ImplementedBy<BankAccountListViewModel>()
+                .LifeStyle.Transient
                 );
             container.Register(Component.For<BankAccountEditorViewModel>()
                 .ImplementedBy<BankAccountEditorViewModel>()
@@ -53,6 +55,7 @@ namespace Finances.WinClient.CastleInstallers
             container.Register(Component.For<IWorkspace>()
                 .Forward<ITransferListViewModel>() // for dashboard
                 .ImplementedBy<TransferListViewModel>()
+                .LifeStyle.Transient
                 );
             container.Register(Component.For<TransferEditorViewModel>()
                 .ImplementedBy<TransferEditorViewModel>()
@@ -67,6 +70,7 @@ namespace Finances.WinClient.CastleInstallers
             container.Register(Component.For<IWorkspace>()
                 .Forward<ICashflowListViewModel>() // for dashboard
                 .ImplementedBy<CashflowListViewModel>()
+                .LifeStyle.Transient
                 );
             container.Register(Component.For<CashflowEditorViewModel>()
                 .ImplementedBy<CashflowEditorViewModel>()
@@ -85,7 +89,17 @@ namespace Finances.WinClient.CastleInstallers
 
 
             // Main
-            container.Register(Component.For<IMainViewModel>().ImplementedBy<MainViewModel>());
+            container.Register(Component.For<IMainViewModel>()
+                .ImplementedBy<MainViewModel>()
+                );
+
+
+
+            // Cashflow Table
+            container.Register(Component.For<IWorkspace>()
+                .ImplementedBy<CashflowTableViewModel>()
+                );
+
 
         }
     }

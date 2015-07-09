@@ -10,98 +10,58 @@ using Finances.WinClient.DomainServices;
 
 namespace Finances.WinClient.ViewModels
 {
-    //public interface BankItemViewModel : ITreeViewItemViewModelBase, IEntityMapper<Bank>
-    //{
-    //    int BankId { get; set; }
-    //    string Name { get; set; }
-    //    byte[] LogoRaw { get; set; }
-    //    //byte[] Logo { get; }
-    //    BitmapSource Logo { get; }
-
-    //    //BankItemViewModel MapIn(Bank from);
-    //}
-
-    public class BankItemViewModel : TreeViewItemViewModelBase//, BankItemViewModel
+    public class BankItemViewModel : TreeViewItemViewModelBase
     {
+        Bank entity;
 
-        public BankItemViewModel()
+        public BankItemViewModel(Bank entity)
         {
+            this.entity = entity;
         }
 
 
 
         #region PublicProperties
 
+        public Bank Entity
+        {
+            get { return entity; }
+            set
+            {
+                entity = value;
+                NotifyAllPropertiesChanged();
+            }
+        }
 
-        int bankId;
         public int BankId
         {
-            get { return this.bankId; }
-            set
-            {
-                this.bankId = value;
-                NotifyPropertyChanged();
-            }
+            get { return entity.BankId; }
         }
 
 
-        string name;
         public string Name
         {
-            get { return this.name; }
-            set
-            {
-                this.name = value;
-                NotifyPropertyChanged();
-            }
+            get { return entity.Name; }
         }
 
-        byte[] logo;
         public byte[] LogoRaw
         {
-            get { return this.logo; }
-            set
-            {
-                this.logo = value;
-                NotifyPropertyChanged(() => this.Logo);
-            }
+            get { return entity.Logo; }
         }
 
         public BitmapSource Logo
         {
             get
             {
-                if (this.logo == null) return null;
-                MemoryStream mem2 = new MemoryStream(this.logo);
+                if (entity.Logo == null) return null;
+                MemoryStream mem2 = new MemoryStream(entity.Logo);
                 BmpBitmapDecoder dec = new BmpBitmapDecoder(mem2, BitmapCreateOptions.None, BitmapCacheOption.Default);
                 return dec.Frames[0];
             }
         }
 
 
-        //ObservableCollection<BankAccountItemViewModel> bankAccounts = new ObservableCollection<BankAccountItemViewModel>();
-        //public ObservableCollection<BankAccountItemViewModel> BankAccounts 
-        //{
-        //    get
-        //    {
-        //        return bankAccounts;
-        //    }
-        //}
-
         #endregion
-
-
-        //public void MapIn(Bank from)
-        //{
-        //    this.BankId = from.BankId;
-        //    this.Name = from.Name;
-        //    this.LogoRaw = from.Logo;
-        //}
-
-        //public void MapOut(Bank entity)
-        //{
-        //    entity.BankId = this.BankId;
-        //}
 
 
         public override string ToString()

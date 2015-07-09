@@ -11,6 +11,7 @@
              xmlns:tool="http://schemas.xceed.com/wpf/xaml/toolkit"
              xmlns:views="clr-namespace:Finances.WinClient.Views"
              xmlns:lib="clr-namespace:Finances.Core.Wpf;assembly=Finances.Core.Wpf"
+             xmlns:libctl="clr-namespace:Finances.Core.Wpf.Controls;assembly=Finances.Core.Wpf"
              mc:Ignorable="d"
              x:Name="apex"
              d:DesignHeight="300" d:DesignWidth="300"
@@ -54,10 +55,10 @@
                         <Button Content="Reload" Command="{Binding ReloadCommand}"/>
                     </ToolBarPanel>
                 </ToolBar>
-                <ListView Grid.Row="1" 
+                <libctl:ListViewScroll 
+                            Grid.Row="1" 
                             ItemsSource="{Binding Banks}" 
                             SelectionMode="Extended"
-                          x:Name="Items"
                             >
                     <!--<ListView.InputBindings>
                         <KeyBinding Key="Insert" Command="{Binding AddCommand}"/>
@@ -100,7 +101,7 @@
                                 </GridViewColumn>
                             </GridView>
                     </ListView.View>
-                </ListView>
+                </libctl:ListViewScroll>
             </Grid>
         </Grid>
     </tool:BusyIndicator>

@@ -12,9 +12,6 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-using Finances.Core;
-using Finances.Core.Wpf;
-//using Finances.BankModule.ViewModels;
 
 namespace Finances.WinClient.Views
 {
@@ -25,18 +22,9 @@ namespace Finances.WinClient.Views
         {
             InitializeComponent();
 
-            this.Unloaded += (s, e) =>
-            {
-                XamlUtils.DetachTriggers(s);
-            };
-
-            this.Loaded += (s, e) =>
-            {
-                XamlUtils.AttachTriggers(s);
-            };
-
 
         }
+
 
     }
 }

@@ -87,6 +87,28 @@ namespace Finances.Persistence.EF
             return true;
         }
 
+        public bool Delete(List<int> ids)
+        {
+            try
+            {
+                using (FinanceEntities context = factory.CreateContext())
+                {
+                    foreach (var id in ids)
+                    {
+                        var ef = new BankAccount() { BankAccountId = id };
+                        context.Entry(ef).State = EntityState.Deleted;
+                    }
+                    context.SaveChanges();
+                }
+            }
+            catch (DbEntityValidationException e)
+            {
+                CommonRepository.HandleDbEntityValidationException(e);
+            }
+            return true;
+        }
+
+
         public Core.Entities.BankAccount Read(int id)
         {
             Core.Entities.BankAccount entity = null;

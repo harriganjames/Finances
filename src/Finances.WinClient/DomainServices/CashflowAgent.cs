@@ -25,7 +25,10 @@ namespace Finances.WinClient.DomainServices
         /// </summary>
         /// <param name="cashflowId"></param>
         /// <returns>true if edit was successful</returns>
-        bool Edit(int cashflowId);
+        bool Edit(int id);
+
+        bool Delete(List<int> ids);
+
     }
 
     public class CashflowAgent : ICashflowAgent
@@ -53,14 +56,12 @@ namespace Finances.WinClient.DomainServices
 
             var entity = new Cashflow();
 
-            var editor = this.cashflowEditorViewModelFactory.Create();
+            var editor = this.cashflowEditorViewModelFactory.Create(entity);
 
-            editor.InitializeForAddEdit(true, entity);
+            editor.InitializeForAddEdit(true);
 
             while (this.dialogService.ShowDialogView(editor))
             {
-                //var entity = mapper.Map<Cashflow>(editor);
-
                 id = this.cashflowRepository.Add(entity);
 
                 if (id>0)
@@ -78,15 +79,15 @@ namespace Finances.WinClient.DomainServices
 
 
 
-        public bool Edit(int cashflowId)
+        public bool Edit(int id)
         {
             bool result = false;
 
-            Cashflow entity = this.cashflowRepository.Read(cashflowId);
+            Cashflow entity = this.cashflowRepository.Read(id);
 
-            var editor = this.cashflowEditorViewModelFactory.Create();
+            var editor = this.cashflowEditorViewModelFactory.Create(entity);
 
-            editor.InitializeForAddEdit(false, entity);
+            editor.InitializeForAddEdit(false);
 
             while (this.dialogService.ShowDialogView(editor))
             {
@@ -104,7 +105,7 @@ namespace Finances.WinClient.DomainServices
 
 
 
-        private bool Delete(List<int> ids)
+        public bool Delete(List<int> ids)
         {
             bool result = false;
             string title;
@@ -130,15 +131,7 @@ namespace Finances.WinClient.DomainServices
 
             if (this.dialogService.ShowMessageBox(title, message, MessageBoxButtonEnum.YesNo) == MessageBoxResultEnum.Yes)
             {
-                this.cashflowRepository.Delete(ids);
-
-                //foreach (var id in ids)
-                //{
-                //    var entity = new Cashflow() { CashflowId = id };
-                //    this.cashflowRepository.Delete(entity);
-                //}
-
-                result = true;
+                result = this.cashflowRepository.Delete(ids);
             }
 
             return result;

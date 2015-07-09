@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using Finances.Core.Entities;
 using Finances.Core.Interfaces;
 using Finances.Core.Wpf;
 
@@ -9,33 +10,54 @@ namespace Finances.WinClient.ViewModels
 {
     public class CashflowItemViewModel : TreeViewItemViewModelBase
     {
+        Cashflow entity;
 
-        int cashflowId;
+        public CashflowItemViewModel(Cashflow entity)
+        {
+            this.entity = entity;
+        }
+
+        public Cashflow Entity
+        {
+            get { return entity; }
+            set 
+            { 
+                entity = value;
+                NotifyAllPropertiesChanged();
+            }
+        }
+
+
         public int CashflowId
         {
-            get { return cashflowId; }
-            set { cashflowId = value; NotifyPropertyChanged(); }
+            get { return entity.CashflowId; }
         }
 
-        string name;
         public string Name
         {
-            get { return name; }
-            set { name = value; NotifyPropertyChanged(); }
+            get { return entity.Name; }
         }
 
-        decimal openingBalance;
         public decimal OpeningBalance
         {
-            get { return openingBalance; }
-            set { openingBalance = value; NotifyPropertyChanged(); }
+            get { return entity.OpeningBalance; }
         }
 
-        DateTime startDate;
         public DateTime StartDate
         {
-            get { return startDate; }
-            set { startDate = value; NotifyPropertyChanged(); }
+            get { return entity.StartDate; }
+        }
+
+
+        public string Accounts
+        {
+            get
+            {
+                if (entity.CashflowBankAccounts.Count == 0)
+                    return "All";
+                else
+                    return entity.CashflowBankAccounts.Count.ToString();
+            }
         }
 
         ObservableCollection<CashflowBankAccountItemViewModel> cashflowBankAccounts;
@@ -44,10 +66,15 @@ namespace Finances.WinClient.ViewModels
             get 
             {
                 if (cashflowBankAccounts == null)
+                {
                     cashflowBankAccounts = new ObservableCollection<CashflowBankAccountItemViewModel>();
+                    foreach (var cba in entity.CashflowBankAccounts)
+                    {
+                        cashflowBankAccounts.Add(new CashflowBankAccountItemViewModel(cba));
+                    }
+                }
                 return cashflowBankAccounts; 
             }
-            set { cashflowBankAccounts = value; NotifyPropertyChanged(); }
         }
 
 

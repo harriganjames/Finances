@@ -10,6 +10,7 @@
     <conv:PercentageConverter x:Key="PercentageConverter"/>
     <conv:NullToVisibleConverter x:Key="NullToVisibleConverter" />
     <conv:NullToCollapsedConverter x:Key="NullToCollapsedConverter" />
+    <conv:ToogleBooleanConverter x:Key="ToogleBooleanConverter" />
     <finconv:AccountEleswhereToVisibileConverter x:Key="AccountEleswhereToVisibileConverter"/>
     <finconv:AccountEleswhereToCollapsedConverter x:Key="AccountEleswhereToCollapsedConverter"/>
     

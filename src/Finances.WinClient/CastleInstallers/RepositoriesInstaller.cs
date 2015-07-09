@@ -2,7 +2,6 @@
 using Castle.MicroKernel.SubSystems.Configuration;
 using Castle.MicroKernel.Registration;
 using Finances.Core.Interfaces;
-using Finances.Persistence.FNH;
 using Finances.WinClient.InterceptorSelectors;
 using Finances.Persistence.EF;
 

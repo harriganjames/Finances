@@ -266,6 +266,38 @@ namespace Finances.UnitTests.MS
         }
 
 
+        [TestMethod]
+        public void Test_TransferCategory_EntityToOrm()
+        {
+            var entity = new Core.Entities.TransferCategory() { TransferCategoryId = 1, Code="a", Name = "one", DisplayOrder=1 };
+
+            var orm = _mapper.Map<Finances.Persistence.EF.TransferCategory>(entity);
+
+
+            CompareTransferCategories(entity, orm);
+        }
+
+        [TestMethod]
+        public void Test_TransferCategory_OrmToEntity()
+        {
+            var orm = new Finances.Persistence.EF.TransferCategory() { TransferCategoryId = 1, Code = "a", Name = "one", DisplayOrder = 1 };
+
+            var entity = _mapper.Map<Core.Entities.TransferCategory>(orm);
+
+            CompareTransferCategories(entity, orm);
+        }
+
+
+
+        private void CompareTransferCategories(Core.Entities.TransferCategory entity, Finances.Persistence.EF.TransferCategory orm)
+        {
+            Assert.AreEqual(entity.TransferCategoryId, orm.TransferCategoryId, "TransferCategoryId");
+            Assert.AreEqual(entity.Code, orm.Code, "Code");
+            Assert.AreEqual(entity.Name, orm.Name, "Name");
+            Assert.AreEqual(entity.DisplayOrder, orm.DisplayOrder, "DisplayOrder");
+        }
+
+
 
     }
 }

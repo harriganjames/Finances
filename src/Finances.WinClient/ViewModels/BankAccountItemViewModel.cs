@@ -10,37 +10,14 @@ using Finances.Core.Wpf;
 
 namespace Finances.WinClient.ViewModels
 {
-    //public interface BankAccountItemViewModel : ITreeViewItemViewModelBase, IEntityMapper<BankAccount>
-    //{
-    //    ICommand GoOnlineCommand { get; set; }
-
-    //    int BankAccountId { get; set; }
-    //    string AccountName { get; set; }
-    //    string AccountNumber { get; set; }
-    //    string AccountOwner { get; set; }
-    //    BankItemViewModel Bank { get; set; }
-    //    DateTime? ClosedDate { get; set; }
-    //    decimal? InitialRate { get; set; }
-    //    string LoginId { get; set; }
-    //    string LoginUrl { get; set; }
-    //    DateTime? MilestoneDate { get; set; }
-    //    string MilestoneNotes { get; set; }
-    //    string Notes { get; set; }
-    //    DateTime OpenedDate { get; set; }
-    //    string PasswordHint { get; set; }
-    //    bool PaysTaxableInterest { get; set; }
-    //    string SortCode { get; set; }
-    //    //BankAccountItemViewModel MapIn(BankAccount from);
-    //}
-
-    public class BankAccountItemViewModel : TreeViewItemViewModelBase//, BankAccountItemViewModel
+    public class BankAccountItemViewModel : TreeViewItemViewModelBase
     {
         //readonly IEventPublisher eventPublisher;
+        BankAccount entity;
 
-        public BankAccountItemViewModel()
+        public BankAccountItemViewModel(BankAccount entity)
         {
-
-            //this.eventPublisher = eventPublisher;
+            this.entity = entity;
 
             GoOnlineCommand = base.AddNewCommand(new ActionCommand(GoOnline));
         }
@@ -54,7 +31,7 @@ namespace Finances.WinClient.ViewModels
             get
             {
                 if(elsewhere==null)
-                    elsewhere = new BankAccountItemViewModel() { BankAccountId = -1, AccountName = "<elsewhere>" };
+                    elsewhere = new BankAccountItemViewModel(new BankAccount() { BankAccountId = -1, Name = "<elsewhere>" });
                 return elsewhere;
             }
         }
@@ -62,30 +39,27 @@ namespace Finances.WinClient.ViewModels
 
         #endregion
 
-        int bankAccountId;
-        public int BankAccountId
+        public BankAccount Entity
         {
-            get { return bankAccountId; }
-            set { bankAccountId = value; NotifyPropertyChanged(); }
-        }
-
-        string accountName;
-        public string AccountName
-        {
-            get { return accountName; }
-            set {
-                accountName = value; 
-                
-                NotifyPropertyChanged();
+            get { return entity; }
+            set
+            {
+                entity = value;
+                bank = new BankItemViewModel(entity.Bank);
+                NotifyAllPropertiesChanged();
             }
         }
 
-        //int bankId;
-        //public int BankId
-        //{
-        //    get { return bankId; }
-        //    set { bankId = value; NotifyPropertyChanged(); }
-        //}
+
+        public int BankAccountId
+        {
+            get { return entity.BankAccountId; }
+        }
+
+        public string AccountName
+        {
+            get { return entity.Name; }
+        }
 
         BankItemViewModel bank;
         public BankItemViewModel Bank
@@ -93,101 +67,74 @@ namespace Finances.WinClient.ViewModels
             get 
             {
                 if (bank == null)
-                    bank = new BankItemViewModel();
+                    bank = new BankItemViewModel(entity.Bank);
                 return bank; 
             }
-            set { bank = value; NotifyPropertyChanged(); }
         }
 
-        string sortCode;
         public string SortCode
         {
-            get { return sortCode; }
-            set { sortCode = value; NotifyPropertyChanged(); }
+            get { return entity.SortCode; }
         }
 
-        string accountNumber;
         public string AccountNumber
         {
-            get { return accountNumber; }
-            set { accountNumber = value; NotifyPropertyChanged(); }
+            get { return entity.AccountNumber; }
         }
 
-        string accountOwner;
         public string AccountOwner
         {
-            get { return accountOwner; }
-            set { accountOwner = value; NotifyPropertyChanged(); }
+            get { return entity.AccountOwner; }
         }
 
-        bool paysTaxableInterest;
         public bool PaysTaxableInterest
         {
-            get { return paysTaxableInterest; }
-            set { paysTaxableInterest = value; NotifyPropertyChanged(); }
+            get { return entity.PaysTaxableInterest; }
         }
 
-        string loginUrl;
         public string LoginUrl
         {
-            get { return loginUrl; }
-            set { loginUrl = value; NotifyPropertyChanged(); }
+            get { return entity.LoginURL; }
         }
 
-        string loginId;
         public string LoginId
         {
-            get { return loginId; }
-            set { loginId = value; NotifyPropertyChanged(); }
+            get { return entity.LoginID; }
         }
 
-        string passwordHint;
         public string PasswordHint
         {
-            get { return passwordHint; }
-            set { passwordHint = value; NotifyPropertyChanged(); }
+            get { return entity.PasswordHint; }
         }
 
-        DateTime openedDate;
         public DateTime OpenedDate
         {
-            get { return openedDate; }
-            set { openedDate = value; NotifyPropertyChanged(); }
+            get { return entity.OpenedDate; }
         }
 
-        DateTime? closedDate;
         public DateTime? ClosedDate
         {
-            get { return closedDate; }
-            set { closedDate = value; NotifyPropertyChanged(); }
+            get { return entity.ClosedDate; }
         }
 
-        decimal? initialRate;
         public decimal? InitialRate
         {
-            get { return initialRate; }
-            set { initialRate = value; NotifyPropertyChanged(); }
+            get { return entity.InitialRate; }
         }
 
-        DateTime? milestoneDate;
         public DateTime? MilestoneDate
         {
-            get { return milestoneDate; }
-            set { milestoneDate = value; NotifyPropertyChanged(); }
+            get { return entity.MilestoneDate; }
         }
 
-        string milestoneNotes;
         public string MilestoneNotes
         {
-            get { return milestoneNotes; }
-            set { milestoneNotes = value; NotifyPropertyChanged(); }
+            get { return entity.MilestoneNotes; }
         }
 
-        string notes;
         public string Notes
         {
-            get { return notes; }
-            set { notes = value; NotifyPropertyChanged(); }
+            get { return entity.Notes; }
         }
 
 
@@ -200,35 +147,6 @@ namespace Finances.WinClient.ViewModels
 
             //this.eventPublisher.SendMessage<OpenBrowserEvent>(ev);
         }
-
-        //#region IEntityMapper
-
-        //public void MapIn(BankAccount entity)
-        //{
-        //    this.BankAccountId = entity.BankAccountId;
-        //    this.AccountName = entity.Name;
-        //    this.Bank.MapIn(entity.Bank);
-        //    this.AccountNumber = entity.AccountNumber;
-        //    this.SortCode = entity.SortCode;
-        //    this.AccountOwner = entity.AccountOwner;
-        //    this.OpenedDate = entity.OpenedDate;
-        //    this.ClosedDate = entity.ClosedDate;
-        //    this.InitialRate = entity.InitialRate;
-        //    this.LoginId = entity.LoginID;
-        //    this.LoginUrl = entity.LoginURL;
-        //    this.MilestoneDate = entity.MilestoneDate;
-        //    this.MilestoneNotes = entity.MilestoneNotes;
-        //    this.Notes = entity.Notes;
-        //    this.PasswordHint = entity.PasswordHint;
-        //    this.PaysTaxableInterest = entity.PaysTaxableInterest;
-        //}
-
-        //public void MapOut(BankAccount entity)
-        //{
-        //    entity.BankAccountId = this.BankAccountId;
-        //}
-
-        //#endregion
 
     }
 }

@@ -12,6 +12,7 @@
              xmlns:views="clr-namespace:Finances.WinClient.Views"
              xmlns:lib="clr-namespace:Finances.Core.Wpf;assembly=Finances.Core.Wpf"
              xmlns:conv="clr-namespace:Finances.Core.Wpf.Converters;assembly=Finances.Core.Wpf"
+             xmlns:libctl="clr-namespace:Finances.Core.Wpf.Controls;assembly=Finances.Core.Wpf"
              mc:Ignorable="d"
              x:Name="apex"
              d:DesignHeight="300" d:DesignWidth="300"
@@ -33,11 +34,10 @@
                         <Button Content="Reload" Command="{Binding ReloadCommand}"/>
                     </ToolBarPanel>
                 </ToolBar>
-                <ListView Grid.Row="1" 
-                            ItemsSource="{Binding Cashflows}" 
-                            SelectionMode="Extended"
-                          x:Name="Items"
-                            >
+                <libctl:ListViewScroll Grid.Row="1" 
+                                       ItemsSource="{Binding Cashflows}" 
+                                       SelectionMode="Extended"
+                                       >
                     <i:Interaction.Triggers>
                         <eii:KeyTrigger ActiveOnFocus="True" FiredOn="KeyUp" Key="Enter" >
                             <i:InvokeCommandAction Command="{Binding EditCommand}"/>
@@ -73,9 +73,10 @@
                                 </GridViewColumn.CellTemplate>
                             </GridViewColumn>
                             <GridViewColumn DisplayMemberBinding="{Binding StartDate, StringFormat=yyyy-MM-dd}" Header="Start" />
+                            <GridViewColumn DisplayMemberBinding="{Binding Accounts}" Header="Accounts" Width="60"/>
                         </GridView>
                     </ListView.View>
-                </ListView>
+                </libctl:ListViewScroll>
                                 
             </Grid>
         </Grid>

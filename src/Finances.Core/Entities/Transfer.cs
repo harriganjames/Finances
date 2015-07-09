@@ -6,21 +6,22 @@ namespace Finances.Core.Entities
     {
         public Transfer()
         {
-            FromBankAccount = new BankAccount();
-            ToBankAccount = new BankAccount();
+            //FromBankAccount = new BankAccount();
+            //ToBankAccount = new BankAccount();
         }
 
-        public virtual int TransferId { get; set; }
-        public virtual string Name { get; set; }
-        public virtual BankAccount FromBankAccount { get; set; }
-        public virtual BankAccount ToBankAccount { get; set; }
-        public virtual decimal Amount { get; set; }
-        public virtual decimal AmountTolerence { get; set; }
-        public virtual System.DateTime StartDate { get; set; }
-        public virtual Nullable<System.DateTime> EndDate { get; set; }
-        public virtual string Frequency { get; set; }
-        public virtual bool IsEnabled { get; set; }
-        public virtual System.DateTime RecordCreatedDateTime { get; set; }
-        public virtual System.DateTime RecordUpdatedDateTime { get; set; }
+        public int TransferId { get; set; }
+        public string Name { get; set; }
+        public BankAccount FromBankAccount { get; set; }
+        public BankAccount ToBankAccount { get; set; }
+        public decimal Amount { get; set; }
+        public decimal AmountTolerence { get; set; }
+        public System.DateTime StartDate { get; set; }
+        public Nullable<System.DateTime> EndDate { get; set; }
+        public string Frequency { get; set; }
+        public bool IsEnabled { get; set; }
+        public TransferCategory Category { get; set; }
+        public System.DateTime RecordCreatedDateTime { get; set; }
+        public System.DateTime RecordUpdatedDateTime { get; set; }
     }
 }

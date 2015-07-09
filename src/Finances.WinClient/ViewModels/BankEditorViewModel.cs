@@ -13,32 +13,23 @@ using Finances.WinClient.DomainServices;
 
 namespace Finances.WinClient.ViewModels
 {
-    //public interface BankEditorViewModel : IEditorViewModelBase, IEntityMapper<Bank>
-    //{
-    //    int BankId { get; set; }
-    //    string Name { get; set; }
-    //    byte[] LogoRaw { get; set; }
-    //    BitmapSource Logo { get; }
-    //    void InitializeForAddEdit(bool AddEdit);
-    //    ActionCommand ImportLogoCommand { get; set; }
-    //    ActionCommand ClearLogoCommand { get; set; }
-    //}
-
-    public class BankEditorViewModel : EditorViewModelBase//, BankEditorViewModel
+    public class BankEditorViewModel : EditorViewModelBase
     {
         bool delayValidation = false; // must be false until change logic around IsValid
         List<DataIdName> existingBanks;
+        Bank entity;
 
         readonly IBankRepository bankRepository;
         readonly IDialogService dialogService;
 
         public BankEditorViewModel(
                         IBankRepository bankRepository,
-                        IDialogService dialogService)
+                        IDialogService dialogService,
+                        Bank entity)
         {
             this.bankRepository = bankRepository;
             this.dialogService = dialogService;
-
+            this.entity = entity;
 
             ImportLogoCommand = base.AddNewCommand(new ActionCommand(this.ImportLogo));
             ClearLogoCommand = base.AddNewCommand(new ActionCommand(ClearLogo,CanClearLogo));
@@ -59,44 +50,39 @@ namespace Finances.WinClient.ViewModels
         }
 
 
-        int _bankId;
         public int BankId
         {
-            get { return _bankId; }
+            get { return entity.BankId; }
             set
             {
-                if (_bankId != value)
+                if (entity.BankId != value)
                 {
-                    _bankId = value;
+                    entity.BankId = value;
                     NotifyPropertyChanged();
                 }
             }
         }
 
-        string _name;
         [Required(ErrorMessage = "Bank Name is mandatory")]
         public string Name
         {
-            get { return _name; }
+            get { return entity.Name; }
             set
             {
-                if (_name != value)
+                if (entity.Name != value)
                 {
-                    _name = value;
-                    NotifyPropertyChanged();
-                    base.Validate();
+                    entity.Name = value;
+                    NotifyPropertyChangedAndValidate();
                 }
             }
         }
 
-        byte[] _logo;
-
         public byte[] LogoRaw
         {
-            get { return _logo; }
+            get { return entity.Logo; }
             set 
-            { 
-                _logo = value;
+            {
+                entity.Logo = value;
                 NotifyPropertyChanged(()=>this.Logo);
             }
         }
@@ -105,8 +91,8 @@ namespace Finances.WinClient.ViewModels
         {
             get
             {
-                if (_logo == null) return null;
-                MemoryStream mem2 = new MemoryStream(_logo);
+                if (entity.Logo == null) return null;
+                MemoryStream mem2 = new MemoryStream(entity.Logo);
                 BmpBitmapDecoder dec = new BmpBitmapDecoder(mem2, BitmapCreateOptions.None, BitmapCacheOption.Default);
                 return dec.Frames[0];
             }
@@ -190,25 +176,6 @@ namespace Finances.WinClient.ViewModels
         #endregion
 
 
-        //#region Map
-
-        //public void MapOut(Bank to)
-        //{
-        //    to.BankId = this.BankId;
-        //    to.Name = this.Name;
-        //    to.Logo = this.LogoRaw;
-        //}
-
-        //public void MapIn(Bank from)
-        //{
-        //    this.BankId = from.BankId;
-        //    this.Name = from.Name;
-        //    this.LogoRaw = from.Logo;
-        //}
-
-
-        //#endregion
-
 
         #region Validation
 
@@ -221,7 +188,7 @@ namespace Finances.WinClient.ViewModels
             // Bank Name exists
             if (existingBanks != null)
             {
-                if (existingBanks.Exists(n => n.Name.Equals(this.Name,StringComparison.CurrentCultureIgnoreCase) && n.Id!=_bankId))
+                if (existingBanks.Exists(n => n.Name.Equals(this.Name,StringComparison.CurrentCultureIgnoreCase) && n.Id!=BankId))
                 {
                     base.ValidationHelper.AddValidationMessage("Bank Name already exists", "Name");
                 }

@@ -5,6 +5,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Runtime.CompilerServices;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
@@ -26,14 +27,24 @@ namespace Finances.Core.Wpf
         string _title;
         bool _isBusy = false;
         List<ActionCommand> _commands = new List<ActionCommand>();
+        TaskScheduler uiScheduler;
 
         //public event PropertyChangedEventHandler PropertyChanged;
 
 
         public ViewModelBase()
         {
+            this.uiScheduler = TaskScheduler.FromCurrentSynchronizationContext();
         }
 
+
+        public TaskScheduler UIScheduler
+        {
+            get
+            {
+                return this.uiScheduler;
+            }
+        }
 
         protected ActionCommand AddNewCommand(ActionCommand c)
         {

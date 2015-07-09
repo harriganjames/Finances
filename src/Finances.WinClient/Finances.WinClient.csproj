@@ -84,6 +84,7 @@
       <DependentUpon>AppWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="CastleInstallers\ConnectionInstaller.cs" />
+    <Compile Include="CastleInstallers\EnginesInstaller.cs" />
     <Compile Include="CastleInstallers\EFModelContextFactoryInstaller.cs" />
     <Compile Include="CastleInstallers\MappingsCreatorInstaller.cs" />
     <Compile Include="CastleInstallers\UtilitiesInstaller.cs" />
@@ -92,13 +93,15 @@
     <Compile Include="CastleInstallers\DialogServiceInstaller.cs" />
     <Compile Include="CastleInstallers\ExceptionServiceInstaller.cs" />
     <Compile Include="CastleInstallers\InterceptorsInstaller.cs" />
-    <Compile Include="CastleInstallers\NHibernateSessionFactoryInstaller.cs" />
     <Compile Include="CastleInstallers\ViewModelInstallers.cs" />
     <Compile Include="CastleInstallers\WorkspaceInstaller.cs" />
     <Compile Include="Converters\AccountEleswhereToVisibileConverter.cs" />
     <Compile Include="Converters\AccountEleswhereToCollapsedConverter.cs" />
+    <Compile Include="Converters\BalanceStateToColourConverter.cs" />
     <Compile Include="DomainServices\CashflowAgent.cs" />
-    <Compile Include="DomainServices\MappingCreator.cs" />
+    <Compile Include="DomainServices\BankAgent.cs" />
+    <Compile Include="DomainServices\BankAccountAgent.cs" />
+    <Compile Include="DomainServices\TransferAgent.cs" />
     <Compile Include="Factories\BankEditorViewModelFactory.cs" />
     <Compile Include="Factories\BankAccountEditorViewModelFactory.cs" />
     <Compile Include="Factories\CashflowEditorViewModelFactory.cs" />
@@ -110,13 +113,13 @@
     <Compile Include="ViewModels\BankItemViewModel.cs" />
     <Compile Include="ViewModels\BankEditorViewModel.cs" />
     <Compile Include="ViewModels\BankTreeViewModel.cs" />
-    <Compile Include="ViewModels\BanksViewModel.cs" />
-    <Compile Include="ViewModels\BankAccountsViewModel.cs" />
+    <Compile Include="ViewModels\BankListViewModel.cs" />
+    <Compile Include="ViewModels\BankAccountListViewModel.cs" />
     <Compile Include="ViewModels\CashflowBankAccountItemViewModel.cs" />
     <Compile Include="ViewModels\CashflowItemViewModel.cs" />
     <Compile Include="ViewModels\CashflowListViewModel.cs" />
-    <Compile Include="ViewModels\CashflowEditorViewModelOld.cs" />
     <Compile Include="ViewModels\CashflowEditorViewModel.cs" />
+    <Compile Include="ViewModels\CashflowTableViewModel.cs" />
     <Compile Include="ViewModels\DashboardViewModel.cs" />
     <Compile Include="ViewModels\TransferListViewModel.cs" />
     <Compile Include="ViewModels\TransferEditorViewModel.cs" />
@@ -143,6 +146,9 @@
     </Compile>
     <Compile Include="Views\CashflowEditorView.xaml.cs">
       <DependentUpon>CashflowEditorView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\CashflowTableView.xaml.cs">
+      <DependentUpon>CashflowTableView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\DashboardView.xaml.cs">
       <DependentUpon>DashboardView.xaml</DependentUpon>
@@ -223,6 +229,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="Views\CashflowTableView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\DashboardView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -285,10 +295,6 @@
       <Project>{8bba6faa-e9db-4016-8af2-1466a7a751a0}</Project>
       <Name>Finances.Persistence.EF</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Finances.Persistence.FNH\Finances.Persistence.FNH.csproj">
-      <Project>{c32d7189-fe4d-4335-8ee1-6cb4e9c0c8e8}</Project>
-      <Name>Finances.Persistence.FNH</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Images\AddNewItem_6273.png" />
@@ -305,6 +311,7 @@
   <ItemGroup>
     <Resource Include="Images\Money.png" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\AutoMapper.3.2.1\tools\AutoMapper.targets" Condition="Exists('..\packages\AutoMapper.3.2.1\tools\AutoMapper.targets')" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -12,12 +12,7 @@ using Finances.WinClient.DomainServices;
 
 namespace Finances.WinClient.ViewModels
 {
-    //public interface IBankTreeViewModel : IListViewModelBase<BankItemViewModel>
-    //{
-    //    ObservableCollection<BankItemViewModel> Banks { get; }
-    //}
-
-    public class BankTreeViewModel : ListViewModelBase<BankItemViewModel>//, IBankTreeViewModel
+    public class BankTreeViewModel : ListViewModelBase<BankItemViewModel>
     {
 
         readonly IBankRepository bankRepository;
@@ -79,7 +74,7 @@ namespace Finances.WinClient.ViewModels
 
         private void LoadBanks()
         {
-            List<BankItemViewModel> banks = null;
+            var banks = new List<BankItemViewModel>();
 
             base.IsBusy = true;
 
@@ -87,7 +82,8 @@ namespace Finances.WinClient.ViewModels
             bw.DoWork += (s, e) =>
                 {
                     var entities = this.bankRepository.ReadList();
-                    banks = mapper.Map<List<BankItemViewModel>>(entities);
+                    entities.ForEach(ent=>banks.Add(new BankItemViewModel(ent)));
+                    //banks = mapper.Map<List<BankItemViewModel>>(entities);
                 };
             bw.RunWorkerCompleted += (s, e) =>
                 {
@@ -121,12 +117,8 @@ namespace Finances.WinClient.ViewModels
                 {
                     var entities = this.bankAccountRepository.ReadListByBankId(bank.BankId);
 
-                    entities.ForEach(ent=> bank.Children.Add(this.mapper.Map<BankAccountItemViewModel>(ent)));
+                    entities.ForEach(ent=> bank.Children.Add(new BankAccountItemViewModel(ent)));
 
-                    //this.bankAccountService.ReadListByBankId(bank.BankId).ForEach(a =>
-                    //    {
-                    //        bank.Children.Add(a);
-                    //    });
                 }
             }
 

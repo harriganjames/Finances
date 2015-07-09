@@ -58,7 +58,6 @@ namespace Finances.WinClient
             container.Install(
                             new ConnectionInstaller(),
                             new EFModelContextFactoryInstaller(),
-                            new NHibernateSessionFactoryInstaller(),
                             new DialogServiceInstaller(w),
                             new RepositoriesInstaller(),
                             new DomainServicesInstaller(),
@@ -67,7 +66,8 @@ namespace Finances.WinClient
                             new WorkspaceInstaller(),
                             new ViewModelInstallers(),
                             new UtilitiesInstaller(w),
-                            new MappingsCreatorInstaller()
+                            new MappingsCreatorInstaller(),
+                            new EnginesInstaller()
                             );
 
 

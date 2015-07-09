@@ -10,55 +10,43 @@ using Finances.Core.Wpf;
 
 namespace Finances.WinClient.ViewModels
 {
-    //public interface TransferItemViewModel : IItemViewModelBase, IEntityMapper<Transfer>
-    //{
-    //    int TransferId { get; set; }
-    //    string Name { get; set; }
-    //    BankAccountItemViewModel FromBankAccount { get; set; }
-    //    BankAccountItemViewModel ToBankAccount { get; set; }
-    //    decimal Amount { get; set; }
-    //    decimal AmountTolerence { get; set; }
-    //    DateTime StartDate { get; set; }
-    //    Nullable<DateTime> EndDate { get; set; }
-    //    string Frequency { get; set; }
-    //    bool IsEnabled { get; set; }
-    //    //TransferItemViewModel MapIn(Transfer from);
-    //}
-
-    public class TransferItemViewModel : ItemViewModelBase//, TransferItemViewModel
+    public class TransferItemViewModel : ItemViewModelBase
     {
+        Transfer entity;
 
-        public TransferItemViewModel()
+
+        public TransferItemViewModel(Transfer entity)
         {
+            this.entity = entity;
         }
 
 
+        public Transfer Entity
+        {
+            get { return entity; }
+            set 
+            { 
+                entity = value;
+                fromBankAccount = null;
+                toBankAccount = null;
+                NotifyAllPropertiesChanged();
+            }
+        }
 
-        int transferId;
+
         public int TransferId
         {
             get
             {
-                return transferId;
-            }
-            set
-            {
-                transferId = value;
-                NotifyPropertyChanged();
+                return entity.TransferId;
             }
         }
 
-        string name;
         public string Name
         {
             get
             {
-                return name;
-            }
-            set
-            {
-                name = value;
-                NotifyPropertyChanged();
+                return entity.Name;
             }
         }
 
@@ -68,14 +56,10 @@ namespace Finances.WinClient.ViewModels
         {
             get
             {
-                //if (fromBankAccount == null)
-                //    fromBankAccount = new BankAccountItemViewModel();
+                if (entity.FromBankAccount != null && fromBankAccount == null)
+                    fromBankAccount = new BankAccountItemViewModel(entity.FromBankAccount);
+
                 return fromBankAccount;
-            }
-            set
-            {
-                fromBankAccount = value;
-                NotifyPropertyChanged();
             }
         }
 
@@ -84,160 +68,69 @@ namespace Finances.WinClient.ViewModels
         {
             get
             {
-                //if (toBankAccount == null)
-                //    toBankAccount = new BankAccountItemViewModel();
+                if (entity.ToBankAccount != null && toBankAccount == null)
+                    toBankAccount = new BankAccountItemViewModel(entity.ToBankAccount);
+
                 return toBankAccount;
-            }
-            set
-            {
-                toBankAccount = value;
-                NotifyPropertyChanged();
             }
         }
 
-        decimal amount;
         public decimal Amount
         {
             get
             {
-                return amount;
-            }
-            set
-            {
-                amount = value;
-                NotifyPropertyChanged();
+                return entity.Amount;
             }
         }
 
-        decimal amountTolerence;
         public decimal AmountTolerence
         {
             get
             {
-                return amountTolerence;
-            }
-            set
-            {
-                amountTolerence = value;
-                NotifyPropertyChanged();
+                return entity.AmountTolerence;
             }
         }
 
-        DateTime startDate;
         public DateTime StartDate
         {
             get
             {
-                return startDate;
-            }
-            set
-            {
-                startDate = value;
-                NotifyPropertyChanged();
+                return entity.StartDate;
             }
         }
 
-        DateTime? endDate;
         public DateTime? EndDate
         {
             get
             {
-                return endDate;
-            }
-            set
-            {
-                endDate = value;
-                NotifyPropertyChanged();
+                return entity.EndDate;
             }
         }
 
-        string frequency;
         public string Frequency
         {
             get
             {
-                return frequency;
-            }
-            set
-            {
-                frequency = value;
-                NotifyPropertyChanged();
+                return entity.Frequency;
             }
         }
 
-        bool isEnabled;
         public bool IsEnabled
         {
             get
             {
-                return isEnabled;   
+                return entity.IsEnabled;   
             }
-            set
+        }
+
+        public TransferCategory Category
+        {
+            get
             {
-                isEnabled = value;
-                NotifyPropertyChanged();
+                return entity.Category;
             }
         }
 
 
-
-        //public TransferItemViewModel MapIn(Transfer from)
-        //{
-        //    this.TransferId = from.TransferId;
-        //    this.Name = from.Name;
-        //    this.FromBankAccount = this.FromBankAccount.MapIn(from.FromBankAccount);
-        //    this.ToBankAccount = this.ToBankAccount.MapIn(from.ToBankAccount); ;
-        //    this.Amount = from.Amount;
-        //    this.AmountTolerence = from.AmountTolerence;
-        //    this.StartDate = from.StartDate;
-        //    this.EndDate = from.EndDate;
-        //    this.Frequency = from.Frequency;
-        //    this.IsEnabled = from.IsEnabled;
-        //    return this;
-        //}
-
-
-        //#region IEntityMapper
-
-        //public void MapIn(Transfer entity)
-        //{
-        //    this.TransferId = entity.TransferId;
-        //    this.Name = entity.Name;
-
-        //    if (entity.FromBankAccount == null)
-        //        this.FromBankAccount = null;
-        //    else
-        //    {
-        //        this.FromBankAccount = new BankAccountItemViewModel();
-        //        this.FromBankAccount.MapIn(entity.FromBankAccount);
-        //    }
-
-        //    if (entity.ToBankAccount == null)
-        //        this.ToBankAccount = null;
-        //    else
-        //    {
-        //        this.ToBankAccount = new BankAccountItemViewModel();
-        //        this.ToBankAccount.MapIn(entity.ToBankAccount); ;
-        //    }
-
-        //    this.Amount = entity.Amount;
-        //    this.AmountTolerence = entity.AmountTolerence;
-        //    this.StartDate = entity.StartDate;
-        //    this.EndDate = entity.EndDate;
-        //    this.Frequency = entity.Frequency;
-        //    this.IsEnabled = entity.IsEnabled;
-        //}
-
-        //public void MapOut(Transfer entity)
-        //{
-        //    entity.TransferId = this.TransferId;
-        //}
-
-        //#endregion
-
-        //TransferItemViewModel TransferItemViewModel.MapIn(Transfer from)
-        //{
-        //    throw new NotImplementedException();
-        //}
     }
 }

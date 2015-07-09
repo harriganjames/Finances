@@ -24,25 +24,16 @@ namespace Finances.WinClient.ViewModels
     public class CashflowListViewModel : ListViewModelBase<CashflowItemViewModel>, ICashflowListViewModel
     {
         readonly ICashflowRepository cashflowRepository;
-        readonly IMappingEngine mapper;
-        readonly IDialogService dialogService;
-        readonly ICashflowEditorViewModelFactory cashflowEditorViewModelFactory;
         readonly ICashflowAgent cashflowAgent;
 
         Dictionary<int, Cashflow> cashflows = new Dictionary<int, Cashflow>();
 
         public CashflowListViewModel(
                         ICashflowRepository cashflowRepository,
-                        IMappingEngine mapper,
-                        IDialogService dialogService,
-                        ICashflowEditorViewModelFactory bankEditorViewModelFactory,
                         ICashflowAgent cashflowAgent
                         )
         {
             this.cashflowRepository = cashflowRepository;
-            this.mapper = mapper;
-            this.dialogService = dialogService;
-            this.cashflowEditorViewModelFactory = bankEditorViewModelFactory;
             this.cashflowAgent = cashflowAgent;
 
             ReloadCommand = base.AddNewCommand(new ActionCommand(Reload));
@@ -103,8 +94,6 @@ namespace Finances.WinClient.ViewModels
 
         private void LoadData()
         {
-            //List<CashflowItemViewModel> cashflows = null;
-
             base.IsBusy = true;
 
             BackgroundWorker bw = new BackgroundWorker();
@@ -125,7 +114,7 @@ namespace Finances.WinClient.ViewModels
                 {
                     cashflows.Values.ToList().ForEach(t =>
                     {
-                        base.DataList.Add(mapper.Map<CashflowItemViewModel>(t));
+                        base.DataList.Add(new CashflowItemViewModel(t));
                     });
                 }
 
@@ -144,7 +133,7 @@ namespace Finances.WinClient.ViewModels
 
                 this.cashflows.Add(entity.CashflowId, entity);
 
-                var vm = mapper.Map<CashflowItemViewModel>(entity);
+                var vm = new CashflowItemViewModel(entity);
 
                 base.DataList.Add(vm);
                 base.DataList.ToList().ForEach(i => i.IsSelected = false);
@@ -152,36 +141,6 @@ namespace Finances.WinClient.ViewModels
 
             }
         
-        }
-
-        private void AddOld()
-        {
-            var editor = this.cashflowEditorViewModelFactory.Create();
-
-            var entity = new Cashflow();
-
-            editor.InitializeForAddEdit(true,entity);
-
-            while (this.dialogService.ShowDialogView(editor))
-            {
-                //var entity = mapper.Map<Cashflow>(editor);
-
-                bool result = this.cashflowRepository.Add(entity) > 0;
-
-                if (result)
-                {
-                    this.cashflows.Add(entity.CashflowId, entity);
-
-                    var vm = mapper.Map<CashflowItemViewModel>(entity);
-
-                    base.DataList.Add(vm);
-                    base.DataList.ToList().ForEach(i => i.IsSelected = false);
-                    vm.IsSelected = true;
-                    break;
-                }
-            }
-
-            this.cashflowEditorViewModelFactory.Release(editor);
         }
 
 
@@ -200,37 +159,11 @@ namespace Finances.WinClient.ViewModels
             if (result)
             {
                 this.cashflows[id] = this.cashflowRepository.Read(id);
-                mapper.Map<Cashflow, CashflowItemViewModel>(this.cashflows[id], vm);
+
+                vm.Entity = this.cashflows[id];
             }
 
         }
-
-        //private void EditOld()
-        //{
-        //    var editor = this.cashflowEditorViewModelFactory.Create();
-
-        //    CashflowItemViewModel vm = base.GetSelectedItems().First();
-
-        //    Cashflow cashflow = this.cashflows[vm.CashflowId];
-
-        //    Cashflow upd = mapper.Map<Cashflow>(cashflow);
-
-        //    editor.InitializeForAddEdit(false,upd);
-
-        //    while (this.dialogService.ShowDialogView(editor))
-        //    {
-        //        bool result = this.cashflowRepository.Update(upd);
-        //        if (result)
-        //        {
-        //            this.cashflows[vm.CashflowId] = upd;
-        //            mapper.Map<Cashflow, CashflowItemViewModel>(upd, vm as CashflowItemViewModel);
-        //            break;
-        //        }
-        //    }
-
-        //    this.cashflowEditorViewModelFactory.Release(editor);
-
-        //}
 
 
         private bool CanDelete()
@@ -239,45 +172,22 @@ namespace Finances.WinClient.ViewModels
         }
         private void Delete()
         {
-            string title;
-            string message;
-            List<CashflowItemViewModel> sel = base.GetSelectedItems().ToList();
+            var vms = base.GetSelectedItems().ToList();
+            List<int> ids = vms.Select(vm => vm.CashflowId).ToList();
 
-            if (sel.Count() == 0)
-            {
-                throw new Exception("Delete Cashflow: nothing selected");
-            }
-
-            if (sel.Count() == 1)
-            {
-                title = "Delete Cashflow";
-                message = String.Format("Please confirm deletion of cashflow: {0}", sel.First().Name);
-            }
-            else
-            {
-                title = "Delete Cashflows";
-                message = String.Format("Please confirm deletion of {0} trransfers?", sel.Count());
-            }
-
-
-            if (this.dialogService.ShowMessageBox(title, message, MessageBoxButtonEnum.YesNo) == MessageBoxResultEnum.Yes)
+            if (this.cashflowAgent.Delete(ids))
             {
                 base.IsBusy = true;
 
-                foreach (var vm in sel)
+                foreach (var vm in vms)
                 {
-                    Cashflow entity = mapper.Map<Cashflow>(vm);
-                    if (this.cashflowRepository.Delete(entity))
-                    {
-                        base.DataList.Remove(vm);
-                        this.cashflows.Remove(entity.CashflowId);
-                    }
-                    else
-                        break;
+                    base.DataList.Remove(vm);
                 }
 
                 base.IsBusy = false;
+
             }
+
         }
 
 

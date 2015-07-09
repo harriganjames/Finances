@@ -15,21 +15,6 @@ using Finances.WinClient.Factories;
 
 namespace Finances.WinClient.ViewModels
 {
-    //public interface TransferEditorViewModel : IEditorViewModelBase, IEntityMapper<Transfer>
-    //{
-    //    void InitializeForAddEdit(bool AddEdit);
-
-    //    int TransferId { get; set; }
-    //    string Name { get; set; }
-    //    BankAccountItemViewModel FromBankAccount { get; set; }
-    //    BankAccountItemViewModel ToBankAccount { get; set; }
-    //    InputDecimal Amount { get; set; }
-    //    decimal AmountTolerence { get; set; }
-    //    DateTime? StartDate { get; set; }
-    //    Nullable<DateTime> EndDate { get; set; }
-    //    string Frequency { get; set; }
-    //    bool IsEnabled { get; set; }
-    //}
 
     internal enum BankAccountFromTo
     {
@@ -37,31 +22,29 @@ namespace Finances.WinClient.ViewModels
         To
     }
 
-    public class TransferEditorViewModel : EditorViewModelBase//, TransferEditorViewModel
+    public class TransferEditorViewModel : EditorViewModelBase
     {
         bool delayValidation = false; // must be false until change logic around IsValid
         ObservableCollection<BankAccountItemViewModel> bankAccounts;
         List<DataIdName> existingTransfers;
+        ObservableCollection<TransferCategory> categories;
+        Transfer entity;
 
         readonly ITransferRepository transferRepository;
-        readonly IMappingEngine mapper;
         readonly IBankAccountRepository bankAccountRepository;
-        readonly IDialogService dialogService;
-        readonly IBankAccountEditorViewModelFactory bankAccountEditorViewModelFactory;
+        readonly IBankAccountAgent bankAccountAgent;
 
         public TransferEditorViewModel(
                 ITransferRepository transferRepository,
-                IMappingEngine mapper,
                 IBankAccountRepository bankAccountRepository,
-                IDialogService dialogService,
-                IBankAccountEditorViewModelFactory bankAccountEditorViewModelFactory
+                IBankAccountAgent bankAccountAgent,
+                Transfer entity
             )
         {
             this.transferRepository = transferRepository;
-            this.mapper = mapper;
             this.bankAccountRepository = bankAccountRepository;
-            this.dialogService = dialogService;
-            this.bankAccountEditorViewModelFactory = bankAccountEditorViewModelFactory;
+            this.bankAccountAgent = bankAccountAgent;
+            this.entity = entity;
 
             this.Amount.PropertyChanged += (s,e) =>
                 {
@@ -88,35 +71,17 @@ namespace Finances.WinClient.ViewModels
 
             LoadBankAccountList();
             LoadExistingTransfers();
-
-            //if (base.ValidationHelper.Enabled)
-            //    base.Validate();
+            LoadTransferCategories();
 
             if (addMode)
             {
-                //this.FromBankAccount = elsewhere;
-                //this.ToBankAccount = elsewhere;
+                this.Category = Categories.FirstOrDefault(c => c.Code == "NONE");
                 this.StartDate = DateTime.Now.Date;
                 this.IsEnabled = true;
-
-                //this.BankAccountId = 0;
-                //this.AccountName = "";
-                //this.Bank = null;
-                //this.AccountNumber = "";
-                //this.SortCode = "";
-                //this.AccountOwner = "";
-                //this.OpenedDate = DateTime.Now.Date;
-                //this.ClosedDate = null;
-                //this.InitialRate = 0;
-                //this.LoginId = "";
-                //this.LoginUrl = "";
-                //this.MilestoneDate = null;
-                //this.MilestoneNotes = "";
-                //this.Notes = "";
-                //this.PasswordHint = "";
-                //this.PaysTaxableInterest = false;
-
             }
+
+            this.Amount.Value = entity.Amount;
+            this.Amount.ValueChangedAction = v => this.entity.Amount = v;
 
         }
 
@@ -139,6 +104,16 @@ namespace Finances.WinClient.ViewModels
             }
         }
 
+        public ObservableCollection<TransferCategory> Categories
+        {
+            get
+            {
+                if (this.categories == null)
+                    this.categories = new ObservableCollection<TransferCategory>();
+                return this.categories;
+            }
+        }
+
         ObservableCollection<string> frequencies;
         public ObservableCollection<string> Frequencies
         {
@@ -153,31 +128,29 @@ namespace Finances.WinClient.ViewModels
         }
 
 
-        int transferId;
         public int TransferId
         {
             get
             {
-                return transferId;
+                return entity.TransferId;
             }
             set
             {
-                transferId = value;
+                entity.TransferId = value;
                 NotifyPropertyChangedAndValidate();
             }
         }
 
-        string name;
         [Required(ErrorMessage = "Transfer Name is mandatory")]
         public string Name
         {
             get
             {
-                return name;
+                return entity.Name;
             }
             set
             {
-                name = value;
+                entity.Name = value;
                 NotifyPropertyChangedAndValidate();
             }
         }
@@ -189,21 +162,38 @@ namespace Finances.WinClient.ViewModels
             get
             {
                 if (fromBankAccount == null)
-                    fromBankAccount = BankAccountItemViewModel.Elsewhere;
+                {
+                    if (entity.FromBankAccount == null || entity.FromBankAccount.BankAccountId==0)
+                    {
+                        fromBankAccount = BankAccountItemViewModel.Elsewhere;
+                    }
+                    else
+                    {
+                        fromBankAccount = new BankAccountItemViewModel(entity.FromBankAccount);
+                    }
+                }
 
                 if (this.BankAccounts != null && !this.BankAccounts.Contains(fromBankAccount))
                 {
-                    BankAccountItemViewModel find = this.BankAccounts.FirstOrDefault(a => a!=null && a.BankAccountId == fromBankAccount.BankAccountId);
+                    BankAccountItemViewModel find = this.BankAccounts.FirstOrDefault(a => a != null && a.BankAccountId == fromBankAccount.BankAccountId);
                     if (find != null)
+                    {
                         fromBankAccount = find;
+                        entity.FromBankAccount = fromBankAccount.Entity;
+                    }
                 }
 
                 return fromBankAccount;
             }
             set
             {
-                fromBankAccount = value;
-                NotifyPropertyChangedAndValidate();
+                if (fromBankAccount != value)
+                {
+                    fromBankAccount = value;
+                    entity.FromBankAccount = fromBankAccount==null || fromBankAccount==BankAccountItemViewModel.Elsewhere ? null : fromBankAccount.Entity;
+
+                    NotifyPropertyChangedAndValidate();
+                }
             }
         }
 
@@ -213,13 +203,25 @@ namespace Finances.WinClient.ViewModels
             get
             {
                 if (toBankAccount == null)
-                    toBankAccount = BankAccountItemViewModel.Elsewhere;
+                {
+                    if (entity.ToBankAccount == null || entity.ToBankAccount.BankAccountId==0)
+                    {
+                        toBankAccount = BankAccountItemViewModel.Elsewhere;
+                    }
+                    else
+                    {
+                        toBankAccount = new BankAccountItemViewModel(entity.ToBankAccount);
+                    }
+                }
 
                 if (this.BankAccounts != null && !this.BankAccounts.Contains(toBankAccount))
                 {
-                    BankAccountItemViewModel find = this.BankAccounts.FirstOrDefault(a => a!=null && a.BankAccountId == toBankAccount.BankAccountId);
+                    BankAccountItemViewModel find = this.BankAccounts.FirstOrDefault(a => a != null && a.BankAccountId == toBankAccount.BankAccountId);
                     if (find != null)
+                    {
                         toBankAccount = find;
+                        entity.ToBankAccount = toBankAccount.Entity;
+                    }
                 }
 
 
@@ -227,119 +229,122 @@ namespace Finances.WinClient.ViewModels
             }
             set
             {
-                toBankAccount = value;
+                if (toBankAccount != value)
+                {
+                    toBankAccount = value;
+                    entity.ToBankAccount = toBankAccount == null || toBankAccount == BankAccountItemViewModel.Elsewhere ? null : toBankAccount.Entity;
+
+                    NotifyPropertyChangedAndValidate();
+                }
+            }
+        }
+
+
+        public TransferCategory Category 
+        {
+            get
+            {
+                if (this.Categories != null && !this.Categories.Contains(entity.Category))
+                {
+                    TransferCategory find = this.Categories.FirstOrDefault(c => c.TransferCategoryId == entity.Category.TransferCategoryId);
+                    if (find != null)
+                        entity.Category = find;
+                }
+
+                return entity.Category;
+            }
+            set
+            {
+                entity.Category = value;
                 NotifyPropertyChangedAndValidate();
             }
         }
 
 
-        InputDecimal amount = new InputDecimal() { FormatString = "c", Mandatory = true };
+        InputDecimal amount;
         public InputDecimal Amount
         {
             get
             {
+                if (amount == null)
+                {
+                    amount = new InputDecimal()
+                    {
+                        FormatString = "c2",
+                        Mandatory = true//,
+                    };
+                }
+
                 return amount;
             }
-            //set
-            //{
-            //    amount = value;
-            //    NotifyPropertyChangedAndValidate();
-            //}
         }
 
 
-        //decimal? amount;
-        //public decimal? Amount
-        //{
-        //    get
-        //    {
-        //        return amount;
-        //    }
-        //    set
-        //    {
-        //        amount = value;
-        //        NotifyPropertyChangedAndValidate();
-        //    }
-        //}
-        //string amountString;
-        //public string AmountString
-        //{
-        //    get
-        //    {
-        //        if (amount.HasValue)
-        //            return amount.Value.ToString("n2");
-        //        else
-        //            return amountString; // String.Empty;
-        //    }
-        //    set
-        //    {
-        //        decimal v;
-        //        if (Decimal.TryParse(value, out v))
-        //            amount = v;
-        //        else
-        //            amount = null;
-        //        amountString = value;
-        //        NotifyPropertyChangedAndValidate();
-        //    }
-        //}
-
-        decimal amountTolerence;
         public decimal AmountTolerence
         {
             get
             {
-                return amountTolerence;
+                return entity.AmountTolerence;
             }
             set
             {
-                amountTolerence = value;
+                entity.AmountTolerence = value;
                 NotifyPropertyChangedAndValidate();
             }
         }
 
 
-
-        DateTime? startDate;
         [Required(ErrorMessage = "Start Date is mandatory")]
         public DateTime? StartDate
         {
-            get { return startDate.HasValue ? startDate.Value.Date : startDate; }
-            set { startDate = value.HasValue ? value.Value.Date : value; NotifyPropertyChangedAndValidate(); }
+            get 
+            {
+                return entity.StartDate == DateTime.MinValue ? (DateTime?)null : entity.StartDate;
+            }
+            set 
+            {
+                entity.StartDate = value.HasValue ? value.Value : DateTime.MinValue;
+                NotifyPropertyChangedAndValidate();
+            }
         }
 
-        DateTime? endDate;
         public DateTime? EndDate
         {
-            get { return endDate.HasValue ? endDate.Value.Date : endDate; }
-            set { endDate = value.HasValue ? value.Value.Date : value; NotifyPropertyChangedAndValidate(); }
+            get 
+            {
+                return entity.EndDate;
+            }
+            set 
+            {
+                entity.EndDate = value;
+                NotifyPropertyChangedAndValidate(); 
+            }
         }
 
-        string frequency;
         public string Frequency
         {
             get
             {
-                if (frequency == null && this.Frequencies != null && this.Frequencies.Count() > 0)
-                    frequency = this.Frequencies[0];
-                return frequency;
+                if (entity.Frequency == null && this.Frequencies != null && this.Frequencies.Count() > 0)
+                    entity.Frequency = this.Frequencies[0];
+                return entity.Frequency;
             }
             set
             {
-                frequency = value;
+                entity.Frequency = value;
                 NotifyPropertyChangedAndValidate();
             }
         }
 
-        bool isEnabled;
         public bool IsEnabled
         {
             get
             {
-                return isEnabled;
+                return entity.IsEnabled;
             }
             set
             {
-                isEnabled = value;
+                entity.IsEnabled = value;
                 NotifyPropertyChangedAndValidate();
             }
         }
@@ -350,9 +355,9 @@ namespace Finances.WinClient.ViewModels
 
         private void LoadBankAccountList()
         {
-            bankAccounts.Clear();
+            BankAccounts.Clear();
             BankAccounts.Add(BankAccountItemViewModel.Elsewhere);
-            bankAccountRepository.ReadList().ForEach(a => BankAccounts.Add(mapper.Map<BankAccountItemViewModel>(a)));
+            bankAccountRepository.ReadList().ForEach(a => BankAccounts.Add(new BankAccountItemViewModel(a)));
         }
 
         private void LoadExistingTransfers()
@@ -362,6 +367,12 @@ namespace Finances.WinClient.ViewModels
                     existingTransfers = transferRepository.ReadListDataIdName();
                 });
 
+        }
+
+        private void LoadTransferCategories()
+        {
+            Categories.Clear();
+            transferRepository.ReadListTransferCategories().ForEach(tc => Categories.Add(tc));
         }
 
         private void NewFromBankAccount()
@@ -374,49 +385,35 @@ namespace Finances.WinClient.ViewModels
             NewBankAccount(BankAccountFromTo.To);
         }
 
+
         private void NewBankAccount(BankAccountFromTo fromto)
         {
-            var editor = this.bankAccountEditorViewModelFactory.Create();
-
-            // prepare Editor
-            editor.InitializeForAddEdit(true);
-
-            // open Editor for adding
-            while (this.dialogService.ShowDialogView(editor))
+            int id = this.bankAccountAgent.Add();
+            if (id > 0)
             {
-                // map the Editor into an entity
-                var newbankaccount = mapper.Map<BankAccount>(editor);
+                var fromBankAccountId = this.FromBankAccount.BankAccountId;
+                var toBankAccountId = this.ToBankAccount.BankAccountId;
 
-                // save the entity and get result
-                bool result = this.bankAccountRepository.Add(newbankaccount) > 0;
+                LoadBankAccountList();
 
-                if (result)
+                if (fromto == BankAccountFromTo.From)
                 {
-                    var fromBankAccountId = this.FromBankAccount.BankAccountId;
-                    var toBankAccountId = this.ToBankAccount.BankAccountId;
-
-                    LoadBankAccountList();
-
-                    if (fromto == BankAccountFromTo.From)
-                    {
-                        this.FromBankAccount = this.BankAccounts.FirstOrDefault(a => a.BankAccountId == newbankaccount.BankAccountId);
-                        this.ToBankAccount = this.BankAccounts.FirstOrDefault(a => a.BankAccountId == toBankAccountId);
-                    }
-                    else
-                    {
-                        this.FromBankAccount = this.BankAccounts.FirstOrDefault(a => a.BankAccountId == fromBankAccountId);
-                        this.ToBankAccount = this.BankAccounts.FirstOrDefault(a => a.BankAccountId == newbankaccount.BankAccountId);
-                    }
-
-                    //base.Validate();
-
-                    break;
+                    this.FromBankAccount = this.BankAccounts.FirstOrDefault(a => a.BankAccountId == id);
+                    this.ToBankAccount = this.BankAccounts.FirstOrDefault(a => a.BankAccountId == toBankAccountId);
                 }
+                else
+                {
+                    this.FromBankAccount = this.BankAccounts.FirstOrDefault(a => a.BankAccountId == fromBankAccountId);
+                    this.ToBankAccount = this.BankAccounts.FirstOrDefault(a => a.BankAccountId == id);
+                }
+
+                //base.Validate();
+
             }
-
-            this.bankAccountEditorViewModelFactory.Release(editor);
-
         }
+
+
+
 
 
         #endregion
@@ -447,7 +444,6 @@ namespace Finances.WinClient.ViewModels
 
             if (!amount.IsNumeric)
             {
-                // probbaly needs IErrorInfo on BackingDecimal ??
                 base.ValidationHelper.AddValidationMessage("Amount is invalid", this.Amount);
             }
             else if (!amount.HasValue)

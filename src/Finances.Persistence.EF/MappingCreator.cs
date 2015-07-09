@@ -29,12 +29,16 @@ namespace Finances.Persistence.EF
 
 
             // Transfers
-            Mapper.CreateMap<Transfer, Core.Entities.Transfer>();
+            Mapper.CreateMap<Transfer, Core.Entities.Transfer>()
+                .ForMember(t => t.Category, opt => opt.MapFrom(s => s.TransferCategory));
             Mapper.CreateMap<Core.Entities.Transfer, Transfer>()
                 .ForMember(t => t.FromBankAccountId, opt => opt.MapFrom(s => s.FromBankAccount.BankAccountId))
                 .ForMember(t => t.ToBankAccountId, opt => opt.MapFrom(s => s.ToBankAccount.BankAccountId))
                 .ForMember(t => t.FromBankAccount, opt => opt.Ignore())
-                .ForMember(t => t.ToBankAccount, opt => opt.Ignore());
+                .ForMember(t => t.ToBankAccount, opt => opt.Ignore())
+                .ForMember(t => t.TransferCategoryId, opt => opt.MapFrom(s => s.Category.TransferCategoryId))
+                .ForMember(t => t.TransferCategory, opt => opt.Ignore())
+                ;
 
             Mapper.CreateMap<Transfer, Core.Entities.DataIdName>()
                 .ForMember(d => d.Id, opt => opt.MapFrom(s => s.TransferId))
@@ -58,6 +62,12 @@ namespace Finances.Persistence.EF
             Mapper.CreateMap<Cashflow, Core.Entities.DataIdName>()
                 .ForMember(d => d.Id, opt => opt.MapFrom(s => s.CashflowId))
                 .ForMember(d => d.Name, opt => opt.MapFrom(s => s.Name));
+
+
+            //Others
+            Mapper.CreateMap<TransferCategory, Core.Entities.TransferCategory>().ReverseMap();
+
+
 
 
         }
