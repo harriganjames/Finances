@@ -3,11 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+
 using Finances.Core.Interfaces;
 
 namespace Finances.Core.Engines.Cashflow
 {
-    public class MonlthlyTransferFrequencyDateCalculator : ITransferFrequencyDateCalculator
+    public class TransferFrequencyDateCalculatorMonthly : ITransferFrequencyDateCalculator
     {
         public string Frequency
         {

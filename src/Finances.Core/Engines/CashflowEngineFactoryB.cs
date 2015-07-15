@@ -25,13 +25,13 @@ namespace Finances.Core.Engines
 
         public ICashflowEngineB CreateDetail()
         {
-            ICashflowEngineB e = new CashflowEngineB(this.bankAccountRepository, this.transferRepository,new DetailAggregatedProjectionItemsGenerator());
+            ICashflowEngineB e = new CashflowEngineB(this.bankAccountRepository, this.transferRepository,new AggregatedProjectionItemsGeneratorDetail());
             return e;
         }
 
         public ICashflowEngineB CreateMonthlySummary()
         {
-            ICashflowEngineB e = new CashflowEngineB(this.bankAccountRepository, this.transferRepository, new MonthlySummaryAggregatedProjectionItemsGenerator());
+            ICashflowEngineB e = new CashflowEngineB(this.bankAccountRepository, this.transferRepository, new AggregatedProjectionItemsGeneratorMonthlySummary());
             return e;
         }
 

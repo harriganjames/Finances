@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 
 using Finances.Core.Entities;
+using Finances.Core.Interfaces;
 
 namespace Finances.Core.Engines.Cashflow
 {
-    public class DetailAggregatedProjectionItemsGenerator : IAggregatedProjectionItemsGenerator
+    public class AggregatedProjectionItemsGeneratorDetail : IAggregatedProjectionItemsGenerator
     {
         public ProjectionModeEnum ProjectionMode
         {

@@ -13,14 +13,20 @@ namespace Finances.Core.Engines
     {
         readonly IBankAccountRepository bankAccountRepository;
         readonly ITransferRepository transferRepository;
+        readonly ITransferFrequencyDateCalculatorFactory transferFrequencyDateCalculatorFactory;
+        readonly IAggregatedProjectionItemsGeneratorFactory aggregatedProjectionItemsGeneratorFactory;
 
         public CashflowEngineC(
                         IBankAccountRepository bankAccountRepository,
-                        ITransferRepository transferRepository
+                        ITransferRepository transferRepository,
+                        ITransferFrequencyDateCalculatorFactory transferFrequencyDateCalculatorFactory,
+                        IAggregatedProjectionItemsGeneratorFactory aggregatedProjectionItemsGeneratorFactory
                         )
         {
             this.bankAccountRepository = bankAccountRepository;
             this.transferRepository = transferRepository;
+            this.transferFrequencyDateCalculatorFactory = transferFrequencyDateCalculatorFactory;
+            this.aggregatedProjectionItemsGeneratorFactory = aggregatedProjectionItemsGeneratorFactory;
         }
 
 
@@ -30,11 +36,15 @@ namespace Finances.Core.Engines
                                 DateTime endDate,
                                 decimal openingBalance,
                                 decimal threshold,
-                                IAggregatedProjectionItemsGenerator aggregatedProjectionItemsGenerator)
+                                ProjectionModeEnum projectionMode
+                                //IAggregatedProjectionItemsGenerator aggregatedProjectionItemsGenerator
+                                )
         {
+            var apig = this.aggregatedProjectionItemsGeneratorFactory.Create(projectionMode);
+
             List<CashflowProjectionTransfer> cpts = this.GenerateProjectionTransfers(accounts, startDate, endDate);
 
-            List<CashflowProjectionItem> cpis = aggregatedProjectionItemsGenerator.GenerateAggregatedProjectionItems(cpts);  //GenerateAggregatedProjectionItems(cpts, mode);
+            List<CashflowProjectionItem> cpis = apig.GenerateAggregatedProjectionItems(cpts);  //GenerateAggregatedProjectionItems(cpts, mode);
 
             ApplyBalancesAndThreshold(cpis, startDate, openingBalance, threshold);
 
@@ -60,23 +70,25 @@ namespace Finances.Core.Engines
                 accounts.ForEach(cba => bankAccounts.Add(cba.BankAccount));
             }
 
-
             List<TransferDirection> transferDirections = GetTransferDirections(bankAccounts);
-
 
             // extrapolate date range.
             // loop each transfer
             foreach (var td in transferDirections)
             {
+                ITransferFrequencyDateCalculator transferFrequencyDateCalculator;
+
                 Transfer t = td.Transfer;
+
+                transferFrequencyDateCalculator = this.transferFrequencyDateCalculatorFactory.Create(t);
+
                 // loop compatible date range
                 DateTime d = t.StartDate < startDate ? t.StartDate : startDate;
                 while (d <= endDate && (t.EndDate == null || d <= t.EndDate))
                 {
                     cpts.Add(new CashflowProjectionTransfer() { Date = d, TransferDirection = td });
 
-                    if (t.Frequency == "Monthly")
-                        d = d.AddMonths(1);
+                    d = transferFrequencyDateCalculator.CalculateNextDate(t, d);
                 }
             }
 

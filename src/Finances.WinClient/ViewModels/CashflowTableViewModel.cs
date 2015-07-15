@@ -28,7 +28,8 @@ namespace Finances.WinClient.ViewModels
         readonly ICashflowEngineA cashflowEngineA;
         readonly ICashflowEngineFactoryB cashflowEngineFactoryB;
         readonly ICashflowEngineC cashflowEngineC;
-        readonly IEnumerable<IAggregatedProjectionItemsGenerator> aggregatedProjectionItemsGenerators;
+        //readonly IEnumerable<IAggregatedProjectionItemsGenerator> aggregatedProjectionItemsGenerators;
+        //readonly IAggregatedProjectionItemsGeneratorFactory aggregatedProjectionItemsGeneratorFactory;
 
         List<Cashflow> cashflowsTemp;
         List<CashflowProjectionItem> cashflowProjectionItems;
@@ -38,14 +39,16 @@ namespace Finances.WinClient.ViewModels
                                         ICashflowEngineA cashflowEngineA,
                                         ICashflowEngineFactoryB cashflowEngineFactoryB,
                                         ICashflowEngineC cashflowEngineC,
-                                        IEnumerable<IAggregatedProjectionItemsGenerator> aggregatedProjectionItemsGenerators            
-                                    )
+                                        //IEnumerable<IAggregatedProjectionItemsGenerator> aggregatedProjectionItemsGenerators            
+                                        //IAggregatedProjectionItemsGeneratorFactory aggregatedProjectionItemsGeneratorFactory
+                                        )
         {
             this.cashflowRepository = cashflowRepository;
             this.cashflowEngineA = cashflowEngineA;
             this.cashflowEngineFactoryB = cashflowEngineFactoryB;
             this.cashflowEngineC = cashflowEngineC;
-            this.aggregatedProjectionItemsGenerators = aggregatedProjectionItemsGenerators;
+            //this.aggregatedProjectionItemsGenerators = aggregatedProjectionItemsGenerators;
+            //this.aggregatedProjectionItemsGeneratorFactory = aggregatedProjectionItemsGeneratorFactory;
 
             RefreshCommand = base.AddNewCommand(new ActionCommand(Refresh));
         }
@@ -285,7 +288,9 @@ namespace Finances.WinClient.ViewModels
 
                 // Engine C method
 
-                var apig = aggregatedProjectionItemsGenerators.FirstOrDefault(g => g.ProjectionMode == SelectedMode);
+                //var apig = aggregatedProjectionItemsGenerators.FirstOrDefault(g => g.ProjectionMode == SelectedMode);
+
+                var apig = this.aggregatedProjectionItemsGeneratorFactory.Create(SelectedMode);
 
                 CashflowProjectionItems = cashflowEngineC.GenerateProjection(SelectedCashflow.Entity.CashflowBankAccounts,
                                     SelectedCashflow.Entity.StartDate,
