@@ -73,6 +73,7 @@
           <Property Name="IsEnabled" Type="bit" Nullable="false" />
           <Property Name="RecordCreatedDateTime" Type="datetime" Nullable="false" StoreGeneratedPattern="Computed" />
           <Property Name="RecordUpdatedDateTime" Type="datetime" Nullable="false" StoreGeneratedPattern="Computed" />
+          <Property Name="FrequencyDays" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="TransferCategory">
           <Key>
@@ -345,6 +346,7 @@
           <NavigationProperty Name="FromBankAccount" Relationship="FinanceModel.FK_Transfer_FromBankAccountId" FromRole="Transfer" ToRole="BankAccount" />
           <NavigationProperty Name="ToBankAccount" Relationship="FinanceModel.FK_Transfer_ToBankAccountId" FromRole="Transfer" ToRole="BankAccount" />
           <NavigationProperty Name="TransferCategory" Relationship="FinanceModel.FK_Transfer_TransferCategory" FromRole="Transfer" ToRole="TransferCategory" />
+          <Property Name="FrequencyDays" Type="Int32" Nullable="false" />
         </EntityType>
         <EntityType Name="TransferCategory">
           <Key>
@@ -465,6 +467,7 @@
           <EntitySetMapping Name="Transfers">
             <EntityTypeMapping TypeName="FinanceModel.Transfer">
               <MappingFragment StoreEntitySet="Transfer">
+                <ScalarProperty Name="FrequencyDays" ColumnName="FrequencyDays" />
                 <ScalarProperty Name="RecordUpdatedDateTime" ColumnName="RecordUpdatedDateTime" />
                 <ScalarProperty Name="RecordCreatedDateTime" ColumnName="RecordCreatedDateTime" />
                 <ScalarProperty Name="IsEnabled" ColumnName="IsEnabled" />

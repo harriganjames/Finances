@@ -1,12 +1,11 @@
 ﻿<ResourceDictionary 
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:sys="clr-namespace:System;assembly=mscorlib"
 
         xmlns:vm="clr-namespace:Finances.WinClient.ViewModels"
         xmlns:v="clr-namespace:Finances.WinClient.Views"
     >
-    
-    
 
 
     <!-- Bank -->
@@ -70,6 +69,10 @@
     <!--Application-->
     <DataTemplate DataType="{x:Type vm:WorkspaceAreaViewModel}">
         <v:WorkspaceAreaView/>
+    </DataTemplate>
+
+    <DataTemplate DataType="{x:Type sys:Boolean}">
+        <v:BooleanView/>
     </DataTemplate>
 
 </ResourceDictionary>

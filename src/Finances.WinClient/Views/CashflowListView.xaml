@@ -27,6 +27,11 @@
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
                 <ToolBar>
+                    <ToolBar.Resources>
+                        <Style TargetType="Button"
+                               BasedOn="{StaticResource Button.HorizontalStack}">
+                        </Style>
+                    </ToolBar.Resources>
                     <ToolBarPanel Orientation="Horizontal">
                         <Button Content="Add" Command="{Binding AddCommand}"/>
                         <Button Content="Edit" Command="{Binding EditCommand}"/>
@@ -63,7 +68,7 @@
 
                     <ListView.View>
                         <GridView>
-                            <GridViewColumn DisplayMemberBinding="{Binding Name}" Header="Name" Width="100"/>
+                            <GridViewColumn DisplayMemberBinding="{Binding Name}" Header="Name"/>
                             <GridViewColumn Header="Opening Balance">
                                 <GridViewColumn.CellTemplate>
                                     <DataTemplate>
@@ -73,7 +78,7 @@
                                 </GridViewColumn.CellTemplate>
                             </GridViewColumn>
                             <GridViewColumn DisplayMemberBinding="{Binding StartDate, StringFormat=yyyy-MM-dd}" Header="Start" />
-                            <GridViewColumn DisplayMemberBinding="{Binding Accounts}" Header="Accounts" Width="60"/>
+                            <GridViewColumn DisplayMemberBinding="{Binding Accounts}" Header="Accounts"/>
                         </GridView>
                     </ListView.View>
                 </libctl:ListViewScroll>

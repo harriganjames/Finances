@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:sys="clr-namespace:System;assembly=mscorlib"
              xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
              xmlns:eic="clr-namespace:Microsoft.Expression.Interactivity.Core;assembly=Microsoft.Expression.Interactions"
              xmlns:eii="clr-namespace:Microsoft.Expression.Interactivity.Input;assembly=Microsoft.Expression.Interactions"
@@ -18,45 +19,6 @@
              d:DesignHeight="300" d:DesignWidth="300"
             FocusManager.FocusedElement="{Binding ElementName=Items}"
             >
-    <!--<UserControl.Resources>
-        <conv:NullToVisibleConverter x:Key="NullToVisibleConverter" />
-        <conv:NullToCollapsedConverter x:Key="NullToCollapsedConverter" />
-    </UserControl.Resources>-->
-
-    <!--
-                                        <DataTemplate>
-                                        <Grid>
-                                            <StackPanel x:Name="bank_acccount_normal" Orientation="Horizontal">
-                                                <StackPanel.Style>
-                                                    <Style TargetType="StackPanel">
-                                                        <Style.Triggers>
-                                                        <DataTrigger Binding="{Binding FromBankAccount}" Value="{x:Null}">
-                                                            <Setter Property="Visibility" Value="Collapsed"/>
-                                                        </DataTrigger>
-                                                        </Style.Triggers>
-                                                    </Style>
-                                                </StackPanel.Style>
-                                                <Image Source="{Binding FromBankAccount.Bank.Logo}" Height="20" />
-                                                <TextBlock Text="{Binding FromBankAccount.AccountName}" Padding="5,0,0,0"/>
-                                            </StackPanel>
-                                            <TextBlock Text="Elsewhere"
-                                                       Visibility="Collapsed">
-                                                <TextBlock.Style>
-                                                    <Style TargetType="TextBlock">
-                                                        <Style.Triggers>
-                                                        <DataTrigger Binding="{Binding FromBankAccount}" Value="{x:Null}">
-                                                            <Setter Property="Visibility" Value="Visible"/>
-                                                        </DataTrigger>
-                                                        </Style.Triggers>
-                                                    </Style>
-                                                </TextBlock.Style>
-                                            </TextBlock>
-                                        </Grid>
-                                    </DataTemplate>
-
-    -->
-    
-    
     
     <tool:BusyIndicator IsBusy="{Binding IsBusy}">
         <Grid>
@@ -66,6 +28,11 @@
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
                 <ToolBar>
+                    <ToolBar.Resources>
+                        <Style TargetType="Button"
+                               BasedOn="{StaticResource Button.HorizontalStack}">
+                        </Style>
+                    </ToolBar.Resources>
                     <ToolBarPanel Orientation="Horizontal">
                         <Button Content="Add" Command="{Binding AddCommand}"/>
                         <Button Content="Edit" Command="{Binding EditCommand}"/>
@@ -102,7 +69,7 @@
 
                     <ListView.View>
                         <GridView>
-                            <GridViewColumn DisplayMemberBinding="{Binding Name}" Header="Name" Width="100"/>
+                            <GridViewColumn DisplayMemberBinding="{Binding Name}" Header="Name" />
                             <GridViewColumn Header="Category">
                                 <GridViewColumn.CellTemplate>
                                     <DataTemplate>
@@ -137,6 +104,14 @@
                             <GridViewColumn DisplayMemberBinding="{Binding StartDate, StringFormat=yyyy-MM-dd}" Header="Start" />
                             <GridViewColumn DisplayMemberBinding="{Binding EndDate, StringFormat=yyyy-MM-dd}" Header="End" />
                             <GridViewColumn DisplayMemberBinding="{Binding Frequency}" Header="Frequency" />
+                            <GridViewColumn DisplayMemberBinding="{Binding FrequencyDays}" Header="Days" />
+                            <GridViewColumn Header="Enabled">
+                                <GridViewColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <ContentPresenter Content="{Binding IsEnabled}"/>
+                                    </DataTemplate>
+                                </GridViewColumn.CellTemplate>
+                            </GridViewColumn>
                         </GridView>
                     </ListView.View>
                 </libctl:ListViewScroll>

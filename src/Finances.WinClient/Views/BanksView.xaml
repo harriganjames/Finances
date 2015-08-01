@@ -48,6 +48,11 @@
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
                 <ToolBar>
+                    <ToolBar.Resources>
+                        <Style TargetType="Button"
+                               BasedOn="{StaticResource Button.HorizontalStack}">
+                        </Style>
+                    </ToolBar.Resources>
                     <ToolBarPanel Orientation="Horizontal">
                         <Button Content="Add" Command="{Binding AddCommand}"/>
                         <Button Content="Edit" Command="{Binding EditCommand}"/>

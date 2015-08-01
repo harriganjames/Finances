@@ -27,6 +27,7 @@ namespace Finances.Persistence.EF
         public bool IsEnabled { get; set; }
         public System.DateTime RecordCreatedDateTime { get; set; }
         public System.DateTime RecordUpdatedDateTime { get; set; }
+        public int FrequencyDays { get; set; }
     
         public virtual BankAccount FromBankAccount { get; set; }
         public virtual BankAccount ToBankAccount { get; set; }

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Finances.Core.Entities
 {
-    public class Cashflow
+    public class Cashflow : Entity
     {
         public Cashflow()
         {

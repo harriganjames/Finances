@@ -72,6 +72,8 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
+    <Compile Include="Fakes\FakeBankAccountRepository.cs" />
+    <Compile Include="Finances.Core.Engines.Cashflow\ProjectionTransferGeneratorTests.cs" />
     <Compile Include="OrmEntityMapperTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="CashflowEngineTests.cs" />

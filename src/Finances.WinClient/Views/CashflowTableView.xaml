@@ -7,7 +7,7 @@
              xmlns:libctl="clr-namespace:Finances.Core.Wpf.Controls;assembly=Finances.Core.Wpf"
              xmlns:conv="clr-namespace:Finances.WinClient.Converters"
              mc:Ignorable="d" 
-             d:DesignHeight="100" d:DesignWidth="700">
+             d:DesignHeight="100" d:DesignWidth="800">
     <UserControl.Resources>
         <conv:BalanceStateToColourConverter x:Key="BalanceStateToColourConverter" />
     </UserControl.Resources>
@@ -31,16 +31,16 @@
                                Padding="5,0"
                                VerticalAlignment="Center"/>
                     <TextBox Text="{Binding OpeningBalance.Input, UpdateSourceTrigger=LostFocus}"
-                             Width="60"/>
+                             Width="80"/>
                     <TextBlock Text="Threshold:"
                                Padding="5,0"
                                VerticalAlignment="Center"/>
                     <TextBox Text="{Binding Threshold.Input, UpdateSourceTrigger=LostFocus}"
                              HorizontalAlignment="Right"
-                             Width="60"/>
+                             Width="80"/>
                     <ComboBox ItemsSource="{Binding Modes}"
                               SelectedItem="{Binding SelectedMode}"
-                              MinWidth="120"/>
+                              MinWidth="130"/>
                     <Label Width="5"/>
                     <Button Content="Refresh" Command="{Binding RefreshCommand}"/>
                 </ToolBarPanel>
@@ -60,9 +60,9 @@
 
                 <ListView.View>
                     <GridView>
-                        <GridViewColumn DisplayMemberBinding="{Binding Period}" Header="Period" Width="100"/>
-                        <GridViewColumn DisplayMemberBinding="{Binding Item}" Header="Item" Width="150"/>
-                        <GridViewColumn Header="In" Width="60">
+                        <GridViewColumn DisplayMemberBinding="{Binding Period}" Header="Period"/>
+                        <GridViewColumn DisplayMemberBinding="{Binding Item}" Header="Item" />
+                        <GridViewColumn Header="In">
                             <GridViewColumn.CellTemplate>
                                 <DataTemplate>
                                     <TextBlock  TextAlignment="Right"
@@ -70,7 +70,7 @@
                                 </DataTemplate>
                             </GridViewColumn.CellTemplate>
                         </GridViewColumn>
-                        <GridViewColumn Header="Out" Width="60">
+                        <GridViewColumn Header="Out">
                             <GridViewColumn.CellTemplate>
                                 <DataTemplate>
                                     <TextBlock  TextAlignment="Right"
@@ -78,7 +78,7 @@
                                 </DataTemplate>
                             </GridViewColumn.CellTemplate>
                         </GridViewColumn>
-                        <GridViewColumn Header="Balance" Width="60">
+                        <GridViewColumn Header="Balance">
                             <GridViewColumn.CellTemplate>
                                 <DataTemplate>
                                     <TextBlock  TextAlignment="Right"
@@ -89,7 +89,7 @@
                             </GridViewColumn.CellTemplate>
                         </GridViewColumn>
 
-                        <GridViewColumn Header="Period Balance" Width="60">
+                        <GridViewColumn Header="Period Balance">
                             <GridViewColumn.CellTemplate>
                                 <DataTemplate>
                                     <TextBlock  TextAlignment="Right"
@@ -100,7 +100,7 @@
                             </GridViewColumn.CellTemplate>
                         </GridViewColumn>
 
-                        <GridViewColumn DisplayMemberBinding="{Binding BalanceState}" Header="State" Width="100"/>
+                        <GridViewColumn DisplayMemberBinding="{Binding BalanceState}" Header="State"/>
 
                     </GridView>
                 </ListView.View>

@@ -31,6 +31,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -40,12 +41,16 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Apex.cs" />
+    <Compile Include="AppSettings.cs" />
     <Compile Include="Connection.cs" />
     <Compile Include="Engines\CashflowEngineA.cs" />
     <Compile Include="Engines\CashflowEngineFactoryB.cs" />
     <Compile Include="Engines\Cashflow\AggregatedProjectionItemsGeneratorFactory.cs" />
     <Compile Include="Engines\Cashflow\CashflowProjectionTransfer.cs" />
     <Compile Include="Engines\Cashflow\AggregatedProjectionItemsGeneratorDetail.cs" />
+    <Compile Include="Engines\Cashflow\ProjectionTransferGenerator.cs" />
+    <Compile Include="Engines\Cashflow\TransferDirectionGenerator.cs" />
+    <Compile Include="Entities\Entity.cs" />
     <Compile Include="Interfaces\IAggregatedProjectionItemsGeneratorFactory.cs" />
     <Compile Include="Interfaces\IAggregatedProjectionItemsGenerator.cs" />
     <Compile Include="Engines\Cashflow\xMonlthlyTransferFrequencyDateCalculator.cs" />
@@ -66,6 +71,10 @@
     <Compile Include="Entities\Transfer.cs" />
     <Compile Include="Entities\DataIdName.cs" />
     <Compile Include="Exceptions\FinancesCoreException.cs" />
+    <Compile Include="Interfaces\IAppSettings.cs" />
+    <Compile Include="Interfaces\IProjectionTransferGenerator.cs" />
+    <Compile Include="Interfaces\IRepositoryRead.cs" />
+    <Compile Include="Interfaces\ITransferDirectionGenerator.cs" />
     <Compile Include="Interfaces\ITransferFrequencyDateCalculatorFactory.cs" />
     <Compile Include="Interfaces\ICashflowEngineC.cs" />
     <Compile Include="Interfaces\ICashflowEngineB.cs" />

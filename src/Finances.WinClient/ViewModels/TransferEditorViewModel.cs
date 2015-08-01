@@ -52,6 +52,12 @@ namespace Finances.WinClient.ViewModels
                 };
             base.ValidationHelper.AddInstance(this.Amount);
 
+            this.FrequencyDays.PropertyChanged += (s, e) =>
+            {
+                base.Validate();
+            };
+            base.ValidationHelper.AddInstance(this.FrequencyDays);
+
             NewFromBankAccountCommand = base.AddNewCommand(new ActionCommand(this.NewFromBankAccount));
             NewToBankAccountCommand = base.AddNewCommand(new ActionCommand(this.NewToBankAccount));
         }
@@ -271,7 +277,7 @@ namespace Finances.WinClient.ViewModels
                     amount = new InputDecimal()
                     {
                         FormatString = "c2",
-                        Mandatory = true//,
+                        Mandatory = true
                     };
                 }
 
@@ -335,6 +341,26 @@ namespace Finances.WinClient.ViewModels
                 NotifyPropertyChangedAndValidate();
             }
         }
+
+
+        InputDecimal frequencyDays;
+        public InputDecimal FrequencyDays
+        {
+            get
+            {
+                if (frequencyDays == null)
+                {
+                    frequencyDays = new InputDecimal()
+                    {
+                        FormatString = "n0",
+                        Mandatory = true
+                    };
+                }
+
+                return frequencyDays;
+            }
+        }
+
 
         public bool IsEnabled
         {

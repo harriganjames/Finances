@@ -43,6 +43,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Data\TransferCagetory.data.sql" />
+    <Content Include="Deploy.sql" />
     <Content Include="Procs\GetDateTest.sql" />
     <Content Include="Queries.sql" />
     <Content Include="ResetINT.sql" />

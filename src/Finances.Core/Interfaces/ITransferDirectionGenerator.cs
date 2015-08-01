@@ -3,13 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+
 using Finances.Core.Engines.Cashflow;
 using Finances.Core.Entities;
 
 namespace Finances.Core.Interfaces
 {
-    public interface IAggregatedProjectionItemsGeneratorFactory
+    public interface ITransferDirectionGenerator
     {
-        IAggregatedProjectionItemsGenerator Create(string projectionMode);
+        List<TransferDirection> GetTransferDirections(List<BankAccount> bankAccounts);
     }
 }

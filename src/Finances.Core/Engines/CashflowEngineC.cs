@@ -11,22 +11,17 @@ namespace Finances.Core.Engines
 {
     public class CashflowEngineC : ICashflowEngineC
     {
-        readonly IBankAccountRepository bankAccountRepository;
-        readonly ITransferRepository transferRepository;
-        readonly ITransferFrequencyDateCalculatorFactory transferFrequencyDateCalculatorFactory;
-        readonly IAggregatedProjectionItemsGeneratorFactory aggregatedProjectionItemsGeneratorFactory;
+        //readonly IBankAccountRepository bankAccountRepository;
+        //readonly ITransferRepository transferRepository;
+        //readonly ITransferFrequencyDateCalculatorFactory transferFrequencyDateCalculatorFactory;
+        readonly IProjectionTransferGenerator projectionTransferGenerator;
+        //readonly IAggregatedProjectionItemsGeneratorFactory aggregatedProjectionItemsGeneratorFactory;
 
         public CashflowEngineC(
-                        IBankAccountRepository bankAccountRepository,
-                        ITransferRepository transferRepository,
-                        ITransferFrequencyDateCalculatorFactory transferFrequencyDateCalculatorFactory,
-                        IAggregatedProjectionItemsGeneratorFactory aggregatedProjectionItemsGeneratorFactory
+                        IProjectionTransferGenerator projectionTransferGenerator
                         )
         {
-            this.bankAccountRepository = bankAccountRepository;
-            this.transferRepository = transferRepository;
-            this.transferFrequencyDateCalculatorFactory = transferFrequencyDateCalculatorFactory;
-            this.aggregatedProjectionItemsGeneratorFactory = aggregatedProjectionItemsGeneratorFactory;
+            this.projectionTransferGenerator = projectionTransferGenerator;
         }
 
 
@@ -36,15 +31,12 @@ namespace Finances.Core.Engines
                                 DateTime endDate,
                                 decimal openingBalance,
                                 decimal threshold,
-                                ProjectionModeEnum projectionMode
-                                //IAggregatedProjectionItemsGenerator aggregatedProjectionItemsGenerator
+                                IAggregatedProjectionItemsGenerator projectionMode
                                 )
         {
-            var apig = this.aggregatedProjectionItemsGeneratorFactory.Create(projectionMode);
+            List<CashflowProjectionTransfer> cpts = projectionTransferGenerator.GenerateProjectionTransfers(accounts, startDate, endDate);
 
-            List<CashflowProjectionTransfer> cpts = this.GenerateProjectionTransfers(accounts, startDate, endDate);
-
-            List<CashflowProjectionItem> cpis = apig.GenerateAggregatedProjectionItems(cpts);  //GenerateAggregatedProjectionItems(cpts, mode);
+            List<CashflowProjectionItem> cpis = projectionMode.GenerateAggregatedProjectionItems(cpts);  //GenerateAggregatedProjectionItems(cpts, mode);
 
             ApplyBalancesAndThreshold(cpis, startDate, openingBalance, threshold);
 
@@ -53,67 +45,67 @@ namespace Finances.Core.Engines
 
 
 
-        private List<CashflowProjectionTransfer> GenerateProjectionTransfers(
-                                List<CashflowBankAccount> accounts,
-                                DateTime startDate,
-                                DateTime endDate)
-        {
-            var cpts = new List<CashflowProjectionTransfer>();
-            List<BankAccount> bankAccounts;
+        //private List<CashflowProjectionTransfer> GenerateProjectionTransfers(
+        //                        List<CashflowBankAccount> accounts,
+        //                        DateTime startDate,
+        //                        DateTime endDate)
+        //{
+        //    var cpts = new List<CashflowProjectionTransfer>();
+        //    List<BankAccount> bankAccounts;
 
-            // get list of bank accounts involved
-            if (accounts.Count == 0)
-                bankAccounts = this.bankAccountRepository.ReadList();
-            else
-            {
-                bankAccounts = new List<BankAccount>();
-                accounts.ForEach(cba => bankAccounts.Add(cba.BankAccount));
-            }
+        //    // get list of bank accounts involved
+        //    if (accounts.Count == 0)
+        //        bankAccounts = this.bankAccountRepository.ReadList();
+        //    else
+        //    {
+        //        bankAccounts = new List<BankAccount>();
+        //        accounts.ForEach(cba => bankAccounts.Add(cba.BankAccount));
+        //    }
 
-            List<TransferDirection> transferDirections = GetTransferDirections(bankAccounts);
+        //    List<TransferDirection> transferDirections = GetTransferDirections(bankAccounts);
 
-            // extrapolate date range.
-            // loop each transfer
-            foreach (var td in transferDirections)
-            {
-                ITransferFrequencyDateCalculator transferFrequencyDateCalculator;
+        //    // extrapolate date range.
+        //    // loop each transfer
+        //    foreach (var td in transferDirections)
+        //    {
+        //        ITransferFrequencyDateCalculator transferFrequencyDateCalculator;
 
-                Transfer t = td.Transfer;
+        //        Transfer t = td.Transfer;
 
-                transferFrequencyDateCalculator = this.transferFrequencyDateCalculatorFactory.Create(t);
+        //        transferFrequencyDateCalculator = this.transferFrequencyDateCalculatorFactory.Create(t);
 
-                // loop compatible date range
-                DateTime d = t.StartDate < startDate ? t.StartDate : startDate;
-                while (d <= endDate && (t.EndDate == null || d <= t.EndDate))
-                {
-                    cpts.Add(new CashflowProjectionTransfer() { Date = d, TransferDirection = td });
+        //        // loop compatible date range
+        //        DateTime d = t.StartDate < startDate ? t.StartDate : startDate;
+        //        while (d <= endDate && (t.EndDate == null || d <= t.EndDate))
+        //        {
+        //            cpts.Add(new CashflowProjectionTransfer() { Date = d, TransferDirection = td });
 
-                    d = transferFrequencyDateCalculator.CalculateNextDate(t, d);
-                }
-            }
-
-
-            return cpts;
-        }
+        //            d = transferFrequencyDateCalculator.CalculateNextDate(t, d);
+        //        }
+        //    }
 
 
-        private List<TransferDirection> GetTransferDirections(List<BankAccount> bankAccounts)
-        {
-            var transferDirections = (from t in this.transferRepository.ReadList()
-                                      let outBound = t.FromBankAccount != null && bankAccounts.Count(a => a.BankAccountId == t.FromBankAccount.BankAccountId) > 0
-                                      let inBound = t.ToBankAccount != null && bankAccounts.Count(a => a.BankAccountId == t.ToBankAccount.BankAccountId) > 0
-                                      where inBound ^ outBound  // xor == exclude internal transfers
-                                        && t.IsEnabled
-                                      select new TransferDirection()
-                                      {
-                                          Transfer = t,
-                                          IsOutbound = outBound,
-                                          IsInbound = inBound
-                                      }
-                ).ToList();
+        //    return cpts;
+        //}
 
-            return transferDirections;
-        }
+
+        //private List<TransferDirection> GetTransferDirections(List<BankAccount> bankAccounts)
+        //{
+        //    var transferDirections = (from t in this.transferRepository.ReadList()
+        //                              let outBound = t.FromBankAccount != null && bankAccounts.Count(a => a.BankAccountId == t.FromBankAccount.BankAccountId) > 0
+        //                              let inBound = t.ToBankAccount != null && bankAccounts.Count(a => a.BankAccountId == t.ToBankAccount.BankAccountId) > 0
+        //                              where inBound ^ outBound  // xor == exclude internal transfers
+        //                                && t.IsEnabled
+        //                              select new TransferDirection()
+        //                              {
+        //                                  Transfer = t,
+        //                                  IsOutbound = outBound,
+        //                                  IsInbound = inBound
+        //                              }
+        //        ).ToList();
+
+        //    return transferDirections;
+        //}
 
 
 

@@ -205,6 +205,21 @@
                 </ComboBox>
             </Grid>
 
+            <!--Frequency Days-->
+            <Grid Margin="{StaticResource Spacer}">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" SharedSizeGroup="label"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <Label      Content="Frequency Days"/>
+                <TextBox    Grid.Column="1"
+                            Width="30"
+                            
+                            HorizontalContentAlignment="Right"
+                            Text="{Binding FrequencyDays.Input, UpdateSourceTrigger=LostFocus}"/>
+            </Grid>
+
             <!--IsEnabled-->
             <Grid Margin="{StaticResource Spacer}">
                 <Grid.ColumnDefinitions>

@@ -16,8 +16,8 @@ xmlns:libattach="clr-namespace:Finances.Core.Wpf.AttachedProperties;assembly=Fin
                 <StackPanel Grid.Column="0" Orientation="Vertical">
                     <StackPanel.Resources>
                         <Style TargetType="Button">
-                            <Setter Property="Padding" Value="10,0" />
-                            <Setter Property="Height" Value="25" />
+                            <Setter Property="Padding" Value="10,5" />
+                            <Setter Property="FontSize" Value="14" />
                             <Setter Property="Background" Value="GreenYellow" />
                         </Style>
                     </StackPanel.Resources>
@@ -25,11 +25,10 @@ xmlns:libattach="clr-namespace:Finances.Core.Wpf.AttachedProperties;assembly=Fin
                     <ItemsControl ItemsSource="{Binding RegisteredWorkspaces}">
                         <ItemsControl.ItemTemplate>
                             <DataTemplate>
-                            <StackPanel Orientation="Vertical">
-                                <Button Content="{Binding Caption}" Command="{Binding OpenCommand}"/>
-                                <!--<Button Content="Relative" 
-                                        Command="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=ItemsControl}, Path=DataContext.OpenWorkspaceCommand}" 
-                                        CommandParameter="{Binding Caption}"/>-->
+                                <StackPanel Orientation="Vertical">
+                                <Border BorderThickness="4,4,4,0">
+                                    <Button  Content="{Binding Caption}" Command="{Binding OpenCommand}"/>
+                                </Border>
                             </StackPanel>
                             </DataTemplate>
                         </ItemsControl.ItemTemplate>
@@ -56,7 +55,7 @@ xmlns:libattach="clr-namespace:Finances.Core.Wpf.AttachedProperties;assembly=Fin
                                                     DockPanel.Dock="Right"
                                                     Focusable="False"
                                                     FontFamily="Courier" 
-                                                    FontSize="9"
+                                                    FontSize="12"
                                                     FontWeight="Bold"  
                                                     Margin="10,1,0,0"
                                                     Padding="0"
@@ -65,11 +64,15 @@ xmlns:libattach="clr-namespace:Finances.Core.Wpf.AttachedProperties;assembly=Fin
                                                     Background="RosyBrown"
                                                     ToolTip="Close"
                                                     />
-                                <ContentPresenter 
+                                <!--<ContentPresenter 
                                                     Content="{Binding Path=Caption}" 
                                                     VerticalAlignment="Center" 
-                                                    />
-                            </DockPanel>
+                                                    />-->
+                                <TextBlock Text="{Binding Caption}"
+                                           VerticalAlignment="Center"
+                                           Padding="5,3"
+                                           FontSize="14"/>
+                        </DockPanel>
                         </DataTemplate>
                     </TabControl.ItemTemplate>
                 </TabControl>

@@ -13,6 +13,6 @@ namespace Finances.Core.Interfaces
                                 DateTime endDate,
                                 decimal openingBalance,
                                 decimal threshold,
-                                IAggregatedProjectionItemsGenerator aggregatedProjectionItemsGenerator);
+                                IAggregatedProjectionItemsGenerator projectionMode);
     }
 }

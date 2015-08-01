@@ -9,12 +9,33 @@ namespace Finances.Core.Engines.Cashflow
 {
     public class AggregatedProjectionItemsGeneratorDetail : IAggregatedProjectionItemsGenerator
     {
-        public ProjectionModeEnum ProjectionMode
+        //public ProjectionModeEnum ProjectionMode
+        //{
+        //    get
+        //    {
+        //        return ProjectionModeEnum.Detail;
+        //    }
+        //}
+
+        //public string ProjectionModeCode
+        //{
+        //    get
+        //    {
+        //        return "DETAIL";
+        //    }
+        //}
+
+        public string ProjectionModeName
         {
             get
             {
-                return ProjectionModeEnum.Detail;
+                return "Detail";
             }
+        }
+
+        public override string ToString()
+        {
+            return this.ProjectionModeName;
         }
 
         public List<Entities.CashflowProjectionItem> GenerateAggregatedProjectionItems(List<CashflowProjectionTransfer> cashflowProjectionTransfers)

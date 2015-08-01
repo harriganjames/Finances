@@ -19,6 +19,7 @@ CREATE TABLE [dbo].[Transfer]
 	,StartDate			DATE NOT NULL
 	,EndDate			DATE NULL
 	,Frequency			VARCHAR(100) NOT NULL
+	,FrequencyDays		INT NOT NULL
 	,IsEnabled			BIT NOT NULL
 
     ,RecordCreatedDateTime DATETIME NOT NULL DEFAULT(GETDATE())
@@ -52,4 +53,11 @@ BEGIN
 			ON	a.TransferId=i.TransferId
 END
 GO
+
+IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.COLUMNS
+		WHERE	TABLE_SCHEMA+'.'+TABLE_NAME+'.'+COLUMN_NAME='dbo.Transfer.FrequencyDays')
+BEGIN
+	ALTER TABLE dbo.Transfer
+	ADD	FrequencyDays INT NOT NULL DEFAULT(1)
+END
 

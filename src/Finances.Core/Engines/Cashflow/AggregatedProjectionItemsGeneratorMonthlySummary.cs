@@ -9,13 +9,35 @@ namespace Finances.Core.Engines.Cashflow
 {
     public class AggregatedProjectionItemsGeneratorMonthlySummary : IAggregatedProjectionItemsGenerator
     {
-        public ProjectionModeEnum ProjectionMode
+        //public ProjectionModeEnum ProjectionMode
+        //{
+        //    get
+        //    {
+        //        return ProjectionModeEnum.MonthlySummary;
+        //    }
+        //}
+
+        //public string ProjectionModeCode
+        //{
+        //    get
+        //    {
+        //        return "MONTHLYSUMMARY";
+        //    }
+        //}
+
+        public string ProjectionModeName
         {
             get
             {
-                return ProjectionModeEnum.MonthlySummary;
+                return "Monthly Summary";
             }
         }
+
+        public override string ToString()
+        {
+            return this.ProjectionModeName;
+        }
+
 
         public List<Entities.CashflowProjectionItem> GenerateAggregatedProjectionItems(List<CashflowProjectionTransfer> cashflowProjectionTransfers)
         {

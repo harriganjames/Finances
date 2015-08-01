@@ -1,6 +1,8 @@
 ﻿
 using System;
+using System.Configuration;
 using Finances.Core;
+using Finances.Core.Interfaces;
 using Finances.Core.Wpf;
 using Finances.Core.Wpf.ObjectInformation;
 namespace Finances.WinClient.ViewModels
@@ -22,15 +24,18 @@ namespace Finances.WinClient.ViewModels
         readonly IConnection connection;
         readonly IDialogService dialogService;
         readonly ObjectInfoViewModel objectInfoViewModel;
+        readonly IAppSettings appSettings;
 
         public MainViewModel(IWorkspaceAreaViewModel workspaceAreaViewModel,
                         IConnection connection,
                         IDialogService dialogService,
+                        IAppSettings appSettings,
                         ObjectInfoViewModel objectInfoViewModel)
         {
             this.workspaceAreaViewModel = workspaceAreaViewModel;
             this.connection = connection;
             this.dialogService = dialogService;
+            this.appSettings = appSettings;
             this.objectInfoViewModel = objectInfoViewModel;
 
             LoginCommand = base.AddNewCommand(new ActionCommand(Login));
@@ -77,6 +82,17 @@ namespace Finances.WinClient.ViewModels
                 return String.Format("{0}.{1}", b.DataSource, b.InitialCatalog);
             }
         }
+
+        public bool IsDebugMode
+        {
+            get
+            {
+                bool debug = false;
+                bool.TryParse(appSettings.GetSetting("debug"), out debug);
+                return debug;
+            }
+        }
+
 
 
         #endregion

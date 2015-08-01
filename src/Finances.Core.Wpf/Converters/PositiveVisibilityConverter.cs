@@ -13,6 +13,8 @@ namespace Finances.Core.Wpf.Converters
     {
         public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
         {
+            if (value == null)
+                return Visibility.Visible;
             return (bool)value ? Visibility.Visible : Visibility.Collapsed;
         }
 

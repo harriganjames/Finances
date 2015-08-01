@@ -11,6 +11,8 @@ namespace Finances.Core.Interfaces
     public interface IAggregatedProjectionItemsGenerator
     {
         List<CashflowProjectionItem> GenerateAggregatedProjectionItems(List<CashflowProjectionTransfer> cashflowProjectionTransfers);
-        ProjectionModeEnum ProjectionMode { get; }
+        //ProjectionModeEnum ProjectionMode { get; }
+        //string ProjectionModeCode { get; }
+        string ProjectionModeName { get; }
     }
 }

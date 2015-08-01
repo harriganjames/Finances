@@ -115,6 +115,14 @@ namespace Finances.WinClient.ViewModels
             }
         }
 
+        public int FrequencyDays
+        {
+            get
+            {
+                return entity.FrequencyDays;
+            }
+        }
+
         public bool IsEnabled
         {
             get

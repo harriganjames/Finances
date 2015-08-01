@@ -6,6 +6,7 @@ using Castle.Facilities.TypedFactory;
 using Finances.WinClient.ViewModels;
 using Finances.Core.Wpf;
 using Finances.WinClient.Factories;
+using Finances.Core.Interfaces;
 
 namespace Finances.WinClient.CastleInstallers
 {
@@ -15,7 +16,11 @@ namespace Finances.WinClient.CastleInstallers
         {
             container.Kernel.AddFacility<TypedFactoryFacility>();
 
-            
+            IAppSettings appSettings = container.Resolve<IAppSettings>();
+
+            bool debug;
+            bool.TryParse(appSettings.GetSetting("debug"),out debug);
+
             // Banks
             container.Register(Component.For<IWorkspace>()
                 .Forward<IBankListViewModel>()
@@ -29,11 +34,12 @@ namespace Finances.WinClient.CastleInstallers
             container.Register(Component.For<IBankEditorViewModelFactory>()
                 .AsFactory()
                 );
-            
 
-            // Bank Tree
-            container.Register(Component.For<IWorkspace>().ImplementedBy<BankTreeViewModel>());
-            
+            if (debug)
+            {
+                // Bank Tree
+                container.Register(Component.For<IWorkspace>().ImplementedBy<BankTreeViewModel>());
+            }
 
             // Banks Accounts
             container.Register(Component.For<IWorkspace>()
@@ -82,11 +88,13 @@ namespace Finances.WinClient.CastleInstallers
 
 
 
-            // Dashboard
-            container.Register(Component.For<IWorkspace>()
-                .ImplementedBy<DashboardViewModel>()
-                );
-
+            if (debug)
+            {
+                // Dashboard
+                container.Register(Component.For<IWorkspace>()
+                    .ImplementedBy<DashboardViewModel>()
+                    );
+            }
 
             // Main
             container.Register(Component.For<IMainViewModel>()

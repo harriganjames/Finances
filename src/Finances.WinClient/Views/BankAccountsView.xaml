@@ -25,6 +25,11 @@
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
                 <ToolBar>
+                    <ToolBar.Resources>
+                        <Style TargetType="Button"
+                               BasedOn="{StaticResource Button.HorizontalStack}">
+                        </Style>
+                    </ToolBar.Resources>
                     <ToolBarPanel Orientation="Horizontal">
                         <Button Content="Add" Command="{Binding AddCommand}"/>
                         <Button Content="Edit" Command="{Binding EditCommand}"/>
@@ -106,11 +111,17 @@
                                     </DataTemplate>
                                 </GridViewColumn.CellTemplate>
                             </GridViewColumn>
-                            <GridViewColumn DisplayMemberBinding="{Binding AccountName}" Header="Name" Width="200"/>
+                            <GridViewColumn DisplayMemberBinding="{Binding AccountName}" Header="Name" Width="Auto"/>
                             <GridViewColumn DisplayMemberBinding="{Binding SortCode}" Header="Sort Code" Width="Auto"/>
                             <GridViewColumn DisplayMemberBinding="{Binding AccountNumber}" Header="Account" Width="Auto"/>
                             <GridViewColumn DisplayMemberBinding="{Binding AccountOwner}" Header="Owner" Width="Auto"/>
-                            <GridViewColumn DisplayMemberBinding="{Binding PaysTaxableInterest}" Header="Tax" Width="Auto"/>
+                            <GridViewColumn Header="Tax" Width="Auto">
+                                <GridViewColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <ContentPresenter Content="{Binding PaysTaxableInterest}"/>
+                                    </DataTemplate>
+                                </GridViewColumn.CellTemplate>
+                            </GridViewColumn>
                             <GridViewColumn DisplayMemberBinding="{Binding LoginUrl}" Header="Login Url" Width="Auto"/>
                             <GridViewColumn DisplayMemberBinding="{Binding LoginId}" Header="Login Id" Width="Auto"/>
                             <GridViewColumn DisplayMemberBinding="{Binding PasswordHint}" Header="Hint" Width="Auto"/>

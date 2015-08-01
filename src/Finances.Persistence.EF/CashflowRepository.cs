@@ -13,7 +13,7 @@ using System.Data;
 
 namespace Finances.Persistence.EF
 {
-    public class CashflowRepository : ICashflowRepository, IRepository
+    public class CashflowRepository : ICashflowRepository, IRepositoryRead<Core.Entities.Cashflow>, IRepository
     {
         private readonly IModelContextFactory factory;
         private readonly IMappingEngine mapper;
@@ -177,8 +177,8 @@ namespace Finances.Persistence.EF
         public Core.Entities.Cashflow Read(int id)
         {
             Core.Entities.Cashflow entity = null;
-            try
-            {
+            //try
+            //{
                 using (FinanceEntities context = factory.CreateContext())
                 {
                     var ef = (from b in context.Cashflows
@@ -190,19 +190,19 @@ namespace Finances.Persistence.EF
 
                     entity = mapper.Map<Core.Entities.Cashflow>(ef);
                 }
-            }
-            catch (DbEntityValidationException e)
-            {
-                CommonRepository.HandleDbEntityValidationException(e);
-            }
+            //}
+            //catch (DbEntityValidationException e)
+            //{
+            //    CommonRepository.HandleDbEntityValidationException(e);
+            //}
             return entity;
         }
 
         public List<Core.Entities.Cashflow> ReadList()
         {
             List<Core.Entities.Cashflow> list = null;
-            try
-            {
+            //try
+            //{
                 using (FinanceEntities context = factory.CreateContext())
                 {
                     var ef = (from b in context.Cashflows
@@ -213,11 +213,11 @@ namespace Finances.Persistence.EF
 
                     list = mapper.Map<List<Core.Entities.Cashflow>>(ef);
                 }
-            }
-            catch (DbEntityValidationException e)
-            {
-                CommonRepository.HandleDbEntityValidationException(e);
-            }
+            //}
+            //catch (DbEntityValidationException e)
+            //{
+            //    CommonRepository.HandleDbEntityValidationException(e);
+            //}
             return list;
         }
 
@@ -225,18 +225,18 @@ namespace Finances.Persistence.EF
         public List<Core.Entities.DataIdName> ReadListDataIdName()
         {
             List<Core.Entities.DataIdName> list = null;
-            try
-            {
+            //try
+            //{
                 using (FinanceEntities context = factory.CreateContext())
                 {
                     list = (from b in context.Cashflows
                             select b).Project(mapper).To<Core.Entities.DataIdName>().ToList();
                 }
-            }
-            catch (DbEntityValidationException e)
-            {
-                CommonRepository.HandleDbEntityValidationException(e);
-            }
+            //}
+            //catch (DbEntityValidationException e)
+            //{
+            //    CommonRepository.HandleDbEntityValidationException(e);
+            //}
             return list;
         }
 

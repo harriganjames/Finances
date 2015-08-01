@@ -56,6 +56,7 @@ namespace Finances.WinClient
             container.Kernel.Resolver.AddSubResolver(new CollectionResolver(container.Kernel));
 
             container.Install(
+                            new SystemInstaller(),
                             new ConnectionInstaller(),
                             new EFModelContextFactoryInstaller(),
                             new DialogServiceInstaller(w),
