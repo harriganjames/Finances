@@ -53,3 +53,9 @@ ALTER COLUMN AccountOwner   VARCHAR(20) NULL
 select	*
 from	dbo.Transfer
 
+
+exec sp_rename 'dbo.Transfer.FrequencyDays','FrequencyEvery', 'column'
+
+
+
+

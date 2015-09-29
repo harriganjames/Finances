@@ -6,7 +6,7 @@ using AutoMapper;
 
 namespace Finances.WinClient.CastleInstallers
 {
-    class MappingsCreatorInstaller : IWindsorInstaller
+    public class MappingsCreatorInstaller : IWindsorInstaller
     {
         public void Install(IWindsorContainer container, IConfigurationStore store)
         {

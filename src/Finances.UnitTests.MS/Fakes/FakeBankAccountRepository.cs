@@ -30,17 +30,17 @@ namespace Finances.UnitTests.MS.Fakes
 
         }
 
-        public int Add(Core.Entities.BankAccount account)
+        public int Add(BankAccount account)
         {
             throw new NotImplementedException();
         }
 
-        public bool Update(Core.Entities.BankAccount account)
+        public bool Update(BankAccount account)
         {
             throw new NotImplementedException();
         }
 
-        public bool Delete(Core.Entities.BankAccount account)
+        public bool Delete(BankAccount account)
         {
             throw new NotImplementedException();
         }
@@ -50,22 +50,22 @@ namespace Finances.UnitTests.MS.Fakes
             throw new NotImplementedException();
         }
 
-        public Core.Entities.BankAccount Read(int accountId)
+        public BankAccount Read(int accountId)
         {
             throw new NotImplementedException();
         }
 
-        public List<Core.Entities.BankAccount> ReadList()
+        public List<BankAccount> ReadList()
         {
             return accounts;
         }
 
-        public List<Core.Entities.BankAccount> ReadListByBankId(int bankId)
+        public List<BankAccount> ReadListByBankId(int bankId)
         {
             throw new NotImplementedException();
         }
 
-        public List<Core.Entities.DataIdName> ReadListDataIdName()
+        public List<DataIdName> ReadListDataIdName()
         {
             throw new NotImplementedException();
         }

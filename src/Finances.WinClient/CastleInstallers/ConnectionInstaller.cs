@@ -5,7 +5,7 @@ using Finances.Core;
 
 namespace Finances.WinClient.CastleInstallers
 {
-    class ConnectionInstaller : IWindsorInstaller
+    public class ConnectionInstaller : IWindsorInstaller
     {
         public void Install(IWindsorContainer container, IConfigurationStore store)
         {

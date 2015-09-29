@@ -21,13 +21,13 @@ namespace Finances.Persistence.EF
         public int TransferCategoryId { get; set; }
         public decimal Amount { get; set; }
         public decimal AmountTolerence { get; set; }
-        public System.DateTime StartDate { get; set; }
-        public Nullable<System.DateTime> EndDate { get; set; }
-        public string Frequency { get; set; }
         public bool IsEnabled { get; set; }
         public System.DateTime RecordCreatedDateTime { get; set; }
         public System.DateTime RecordUpdatedDateTime { get; set; }
-        public int FrequencyDays { get; set; }
+        public System.DateTime ScheduleStartDate { get; set; }
+        public Nullable<System.DateTime> ScheduleEndDate { get; set; }
+        public string ScheduleFrequency { get; set; }
+        public int ScheduleFrequencyEvery { get; set; }
     
         public virtual BankAccount FromBankAccount { get; set; }
         public virtual BankAccount ToBankAccount { get; set; }

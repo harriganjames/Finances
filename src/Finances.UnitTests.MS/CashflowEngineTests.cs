@@ -7,6 +7,7 @@ using Finances.Core.Interfaces;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using Finances.Core.Engines.Cashflow;
+using Finances.Core.Factories;
 
 namespace Finances.UnitTests.MS
 {
@@ -21,6 +22,9 @@ namespace Finances.UnitTests.MS
         List<BankAccount> bankAccountList = new List<BankAccount>();
         List<Transfer> transferList = new List<Transfer>();
 
+        IEnumerable<IScheduleFrequencyCalculator> scheduleFrequencyCalculators;
+
+        IScheduleFactory scheduleFactory;
 
         [TestInitialize]
         public void Initialize()
@@ -32,7 +36,12 @@ namespace Finances.UnitTests.MS
 
             bankAccountRepository.Setup(s => s.ReadList()).Returns(bankAccountList);
             transferRepository.Setup(s => s.ReadList()).Returns(transferList);
-        
+
+            scheduleFrequencyCalculators = new IScheduleFrequencyCalculator[] { 
+                                new ScheduleFrequencyCalculatorMonthly(),
+                                new ScheduleFrequencyCalculatorWeekly() };
+
+            scheduleFactory = new Fakes.FakeScheduleFactory();
         }
 
 
@@ -55,40 +64,49 @@ namespace Finances.UnitTests.MS
 
             transferList.AddRange(new []
             {
-                new Transfer()
+                new Transfer(scheduleFactory)
                 {
                     Name = "1 -> 2 - internal",
                     Amount = 10,
                     IsEnabled = true,
-                    StartDate = DateTime.Parse("2015-04-01"),
-                    Frequency = "Monthly",
+                    Schedule = new Schedule(scheduleFrequencyCalculators)
+                    {
+                        StartDate = DateTime.Parse("2015-04-01"),
+                        Frequency = "Monthly"
+                    },
                     FromBankAccount = bankAccountList.Single(a=>a.BankAccountId==1),
                     ToBankAccount = bankAccountList.Single(a=>a.BankAccountId==2)
                 },
-                new Transfer()
+                new Transfer(scheduleFactory)
                 {
                     Name = "Elswhere -> 2 - inbound",
                     Amount = 20,
                     IsEnabled = true,
-                    StartDate = DateTime.Parse("2015-04-01"),
-                    Frequency = "Monthly",
+                    Schedule = new Schedule(scheduleFrequencyCalculators)
+                    {
+                        StartDate = DateTime.Parse("2015-04-01"),
+                        Frequency = "Monthly"
+                    },
                     FromBankAccount = null,
                     ToBankAccount = bankAccountList.Single(a=>a.BankAccountId==2)
                 },
-                new Transfer()
+                new Transfer(scheduleFactory)
                 {
                     Name = "1 -> Elsewhere - outbound",
                     Amount = 30,
                     IsEnabled = true,
-                    StartDate = DateTime.Parse("2015-04-01"),
-                    Frequency = "Monthly",
+                    Schedule = new Schedule(scheduleFrequencyCalculators)
+                    {
+                        StartDate = DateTime.Parse("2015-04-01"),
+                        Frequency = "Monthly"
+                    },
                     FromBankAccount = bankAccountList.Single(a=>a.BankAccountId==1),
                     ToBankAccount = null
                 },
 
             });
 
-            Cashflow cf = new Cashflow()
+            Cashflow cf = new Cashflow(null)
             {
                 CashflowId = 1,
                 OpeningBalance = 100,

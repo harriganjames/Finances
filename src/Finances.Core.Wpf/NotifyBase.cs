@@ -21,17 +21,48 @@ namespace Finances.Core.Wpf
             }
         }
 
-        public virtual void NotifyPropertyChanged(Expression<Func<object>> propertyExpression)
+        //public virtual void NotifyPropertyChanged(Expression<Func<object>> propertyExpression)
+        //{
+        //    if (propertyExpression != null)
+        //    {
+        //        if (propertyExpression.Body is MemberExpression)
+        //        {
+        //            this.NotifyPropertyChanged(((MemberExpression)propertyExpression.Body).);
+        //            return;
+        //        }
+
+        //        if (propertyExpression.Body is UnaryExpression)
+        //        {
+        //            this.NotifyPropertyChanged(((UnaryExpression)propertyExpression.Body).Method.Name);
+        //            return;
+        //        }
+
+        //    }
+        //    throw new Exception("Invalid property expression passed into NotifyPropertyChanged");
+        //}
+
+
+        public virtual void NotifyPropertyChanged(Expression<Func<object>> property)
         {
-            if (propertyExpression != null)
+            var lambda = (LambdaExpression)property;
+            MemberExpression memberExpression = null;
+            if (lambda.Body is UnaryExpression)
             {
-                if (propertyExpression.Body is MemberExpression)
-                {
-                    this.NotifyPropertyChanged(((MemberExpression)propertyExpression.Body).Member.Name);
-                    return;
-                }
+                var unaryExpression = (UnaryExpression)lambda.Body;
+                memberExpression = (MemberExpression)unaryExpression.Operand;
+            } 
+            else if (lambda.Body is MemberExpression)
+            {
+                memberExpression = (MemberExpression)lambda.Body;
             }
-            throw new Exception("Invalid property expression passed into NotifyPropertyChanged");
+            if (memberExpression != null)
+            {
+                this.NotifyPropertyChanged(memberExpression.Member.Name);
+            }
+            else
+            {
+                throw new Exception("Invalid property expression passed into NotifyPropertyChanged");
+            }
         }
 
         public virtual void NotifyAllPropertiesChanged()

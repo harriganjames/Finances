@@ -5,7 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              mc:Ignorable="d" 
              MinWidth="350"
-             d:DesignHeight="300" d:DesignWidth="300">
+             d:DesignHeight="350" d:DesignWidth="300">
     
     <UserControl.Resources>
         <DataTemplate x:Key="BankAccountTemplate">
@@ -163,6 +163,38 @@
                             Text="{Binding Amount.Input, UpdateSourceTrigger=LostFocus}"/>
             </Grid>
 
+
+
+            <!--Repeating/One-off-->
+            <Grid Margin="{StaticResource Spacer}">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" SharedSizeGroup="label"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <Label      Content="Occurrance"/>
+                
+                <StackPanel Grid.Column="1"
+                            Orientation="Horizontal">
+                    <StackPanel.Resources>
+                        <Style TargetType="{x:Type RadioButton}">
+                            <Setter Property="VerticalAlignment" Value="Center"/>
+                            <Setter Property="Margin" Value="0,0,20,0"/>
+                        </Style>
+                    </StackPanel.Resources>
+
+                    <RadioButton Content="Repeating"
+                                 IsChecked="{Binding IsOccuranceRepeating}"
+                                 Command="{Binding OccuranceRepeatingCommand}"/>
+
+                    <RadioButton Content="One-off"
+                                 IsChecked="{Binding IsOccuranceRepeating, Converter={StaticResource ToggleBooleanConverter}}"
+                                 Command="{Binding OccuranceSingleCommand}"/>
+
+                </StackPanel>
+                
+            </Grid>
+
             <!--Start Date-->
             <Grid Margin="{StaticResource Spacer}">
                 <Grid.ColumnDefinitions>
@@ -176,49 +208,94 @@
                                 />
             </Grid>
 
-            <!--End Date (optional)-->
-            <Grid Margin="{StaticResource Spacer}">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto" SharedSizeGroup="label"/>
-                    <ColumnDefinition Width="*"/>
-                </Grid.ColumnDefinitions>
+            <!--Repeating section-->
+            <StackPanel Orientation="Vertical"
+                        Visibility="{Binding IsOccuranceRepeating, Converter={StaticResource PositiveVisibilityConverter}}"
+                        >
 
-                <Label      Content="End Date"/>
-                <DatePicker SelectedDate="{Binding EndDate, UpdateSourceTrigger=PropertyChanged}"
-                                Grid.Column="1"
-                                />
-            </Grid>
+                <!--Frequency-->
+                <Grid Margin="{StaticResource Spacer}"
+                    Visibility="{Binding IsOccuranceRepeating, Converter={StaticResource PositiveVisibilityConverter}}">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" SharedSizeGroup="label"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
 
-            <!--Frequency-->
-            <Grid Margin="{StaticResource Spacer}">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto" SharedSizeGroup="label"/>
-                    <ColumnDefinition Width="*"/>
-                </Grid.ColumnDefinitions>
+                    <Label      Content="Frequency"/>
+                    <StackPanel Grid.Column="1" 
+                            Orientation="Horizontal">
 
-                <Label      Content="Frequency"/>
-                <ComboBox   Width="Auto"
-                            HorizontalAlignment="Stretch"
+                        <ComboBox   Width="100"
+                            HorizontalAlignment="Left"
                             Grid.Column="1"
                             ItemsSource="{Binding Frequencies}"
                             SelectedItem="{Binding Frequency}">
-                </ComboBox>
-            </Grid>
+                            <ComboBox.ItemTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding Frequency}"/>
+                                </DataTemplate>
+                            </ComboBox.ItemTemplate>
+                        </ComboBox>
+                        <Label      Content="Every"
+                                Padding="15,0,15,0"/>
+                        <TextBox    Width="30"
+                                VerticalContentAlignment="Center"
+                                HorizontalContentAlignment="Center"
+                                Text="{Binding FrequencyEvery.Input, UpdateSourceTrigger=LostFocus}"/>
+                        <Label      Content="{Binding FrequencyEveryLabel,FallbackValue=default}"
+                                Padding="17,0,0,0"/>
+                    </StackPanel>
 
-            <!--Frequency Days-->
-            <Grid Margin="{StaticResource Spacer}">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto" SharedSizeGroup="label"/>
-                    <ColumnDefinition Width="*"/>
-                </Grid.ColumnDefinitions>
+                </Grid>
 
-                <Label      Content="Frequency Days"/>
-                <TextBox    Grid.Column="1"
-                            Width="30"
-                            
-                            HorizontalContentAlignment="Right"
-                            Text="{Binding FrequencyDays.Input, UpdateSourceTrigger=LostFocus}"/>
-            </Grid>
+                <!--Until-->
+                <Grid Margin="{StaticResource Spacer}">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" SharedSizeGroup="label"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <Label      Content="Until"/>
+
+                    <StackPanel Grid.Column="1"
+                            Orientation="Horizontal">
+                        <StackPanel.Resources>
+                            <Style TargetType="{x:Type RadioButton}">
+                                <Setter Property="VerticalAlignment" Value="Center"/>
+                                <Setter Property="Margin" Value="0,0,20,0"/>
+                            </Style>
+                        </StackPanel.Resources>
+
+                        <RadioButton Content="End Date"
+                                 IsChecked="{Binding IsEndDate}"
+                                 />
+
+                        <RadioButton Content="Forever"
+                                 IsChecked="{Binding IsEndDate, Converter={StaticResource ToggleBooleanConverter}}"
+                                 />
+
+                    </StackPanel>
+
+                </Grid>
+
+
+                <!--End Date (optional)-->
+                <Grid Margin="{StaticResource Spacer}"
+                    Visibility="{Binding IsEndDate, Converter={StaticResource PositiveVisibilityConverter}}">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" SharedSizeGroup="label"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <Label      Content="End Date"/>
+                    <DatePicker SelectedDate="{Binding EndDate, UpdateSourceTrigger=PropertyChanged}"
+                                Grid.Column="1"
+                                />
+                </Grid>
+
+            </StackPanel>
+            
+
 
             <!--IsEnabled-->
             <Grid Margin="{StaticResource Spacer}">

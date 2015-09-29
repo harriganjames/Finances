@@ -71,6 +71,10 @@
       <DependentUpon>Model.tt</DependentUpon>
     </Compile>
     <Compile Include="Interfaces\IEntityValidationHandler.cs" />
+    <Compile Include="Mappings\BankAccountMappings.cs" />
+    <Compile Include="Mappings\BankMappings.cs" />
+    <Compile Include="Mappings\CashflowMappings.cs" />
+    <Compile Include="Mappings\TransferMappings.cs" />
     <Compile Include="Model.Context.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -94,7 +98,6 @@
       <DependentUpon>Model.tt</DependentUpon>
     </Compile>
     <Compile Include="TransferRepository.cs" />
-    <Compile Include="MappingCreator.cs" />
     <Compile Include="ModelContextFactory.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

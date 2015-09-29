@@ -8,7 +8,7 @@ using System.Windows.Data;
 
 namespace Finances.Core.Wpf.Converters
 {
-    public class ToogleBooleanConverter : IValueConverter
+    public class ToggleBooleanConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
         {

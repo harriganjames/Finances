@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Finances.Core.Entities;
+using Finances.Core.Factories;
 using Finances.Core.Interfaces;
 using Finances.Core.Wpf;
 using Finances.WinClient.Factories;
@@ -36,16 +37,19 @@ namespace Finances.WinClient.DomainServices
         readonly ITransferRepository transferRepository;
         readonly IDialogService dialogService;
         readonly ITransferEditorViewModelFactory transferEditorViewModelFactory;
+        readonly ITransferFactory transferFactory;
 
         public TransferAgent(
                         ITransferRepository transferRepository,
                         IDialogService dialogService,
-                        ITransferEditorViewModelFactory bankEditorViewModelFactory
+                        ITransferEditorViewModelFactory bankEditorViewModelFactory,
+                        ITransferFactory transferFactory
                         )
         {
             this.transferRepository = transferRepository;
             this.dialogService = dialogService;
             this.transferEditorViewModelFactory = bankEditorViewModelFactory;
+            this.transferFactory = transferFactory;
         }
 
 
@@ -54,7 +58,7 @@ namespace Finances.WinClient.DomainServices
         {
             int id = 0;
 
-            var entity = new Transfer();
+            var entity = this.transferFactory.Create();
 
             var editor = this.transferEditorViewModelFactory.Create(entity);
 

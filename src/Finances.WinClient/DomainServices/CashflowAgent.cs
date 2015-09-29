@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Finances.Core.Entities;
+using Finances.Core.Factories;
 using Finances.Core.Interfaces;
 using Finances.Core.Wpf;
 using Finances.WinClient.Factories;
@@ -33,16 +34,19 @@ namespace Finances.WinClient.DomainServices
 
     public class CashflowAgent : ICashflowAgent
     {
+        readonly ICashflowFactory cashflowFactory;
         readonly ICashflowRepository cashflowRepository;
         readonly IDialogService dialogService;
         readonly ICashflowEditorViewModelFactory cashflowEditorViewModelFactory;
 
         public CashflowAgent(
+                        ICashflowFactory cashflowFactory,
                         ICashflowRepository cashflowRepository,
                         IDialogService dialogService,
                         ICashflowEditorViewModelFactory bankEditorViewModelFactory
                         )
         {
+            this.cashflowFactory = cashflowFactory;
             this.cashflowRepository = cashflowRepository;
             this.dialogService = dialogService;
             this.cashflowEditorViewModelFactory = bankEditorViewModelFactory;
@@ -54,7 +58,7 @@ namespace Finances.WinClient.DomainServices
         {
             int id = 0;
 
-            var entity = new Cashflow();
+            var entity = this.cashflowFactory.Create();
 
             var editor = this.cashflowEditorViewModelFactory.Create(entity);
 

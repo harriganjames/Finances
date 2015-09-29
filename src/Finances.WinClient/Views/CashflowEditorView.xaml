@@ -143,7 +143,7 @@
         <!--Outside of StackPanel to allow vertical resizing-->
         <!--Bank Accounts-->
         <Grid Grid.Row="1"
-              IsEnabled="{Binding ElementName=AllAccounts, Path=IsChecked, Converter={StaticResource ToogleBooleanConverter}}"
+              IsEnabled="{Binding ElementName=AllAccounts, Path=IsChecked, Converter={StaticResource ToggleBooleanConverter}}"
               >
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" SharedSizeGroup="label"/>

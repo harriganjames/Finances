@@ -6,7 +6,7 @@ using Finances.Core.Interfaces;
 
 namespace Finances.WinClient.CastleInstallers 
 {
-    class SystemInstaller : IWindsorInstaller
+    public class SystemInstaller : IWindsorInstaller
     {
         public void Install(IWindsorContainer container, IConfigurationStore store)
         {

@@ -4,10 +4,11 @@ using Castle.MicroKernel.Registration;
 using Finances.Core.Interfaces;
 using Finances.WinClient.InterceptorSelectors;
 using Finances.Persistence.EF;
+using Finances.Persistence.EF.Mappings;
 
 namespace Finances.WinClient.CastleInstallers
 {
-    class RepositoriesInstaller : IWindsorInstaller
+    public class RepositoriesInstaller : IWindsorInstaller
     {
         public void Install(IWindsorContainer container, IConfigurationStore store)
         {
@@ -21,10 +22,12 @@ namespace Finances.WinClient.CastleInstallers
 
 
             // Mappings
-            container.Register(Component.For<IMappingCreator>().ImplementedBy<MappingCreator>());
+            //container.Register(Component.For<IMappingCreator>().ImplementedBy<MappingCreator>());
 
-
-            container.Kernel.ProxyFactory.AddInterceptorSelector(new RepositoryInterceptorSelector());
+            container.Register(Component.For<IMappingCreator>().ImplementedBy<BankMappings>());
+            container.Register(Component.For<IMappingCreator>().ImplementedBy<BankAccountMappings>());
+            container.Register(Component.For<IMappingCreator>().ImplementedBy<TransferMappings>());
+            container.Register(Component.For<IMappingCreator>().ImplementedBy<CashflowMappings>());
 
         }
     }

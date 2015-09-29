@@ -10,11 +10,10 @@ using Finances.Core.Interfaces;
 
 namespace Finances.WinClient.CastleInstallers
 {
-    class ViewModelInstallers : IWindsorInstaller
+    public class ViewModelInstallers : IWindsorInstaller
     {
         public void Install(IWindsorContainer container, IConfigurationStore store)
         {
-            container.Kernel.AddFacility<TypedFactoryFacility>();
 
             IAppSettings appSettings = container.Resolve<IAppSettings>();
 

@@ -9,6 +9,8 @@ using Finances.Core.Engines.Cashflow;
 using Finances.Core.Interfaces;
 using Finances.Core.Entities;
 using System.Collections.Generic;
+using Finances.Core.Factories;
+using Finances.Core.Engines;
 
 namespace Finances.UnitTests.MS.Finances.Core.Engines.Cashflow
 {
@@ -19,9 +21,13 @@ namespace Finances.UnitTests.MS.Finances.Core.Engines.Cashflow
 
         IBankAccountRepository fakeBankAccountRepository;
 
-        Mock<ITransferFrequencyDateCalculatorFactory> mockTransferFrequencyDateCalculatorFactory;
+        Mock<IScheduleFrequencyCalculatorFactory> mockTransferFrequencyDateCalculatorFactory;
         Mock<ITransferDirectionGenerator> mockTransferDirectionGenerator;
-        Mock<ITransferFrequencyDateCalculator> mockTransferFrequencyDateCalculatorMonthly;
+        Mock<IScheduleFrequencyCalculator> mockTransferFrequencyDateCalculatorMonthly;
+
+        IEnumerable<IScheduleFrequencyCalculator> scheduleFrequencyCalculators;
+
+        IScheduleFactory scheduleFactory;
 
         DateTime cashflowStartDate;
         DateTime cashflowEndDate;
@@ -32,12 +38,12 @@ namespace Finances.UnitTests.MS.Finances.Core.Engines.Cashflow
         {
             fakeBankAccountRepository = new FakeBankAccountRepository();
 
-            mockTransferFrequencyDateCalculatorFactory = new Mock<ITransferFrequencyDateCalculatorFactory>();
+            mockTransferFrequencyDateCalculatorFactory = new Mock<IScheduleFrequencyCalculatorFactory>();
             mockTransferDirectionGenerator = new Mock<ITransferDirectionGenerator>();
 
-            mockTransferFrequencyDateCalculatorMonthly = new Mock<ITransferFrequencyDateCalculator>();
+            mockTransferFrequencyDateCalculatorMonthly = new Mock<IScheduleFrequencyCalculator>();
 
-            mockTransferFrequencyDateCalculatorMonthly.Setup(s => s.CalculateNextDate(It.IsAny<Transfer>(), It.IsAny<DateTime>()))
+            mockTransferFrequencyDateCalculatorMonthly.Setup(s => s.CalculateNextDate(It.IsAny<Schedule>(), It.IsAny<DateTime>()))
                 .Returns((Transfer t, DateTime d) => d.AddMonths(1));
 
 
@@ -45,9 +51,15 @@ namespace Finances.UnitTests.MS.Finances.Core.Engines.Cashflow
 
             sut = new ProjectionTransferGenerator(
                                     fakeBankAccountRepository,
-                                    mockTransferFrequencyDateCalculatorFactory.Object,
+                                    //mockTransferFrequencyDateCalculatorFactory.Object,
                                     mockTransferDirectionGenerator.Object
                                     );
+
+            scheduleFrequencyCalculators = new IScheduleFrequencyCalculator[] { 
+                                new ScheduleFrequencyCalculatorMonthly(),
+                                new ScheduleFrequencyCalculatorWeekly() };
+
+            scheduleFactory = new Fakes.FakeScheduleFactory();
 
         }
         // scenarioes:
@@ -61,7 +73,7 @@ namespace Finances.UnitTests.MS.Finances.Core.Engines.Cashflow
         {
             List<CashflowProjectionTransfer> results;
 
-            mockTransferFrequencyDateCalculatorFactory.Setup(s => s.Create(It.IsAny<Transfer>()))
+            mockTransferFrequencyDateCalculatorFactory.Setup(s => s.GetCalculator(It.IsAny<Schedule>()))
                 .Returns(mockTransferFrequencyDateCalculatorMonthly.Object);
 
             var testdata = new[] 
@@ -108,10 +120,13 @@ namespace Finances.UnitTests.MS.Finances.Core.Engines.Cashflow
                     {
                         IsInbound = data.QtyInbound>0,
                         IsOutbound = data.QtyOutbound>0,
-                        Transfer = new Transfer()
+                        Transfer = new Transfer(scheduleFactory)
                         {
-                            StartDate = data.TransferDate,
-                            EndDate = data.TransferDate,
+                            Schedule = new Schedule(scheduleFrequencyCalculators)
+                            {
+                                StartDate = data.TransferDate,
+                                EndDate = data.TransferDate
+                            },
                             FromBankAccount = data.FromAccount,
                             ToBankAccount = data.ToAccount,
                             IsEnabled = true,

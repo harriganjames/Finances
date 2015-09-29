@@ -95,7 +95,7 @@ namespace Finances.WinClient.ViewModels
         {
             get
             {
-                return entity.StartDate;
+                return entity.Schedule.StartDate;
             }
         }
 
@@ -103,7 +103,7 @@ namespace Finances.WinClient.ViewModels
         {
             get
             {
-                return entity.EndDate;
+                return entity.Schedule.EndDate;
             }
         }
 
@@ -111,17 +111,26 @@ namespace Finances.WinClient.ViewModels
         {
             get
             {
-                return entity.Frequency;
+                return entity.Schedule.Frequency;
             }
         }
 
-        public int FrequencyDays
+        public int FrequencyEvery
         {
             get
             {
-                return entity.FrequencyDays;
+                return entity.Schedule.FrequencyEvery;
             }
         }
+
+        public string ScheduleDescription
+        {
+            get
+            {
+                return entity.Schedule.GetDescription();
+            }
+        }
+
 
         public bool IsEnabled
         {

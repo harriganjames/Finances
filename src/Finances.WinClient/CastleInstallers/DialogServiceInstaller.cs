@@ -6,7 +6,7 @@ using Finances.Core.Wpf;
 
 namespace Finances.WinClient.CastleInstallers
 {
-    class DialogServiceInstaller : IWindsorInstaller
+    public class DialogServiceInstaller : IWindsorInstaller
     {
         readonly Window wpfWindow;
 

@@ -13,17 +13,17 @@ namespace Finances.Core.Engines.Cashflow
     public class ProjectionTransferGenerator : IProjectionTransferGenerator
     {
         readonly IBankAccountRepository bankAccountRepository;
-        readonly ITransferFrequencyDateCalculatorFactory transferFrequencyDateCalculatorFactory;
+        //readonly IScheduleFrequencyCalculatorFactory transferFrequencyDateCalculatorFactory;
         readonly ITransferDirectionGenerator transferDirectionGenerator;
 
         public ProjectionTransferGenerator(
                         IBankAccountRepository bankAccountRepository,
-                        ITransferFrequencyDateCalculatorFactory transferFrequencyDateCalculatorFactory,
+                        //IScheduleFrequencyCalculatorFactory transferFrequencyDateCalculatorFactory,
                         ITransferDirectionGenerator transferDirectionGenerator
                         )
         {
             this.bankAccountRepository = bankAccountRepository;
-            this.transferFrequencyDateCalculatorFactory = transferFrequencyDateCalculatorFactory;
+            //this.transferFrequencyDateCalculatorFactory = transferFrequencyDateCalculatorFactory;
             this.transferDirectionGenerator = transferDirectionGenerator;
         }
 
@@ -52,20 +52,21 @@ namespace Finances.Core.Engines.Cashflow
             // loop each transfer
             foreach (var td in transferDirections)
             {
-                ITransferFrequencyDateCalculator transferFrequencyDateCalculator;
+                //IScheduleFrequencyCalculator transferFrequencyDateCalculator;
 
                 Transfer t = td.Transfer;
 
-                transferFrequencyDateCalculator = this.transferFrequencyDateCalculatorFactory.Create(t);
+                //transferFrequencyDateCalculator = this.transferFrequencyDateCalculatorFactory.GetCalculator(t.Schedule);
 
                 // loop compatible date range
-                DateTime d = t.StartDate;// < startDate ? t.StartDate : startDate;
-                while (d <= endDate && (t.EndDate == null || d <= t.EndDate))
+                DateTime d = t.Schedule.StartDate;// < startDate ? t.StartDate : startDate;
+                while (d <= endDate && (t.Schedule.EndDate == null || d <= t.Schedule.EndDate))
                 {
                     if(d>= startDate && d<=endDate)
                         cpts.Add(new CashflowProjectionTransfer() { Date = d, TransferDirection = td });
 
-                    d = transferFrequencyDateCalculator.CalculateNextDate(t, d);
+                    //d = transferFrequencyDateCalculator.CalculateNextDate(t.Schedule, d);
+                    d = t.Schedule.CalculateNextDate(d);
                 }
             }
 

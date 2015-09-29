@@ -33,17 +33,20 @@ namespace Finances.WinClient.ViewModels
         readonly ITransferRepository transferRepository;
         readonly IBankAccountRepository bankAccountRepository;
         readonly IBankAccountAgent bankAccountAgent;
+        readonly IEnumerable<IScheduleFrequencyCalculator> frequencyCalculators;
 
         public TransferEditorViewModel(
                 ITransferRepository transferRepository,
                 IBankAccountRepository bankAccountRepository,
                 IBankAccountAgent bankAccountAgent,
+                IEnumerable<IScheduleFrequencyCalculator> frequencyCalculators,
                 Transfer entity
             )
         {
             this.transferRepository = transferRepository;
             this.bankAccountRepository = bankAccountRepository;
             this.bankAccountAgent = bankAccountAgent;
+            this.frequencyCalculators = frequencyCalculators;
             this.entity = entity;
 
             this.Amount.PropertyChanged += (s,e) =>
@@ -52,11 +55,12 @@ namespace Finances.WinClient.ViewModels
                 };
             base.ValidationHelper.AddInstance(this.Amount);
 
-            this.FrequencyDays.PropertyChanged += (s, e) =>
+            this.FrequencyEvery.PropertyChanged += (s, e) =>
             {
                 base.Validate();
+                NotifyPropertyChanged(() => this.FrequencyEveryLabel);
             };
-            base.ValidationHelper.AddInstance(this.FrequencyDays);
+            base.ValidationHelper.AddInstance(this.FrequencyEvery);
 
             NewFromBankAccountCommand = base.AddNewCommand(new ActionCommand(this.NewFromBankAccount));
             NewToBankAccountCommand = base.AddNewCommand(new ActionCommand(this.NewToBankAccount));
@@ -89,6 +93,8 @@ namespace Finances.WinClient.ViewModels
             this.Amount.Value = entity.Amount;
             this.Amount.ValueChangedAction = v => this.entity.Amount = v;
 
+            this.FrequencyEvery.Value = entity.Schedule.FrequencyEvery;
+            this.FrequencyEvery.ValueChangedAction = v => this.entity.Schedule.FrequencyEvery = Convert.ToInt32(v);
         }
 
         public string DialogTitle
@@ -120,19 +126,32 @@ namespace Finances.WinClient.ViewModels
             }
         }
 
-        ObservableCollection<string> frequencies;
-        public ObservableCollection<string> Frequencies
+        ObservableCollection<IScheduleFrequencyCalculator> frequencies;
+        public ObservableCollection<IScheduleFrequencyCalculator> Frequencies
         {
             get
             {
                 if (frequencies == null)
                 {
-                    frequencies = new ObservableCollection<string>() { "Monthly" };
+                    frequencies = new ObservableCollection<IScheduleFrequencyCalculator>();
+                    this.frequencyCalculators.ToList().ForEach(fc => frequencies.Add(fc));
                 }
                 return frequencies;
             }
         }
 
+        //ObservableCollection<string> frequencies;
+        //public ObservableCollection<string> Frequencies
+        //{
+        //    get
+        //    {
+        //        if (frequencies == null)
+        //        {
+        //            frequencies = new ObservableCollection<string>() { "Monthly" };
+        //        }
+        //        return frequencies;
+        //    }
+        //}
 
         public int TransferId
         {
@@ -305,11 +324,11 @@ namespace Finances.WinClient.ViewModels
         {
             get 
             {
-                return entity.StartDate == DateTime.MinValue ? (DateTime?)null : entity.StartDate;
+                return entity.Schedule.StartDate == DateTime.MinValue ? (DateTime?)null : entity.Schedule.StartDate;
             }
             set 
             {
-                entity.StartDate = value.HasValue ? value.Value : DateTime.MinValue;
+                entity.Schedule.StartDate = value.HasValue ? value.Value : DateTime.MinValue;
                 NotifyPropertyChangedAndValidate();
             }
         }
@@ -318,46 +337,60 @@ namespace Finances.WinClient.ViewModels
         {
             get 
             {
-                return entity.EndDate;
+                return entity.Schedule.EndDate;
             }
             set 
             {
-                entity.EndDate = value;
-                NotifyPropertyChangedAndValidate(); 
+                entity.Schedule.EndDate = value;
+                NotifyPropertyChangedAndValidate();
+                NotifyPropertyChanged(() => this.IsEndDate);
             }
         }
 
-        public string Frequency
+        public IScheduleFrequencyCalculator Frequency
         {
             get
             {
-                if (entity.Frequency == null && this.Frequencies != null && this.Frequencies.Count() > 0)
-                    entity.Frequency = this.Frequencies[0];
-                return entity.Frequency;
+                //if (entity.Frequency == null && this.Frequencies != null && this.Frequencies.Count() > 0)
+                //    entity.Frequency = this.Frequencies[0].Frequency;
+
+                var f = frequencyCalculators.FirstOrDefault(c => c.Frequency == entity.Schedule.Frequency);
+
+                return f;
             }
             set
             {
-                entity.Frequency = value;
+                entity.Schedule.Frequency = value.Frequency;
+                NotifyPropertyChanged(() => this.FrequencyEveryLabel);
                 NotifyPropertyChangedAndValidate();
             }
         }
 
-
-        InputDecimal frequencyDays;
-        public InputDecimal FrequencyDays
+        public string FrequencyEveryLabel
         {
             get
             {
-                if (frequencyDays == null)
+                return Frequency.GetFrequencyEveryLabel(Convert.ToInt32(FrequencyEvery.Value));
+            }
+        }
+
+
+
+        InputDecimal frequencyEvery;
+        public InputDecimal FrequencyEvery
+        {
+            get
+            {
+                if (frequencyEvery == null)
                 {
-                    frequencyDays = new InputDecimal()
+                    frequencyEvery = new InputDecimal()
                     {
                         FormatString = "n0",
                         Mandatory = true
                     };
                 }
 
-                return frequencyDays;
+                return frequencyEvery;
             }
         }
 
@@ -374,6 +407,54 @@ namespace Finances.WinClient.ViewModels
                 NotifyPropertyChangedAndValidate();
             }
         }
+
+        bool? isOccuranceRepeating;
+        public bool IsOccuranceRepeating
+        {
+            get
+            {
+                if (isOccuranceRepeating == null)
+                {
+                    isOccuranceRepeating = (entity.Schedule.EndDate == null || entity.Schedule.EndDate != entity.Schedule.StartDate);
+                }
+                return isOccuranceRepeating.Value;
+            }
+            set
+            {
+                isOccuranceRepeating = value;
+                NotifyPropertyChanged();
+            }
+        }
+
+
+        public bool IsEndDate
+        {
+            get
+            {
+                return entity.Schedule.EndDate != null;
+            }
+            set
+            {
+                if (value)
+                    this.EndDate = entity.Schedule.StartDate.AddMonths(12);
+                else
+                    this.EndDate = null;
+                NotifyPropertyChangedAndValidate();
+            }
+        }
+
+
+        public override void DialogOkClicked()
+        {
+            base.DialogOkClicked();
+
+            if (!this.IsOccuranceRepeating)
+            {
+                entity.Schedule.EndDate = entity.Schedule.StartDate;
+            }
+
+        }
+
 
         #endregion
 
@@ -480,6 +561,22 @@ namespace Finances.WinClient.ViewModels
             {
                 base.ValidationHelper.AddValidationMessage("Amount must be > 0", this.Amount);
             }
+
+
+            if (!frequencyEvery.IsNumeric)
+            {
+                base.ValidationHelper.AddValidationMessage("Frequency Every is invalid", this.frequencyEvery);
+            }
+            else if (!frequencyEvery.HasValue)
+            {
+                base.ValidationHelper.AddValidationMessage("Frequency Every is mandatory", this.frequencyEvery);
+            }
+            else if (frequencyEvery.Value <= 0)
+            {
+                base.ValidationHelper.AddValidationMessage("Frequency Every must be > 0", this.frequencyEvery);
+            }
+
+
 
         }
 

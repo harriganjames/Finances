@@ -11,6 +11,8 @@ using System.Windows.Input;
 using System.Windows.Markup;
 using System.Windows.Media;
 using Castle.Core;
+using Castle.Facilities.TypedFactory;
+using Castle.MicroKernel.ModelBuilder.Inspectors;
 using Castle.MicroKernel.Registration;
 using Castle.MicroKernel.Resolvers.SpecializedResolvers;
 using Castle.Windsor;
@@ -36,8 +38,14 @@ namespace Finances.WinClient
         {
             base.OnStartup(e);
 
+            // Note: the culture used by String.Format() and CultureInfo.CurrentCulture and Binding StringFormat
+            // are independant.
+            // String.Format() seems to use the System locale (i.e. select language in system tray)
+            // CultureInfo.CurrentCulture is locale of User - Region settings, Change location, Format tab
+            // I think Binding StringFormat always used en-US unless changed explicitly using the below:
             FrameworkElement.LanguageProperty.OverrideMetadata(typeof(FrameworkElement),
                 new FrameworkPropertyMetadata(XmlLanguage.GetLanguage(CultureInfo.CurrentCulture.IetfLanguageTag)));
+
 
 
             EventManager.RegisterClassHandler(typeof(TextBox), TextBox.PreviewMouseLeftButtonDownEvent,
@@ -53,7 +61,16 @@ namespace Finances.WinClient
 
             var container = new WindsorContainer();
 
+            // allow collection injection
             container.Kernel.Resolver.AddSubResolver(new CollectionResolver(container.Kernel));
+
+            // disable automatic property injection
+            container.Kernel.ComponentModelBuilder.RemoveContributor(
+                container.Kernel.ComponentModelBuilder.Contributors.OfType<PropertiesDependenciesModelInspector>().Single());
+
+            container.Kernel.AddFacility<TypedFactoryFacility>();
+
+            //AutoMapper.Mapper.Initialize(cfg => cfg.RecognizePrefixes("Schedule"));
 
             container.Install(
                             new SystemInstaller(),
@@ -68,7 +85,8 @@ namespace Finances.WinClient
                             new ViewModelInstallers(),
                             new UtilitiesInstaller(w),
                             new MappingsCreatorInstaller(),
-                            new EnginesInstaller()
+                            new EnginesInstaller(),
+                            new EntityInstaller()
                             );
 
 

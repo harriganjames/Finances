@@ -67,13 +67,13 @@
           <Property Name="TransferCategoryId" Type="int" Nullable="false" />
           <Property Name="Amount" Type="money" Nullable="false" />
           <Property Name="AmountTolerence" Type="numeric" Precision="3" Scale="2" Nullable="false" />
-          <Property Name="StartDate" Type="date" Nullable="false" />
-          <Property Name="EndDate" Type="date" />
-          <Property Name="Frequency" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="ScheduleStartDate" Type="date" Nullable="false" />
+          <Property Name="ScheduleEndDate" Type="date" />
+          <Property Name="ScheduleFrequency" Type="varchar" MaxLength="100" Nullable="false" />
           <Property Name="IsEnabled" Type="bit" Nullable="false" />
           <Property Name="RecordCreatedDateTime" Type="datetime" Nullable="false" StoreGeneratedPattern="Computed" />
           <Property Name="RecordUpdatedDateTime" Type="datetime" Nullable="false" StoreGeneratedPattern="Computed" />
-          <Property Name="FrequencyDays" Type="int" Nullable="false" />
+          <Property Name="ScheduleFrequencyEvery" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="TransferCategory">
           <Key>
@@ -337,16 +337,16 @@
           <Property Name="TransferCategoryId" Type="Int32" Nullable="false" />
           <Property Name="Amount" Type="Decimal" Nullable="false" Precision="19" Scale="4" />
           <Property Name="AmountTolerence" Type="Decimal" Nullable="false" Precision="3" Scale="2" />
-          <Property Name="StartDate" Type="DateTime" Nullable="false" Precision="0" />
-          <Property Name="EndDate" Type="DateTime" Precision="0" />
-          <Property Name="Frequency" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
           <Property Name="IsEnabled" Type="Boolean" Nullable="false" />
           <Property Name="RecordCreatedDateTime" Type="DateTime" Nullable="false" Precision="3" annotation:StoreGeneratedPattern="Computed" />
           <Property Name="RecordUpdatedDateTime" Type="DateTime" Nullable="false" Precision="3" annotation:StoreGeneratedPattern="Computed" />
           <NavigationProperty Name="FromBankAccount" Relationship="FinanceModel.FK_Transfer_FromBankAccountId" FromRole="Transfer" ToRole="BankAccount" />
           <NavigationProperty Name="ToBankAccount" Relationship="FinanceModel.FK_Transfer_ToBankAccountId" FromRole="Transfer" ToRole="BankAccount" />
           <NavigationProperty Name="TransferCategory" Relationship="FinanceModel.FK_Transfer_TransferCategory" FromRole="Transfer" ToRole="TransferCategory" />
-          <Property Name="FrequencyDays" Type="Int32" Nullable="false" />
+          <Property Name="ScheduleStartDate" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="ScheduleEndDate" Type="DateTime" Precision="0" />
+          <Property Name="ScheduleFrequency" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="ScheduleFrequencyEvery" Type="Int32" Nullable="false" />
         </EntityType>
         <EntityType Name="TransferCategory">
           <Key>
@@ -467,13 +467,13 @@
           <EntitySetMapping Name="Transfers">
             <EntityTypeMapping TypeName="FinanceModel.Transfer">
               <MappingFragment StoreEntitySet="Transfer">
-                <ScalarProperty Name="FrequencyDays" ColumnName="FrequencyDays" />
+                <ScalarProperty Name="ScheduleFrequencyEvery" ColumnName="ScheduleFrequencyEvery" />
+                <ScalarProperty Name="ScheduleFrequency" ColumnName="ScheduleFrequency" />
+                <ScalarProperty Name="ScheduleEndDate" ColumnName="ScheduleEndDate" />
+                <ScalarProperty Name="ScheduleStartDate" ColumnName="ScheduleStartDate" />
                 <ScalarProperty Name="RecordUpdatedDateTime" ColumnName="RecordUpdatedDateTime" />
                 <ScalarProperty Name="RecordCreatedDateTime" ColumnName="RecordCreatedDateTime" />
                 <ScalarProperty Name="IsEnabled" ColumnName="IsEnabled" />
-                <ScalarProperty Name="Frequency" ColumnName="Frequency" />
-                <ScalarProperty Name="EndDate" ColumnName="EndDate" />
-                <ScalarProperty Name="StartDate" ColumnName="StartDate" />
                 <ScalarProperty Name="AmountTolerence" ColumnName="AmountTolerence" />
                 <ScalarProperty Name="Amount" ColumnName="Amount" />
                 <ScalarProperty Name="TransferCategoryId" ColumnName="TransferCategoryId" />
@@ -524,7 +524,7 @@
         <AssociationConnector Association="FinanceModel.FK_BankAccount_BankId" ManuallyRouted="false" />
         <AssociationConnector Association="FinanceModel.FK_CashflowBankAccount_BankAccountId" ManuallyRouted="false" />
         <AssociationConnector Association="FinanceModel.FK_CashflowBankAccount_CashflowId" ManuallyRouted="false" />
-        <EntityTypeShape EntityType="FinanceModel.Transfer" Width="1.5" PointX="5.625" PointY="4.25" />
+        <EntityTypeShape EntityType="FinanceModel.Transfer" Width="1.875" PointX="5.625" PointY="4.5" />
         <EntityTypeShape EntityType="FinanceModel.TransferCategory" Width="1.5" PointX="0.75" PointY="0.75" />
         <AssociationConnector Association="FinanceModel.FK_Transfer_FromBankAccountId" />
         <AssociationConnector Association="FinanceModel.FK_Transfer_ToBankAccountId" />

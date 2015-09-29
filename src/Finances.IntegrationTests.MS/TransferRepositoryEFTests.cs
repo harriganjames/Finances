@@ -4,47 +4,51 @@ using Finances.Persistence.EF;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using AutoMapper;
 using System.Linq;
+using Finances.Core.Factories;
+using Finances.Core.Engines;
+using Finances.Core.Entities;
+using Castle.Windsor;
 
 namespace Finances.IntegrationTests.MS
 {
     [TestClass]
-    public class TransferRepositoryEFTests
+    public class TransferRepositoryEFTests : IntegrationBase
     {
-        ITransferRepository _repository;
+        ITransferRepository repository;
         Core.Entities.Transfer testEntity;
-        //Core.Entities.Bank testBank;
+        ITransferFactory transferFactory;
 
         [TestInitialize]
         public void Initialize()
         {
-            string connectionString = "data source=MIKE_LAPTOP;initial catalog=FinanceINT;integrated security=True;App=MSTest;";
-            var mcfactory = new ModelContextFactory(connectionString);
 
-            new Finances.Persistence.EF.MappingCreator().CreateMappings();
+            repository = container.Resolve<ITransferRepository>();
 
-            _repository = new TransferRepository(mcfactory,Mapper.Engine);
+            transferFactory = container.Resolve<ITransferFactory>();
 
-            testEntity = new Core.Entities.Transfer()
+            testEntity = transferFactory.Create();
+
+            testEntity.Name = "xfer-" + Guid.NewGuid().ToString();
+            testEntity.Amount = 123;
+            testEntity.AmountTolerence = 0.5M;
+            testEntity.Schedule.StartDate = DateTime.Now.Date;
+            testEntity.Schedule.EndDate = DateTime.Now.AddDays(30).Date;
+            testEntity.Schedule.Frequency = "Monthly";
+            testEntity.IsEnabled = true;
+            testEntity.FromBankAccount = new Core.Entities.BankAccount()
             {
-                Name = "xfer-" + Guid.NewGuid().ToString(),
-                Amount = 123,
-                AmountTolerence = 0.5M,
-                EndDate = DateTime.Now.Date,
-                StartDate = DateTime.Now.AddDays(1).Date,
-                Frequency = "Monthly",
-                IsEnabled = true,
-                FromBankAccount = new Core.Entities.BankAccount()
-                {
-                    BankAccountId = 1
-                },
-                ToBankAccount = new Core.Entities.BankAccount()
-                {
-                    BankAccountId = 2
-                },
-                Category = new Core.Entities.TransferCategory()
-                {
-                    TransferCategoryId = 1                }
+                BankAccountId = 1
             };
+            testEntity.ToBankAccount = new Core.Entities.BankAccount()
+            {
+                BankAccountId = 2
+            };
+            testEntity.Category = new Core.Entities.TransferCategory()
+            {
+                TransferCategoryId = 1
+            };
+
+
 
         }
 
@@ -55,10 +59,10 @@ namespace Finances.IntegrationTests.MS
             Core.Entities.Transfer read;
             var entity = testEntity;
 
-            _repository.Add(entity);
+            repository.Add(entity);
             Assert.IsTrue(entity.TransferId > 0, "TransferId not set");
 
-            read = _repository.Read(entity.TransferId);
+            read = repository.Read(entity.TransferId);
             Assert.IsNotNull(read);
             Assert.IsNotNull(read.FromBankAccount);
             Assert.IsNotNull(read.FromBankAccount.Name);
@@ -74,14 +78,14 @@ namespace Finances.IntegrationTests.MS
             CompareTransfers(entity, read, "Read");
 
             entity.Name += "-UPDATE";
-            _repository.Update(entity);
-            read = _repository.Read(entity.TransferId);
+            repository.Update(entity);
+            read = repository.Read(entity.TransferId);
             Assert.IsNotNull(read);
             CompareTransfers(entity, read, "Update");
 
-            _repository.Delete(entity);
+            repository.Delete(entity);
 
-            read = _repository.Read(entity.TransferId);
+            read = repository.Read(entity.TransferId);
             Assert.IsNull(read);
         }
 
@@ -89,7 +93,7 @@ namespace Finances.IntegrationTests.MS
         [TestMethod]
         public void TestReadList()
         {
-            var list = _repository.ReadList();
+            var list = repository.ReadList();
             Assert.IsNotNull(list);
             Assert.IsTrue(list.Count > 0);
             Assert.IsNotNull(list[0].Category);
@@ -99,7 +103,7 @@ namespace Finances.IntegrationTests.MS
         [TestMethod]
         public void TestReadListDataIdName()
         {
-            var list = _repository.ReadListDataIdName();
+            var list = repository.ReadListDataIdName();
             Assert.IsNotNull(list);
             Assert.IsTrue(list.Count > 0);
 
@@ -110,11 +114,11 @@ namespace Finances.IntegrationTests.MS
         [TestMethod]
         public void TestReadListTransferCategory()
         {
-            var list = _repository.ReadListTransferCategories();
+            var list = repository.ReadListTransferCategories();
             Assert.IsNotNull(list);
             Assert.IsTrue(list.Count > 0);
 
-            Assert.IsTrue(list.Count(d => d.TransferCategoryId > 0) == list.Count);
+            Assert.IsTrue(list.Count(d => d.TransferCategoryId >= -1) == list.Count);
             Assert.IsTrue(list.Count(d => !String.IsNullOrEmpty(d.Code)) == list.Count);
             Assert.IsTrue(list.Count(d => !String.IsNullOrEmpty(d.Name)) == list.Count);
         }
@@ -128,9 +132,9 @@ namespace Finances.IntegrationTests.MS
             Assert.AreEqual(entity1.Name, entity2.Name, "{0} - Name", prefix);
             Assert.AreEqual(entity1.Amount, entity2.Amount, "{0} - Amount", prefix);
             Assert.AreEqual(entity1.AmountTolerence, entity2.AmountTolerence, "{0} - AmountTolerence", prefix);
-            Assert.AreEqual(entity1.EndDate, entity2.EndDate, "{0} - EndDate", prefix);
-            Assert.AreEqual(entity1.StartDate, entity2.StartDate, "{0} - StartDate", prefix);
-            Assert.AreEqual(entity1.Frequency, entity2.Frequency, "{0} - Frequency", prefix);
+            Assert.AreEqual(entity1.Schedule.EndDate, entity2.Schedule.EndDate, "{0} - EndDate", prefix);
+            Assert.AreEqual(entity1.Schedule.StartDate, entity2.Schedule.StartDate, "{0} - StartDate", prefix);
+            Assert.AreEqual(entity1.Schedule.Frequency, entity2.Schedule.Frequency, "{0} - Frequency", prefix);
             Assert.AreEqual(entity1.IsEnabled, entity2.IsEnabled, "{0} - IsEnabled", prefix);
 
             Assert.IsNotNull(entity1.FromBankAccount, "{0} - entity1.FromBankAccount", prefix);

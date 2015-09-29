@@ -25,7 +25,7 @@
     <UpdateRequired>false</UpdateRequired>
     <MapFileExtensions>true</MapFileExtensions>
     <AutorunEnabled>true</AutorunEnabled>
-    <ApplicationRevision>8</ApplicationRevision>
+    <ApplicationRevision>10</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
@@ -113,6 +113,7 @@
     <Compile Include="CastleInstallers\ConnectionInstaller.cs" />
     <Compile Include="CastleInstallers\EnginesInstaller.cs" />
     <Compile Include="CastleInstallers\EFModelContextFactoryInstaller.cs" />
+    <Compile Include="CastleInstallers\EntityInstaller.cs" />
     <Compile Include="CastleInstallers\MappingsCreatorInstaller.cs" />
     <Compile Include="CastleInstallers\SystemInstaller.cs" />
     <Compile Include="CastleInstallers\UtilitiesInstaller.cs" />

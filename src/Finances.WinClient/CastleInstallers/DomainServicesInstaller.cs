@@ -8,7 +8,7 @@ using Finances.Core.Interfaces;
 
 namespace Finances.WinClient.CastleInstallers
 {
-    class DomainServicesInstaller : IWindsorInstaller
+    public class DomainServicesInstaller : IWindsorInstaller
     {
         public void Install(IWindsorContainer container, IConfigurationStore store)
         {

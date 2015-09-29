@@ -6,7 +6,7 @@ using Finances.Persistence.EF;
 
 namespace Finances.WinClient.CastleInstallers
 {
-    class EFModelContextFactoryInstaller : IWindsorInstaller
+    public class EFModelContextFactoryInstaller : IWindsorInstaller
     {
         public void Install(IWindsorContainer container, IConfigurationStore store)
         {

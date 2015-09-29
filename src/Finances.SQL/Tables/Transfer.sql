@@ -16,10 +16,10 @@ CREATE TABLE [dbo].[Transfer]
 	,TransferCategoryId	INT NOT NULL
 	,Amount				MONEY NOT NULL
 	,AmountTolerence	NUMERIC(3,2) NOT NULL	-- %
-	,StartDate			DATE NOT NULL
-	,EndDate			DATE NULL
-	,Frequency			VARCHAR(100) NOT NULL
-	,FrequencyDays		INT NOT NULL
+	,ScheduleStartDate			DATE NOT NULL
+	,ScheduleEndDate			DATE NULL
+	,ScheduleFrequency			VARCHAR(100) NOT NULL
+	,ScheduleFrequencyEvery		INT NOT NULL
 	,IsEnabled			BIT NOT NULL
 
     ,RecordCreatedDateTime DATETIME NOT NULL DEFAULT(GETDATE())
@@ -55,9 +55,33 @@ END
 GO
 
 IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.COLUMNS
-		WHERE	TABLE_SCHEMA+'.'+TABLE_NAME+'.'+COLUMN_NAME='dbo.Transfer.FrequencyDays')
+		WHERE	TABLE_SCHEMA+'.'+TABLE_NAME+'.'+COLUMN_NAME='dbo.Transfer.FrequencyEvery')
 BEGIN
 	ALTER TABLE dbo.Transfer
-	ADD	FrequencyDays INT NOT NULL DEFAULT(1)
+	ADD	FrequencyEvery INT NOT NULL DEFAULT(1)
+END
+
+IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.COLUMNS
+		WHERE	TABLE_SCHEMA+'.'+TABLE_NAME+'.'+COLUMN_NAME='dbo.Transfer.ScheduleStartDate')
+BEGIN
+	exec sp_rename 'dbo.Transfer.StartDate','ScheduleStartDate','COLUMN'
+END
+
+IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.COLUMNS
+		WHERE	TABLE_SCHEMA+'.'+TABLE_NAME+'.'+COLUMN_NAME='dbo.Transfer.ScheduleEndDate')
+BEGIN
+	exec sp_rename 'dbo.Transfer.EndDate','ScheduleEndDate','COLUMN'
+END
+
+IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.COLUMNS
+		WHERE	TABLE_SCHEMA+'.'+TABLE_NAME+'.'+COLUMN_NAME='dbo.Transfer.ScheduleFrequency')
+BEGIN
+	exec sp_rename 'dbo.Transfer.Frequency','ScheduleFrequency','COLUMN'
+END
+
+IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.COLUMNS
+		WHERE	TABLE_SCHEMA+'.'+TABLE_NAME+'.'+COLUMN_NAME='dbo.Transfer.ScheduleFrequencyEvery')
+BEGIN
+	exec sp_rename 'dbo.Transfer.FrequencyEvery','ScheduleFrequencyEvery','COLUMN'
 END
 

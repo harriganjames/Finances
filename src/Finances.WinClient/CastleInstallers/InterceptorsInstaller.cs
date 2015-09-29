@@ -2,6 +2,8 @@
 using Castle.MicroKernel.SubSystems.Configuration;
 using Castle.MicroKernel.Registration;
 
+using Finances.WinClient.InterceptorSelectors;
+
 namespace Finances.WinClient.CastleInstallers
 {
     public class InterceptorsInstaller : IWindsorInstaller
@@ -9,6 +11,8 @@ namespace Finances.WinClient.CastleInstallers
         public void Install(IWindsorContainer container, IConfigurationStore store)
         {
             container.Register(Component.For<Finances.WinClient.Interceptors.ErrorHandlingInterceptor>());
+
+            container.Kernel.ProxyFactory.AddInterceptorSelector(new RepositoryInterceptorSelector());
         }
     }
 }

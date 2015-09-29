@@ -7,7 +7,7 @@ using Finances.Core.Engines.Cashflow;
 
 namespace Finances.WinClient.CastleInstallers
 {
-    class EnginesInstaller : IWindsorInstaller
+    public class EnginesInstaller : IWindsorInstaller
     {
         public void Install(IWindsorContainer container, IConfigurationStore store)
         {
@@ -25,8 +25,9 @@ namespace Finances.WinClient.CastleInstallers
             //container.Register(Component.For<IAggregatedProjectionItemsGeneratorFactory>()
             //            .ImplementedBy<AggregatedProjectionItemsGeneratorFactory>());
 
-            container.Register(Component.For<ITransferFrequencyDateCalculator>().ImplementedBy<TransferFrequencyDateCalculatorMonthly>());
-            container.Register(Component.For<ITransferFrequencyDateCalculatorFactory>().ImplementedBy<TransferFrequencyDateCalculatorFactory>());
+            container.Register(Component.For<IScheduleFrequencyCalculator>().ImplementedBy<ScheduleFrequencyCalculatorMonthly>());
+            container.Register(Component.For<IScheduleFrequencyCalculator>().ImplementedBy<ScheduleFrequencyCalculatorWeekly>());
+            container.Register(Component.For<IScheduleFrequencyCalculatorFactory>().ImplementedBy<ScheduleFrequencyCalculatorFactory>());
 
             container.Register(Component.For<IProjectionTransferGenerator>().ImplementedBy<ProjectionTransferGenerator>());
             container.Register(Component.For<ITransferDirectionGenerator>().ImplementedBy<TransferDirectionGenerator>());

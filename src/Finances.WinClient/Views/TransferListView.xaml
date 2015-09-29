@@ -101,10 +101,7 @@
                                     </DataTemplate>
                                 </GridViewColumn.CellTemplate>
                             </GridViewColumn>
-                            <GridViewColumn DisplayMemberBinding="{Binding StartDate, StringFormat=yyyy-MM-dd}" Header="Start" />
-                            <GridViewColumn DisplayMemberBinding="{Binding EndDate, StringFormat=yyyy-MM-dd}" Header="End" />
-                            <GridViewColumn DisplayMemberBinding="{Binding Frequency}" Header="Frequency" />
-                            <GridViewColumn DisplayMemberBinding="{Binding FrequencyDays}" Header="Days" />
+                            <GridViewColumn DisplayMemberBinding="{Binding ScheduleDescription}" Header="Schedule" />
                             <GridViewColumn Header="Enabled">
                                 <GridViewColumn.CellTemplate>
                                     <DataTemplate>

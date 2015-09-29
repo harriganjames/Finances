@@ -70,12 +70,12 @@ namespace Finances.Core.Engines
             {
                 Transfer t = td.Transfer;
                 // loop compatible date range
-                DateTime d = t.StartDate < startDate ? t.StartDate : startDate;
-                while (d <= endDate && (t.EndDate == null || d <= t.EndDate))
+                DateTime d = t.Schedule.StartDate < startDate ? t.Schedule.StartDate : startDate;
+                while (d <= endDate && (t.Schedule.EndDate == null || d <= t.Schedule.EndDate))
                 {
                     cpts.Add(new CashflowProjectionTransfer() { Date = d, TransferDirection = td });
 
-                    if (t.Frequency == "Monthly")
+                    if (t.Schedule.Frequency == "Monthly")
                         d = d.AddMonths(1);
                 }
             }

@@ -4,26 +4,32 @@ using Finances.Persistence.EF;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using AutoMapper;
 using System.Linq;
+using Finances.Core.Factories;
 
 namespace Finances.IntegrationTests.MS
 {
     [TestClass]
-    public class BankAccountRepositoryEFTests
+    public class BankAccountRepositoryEFTests : IntegrationBase
     {
-        IBankAccountRepository _repository;
+        IBankAccountRepository repository;
         Core.Entities.BankAccount testEntity;
-        //Core.Entities.Bank testBank;
+        ITransferFactory transferFactory;
 
         [TestInitialize]
         public void Initialize()
         {
-            string connectionString = "data source=MIKE_LAPTOP;initial catalog=FinanceINT;integrated security=True;App=MSTest;";
-            var mcfactory = new ModelContextFactory(connectionString);
+            //string connectionString = "data source=MIKE_LAPTOP;initial catalog=FinanceINT;integrated security=True;App=MSTest;";
+            //var mcfactory = new ModelContextFactory(connectionString);
 
-            new Finances.Persistence.EF.MappingCreator().CreateMappings();
+            //IScheduleFactory scheduleFactory = new Fakes.FakeScheduleFactory();
 
-            _repository = new BankAccountRepository(mcfactory,Mapper.Engine);
+            //transferFactory = new Fakes.FakeTransferFactory(scheduleFactory);
 
+            //new Finances.Persistence.EF.MappingCreator(transferFactory).CreateMappings();
+
+            //repository = new BankAccountRepository(mcfactory,Mapper.Engine);
+
+            repository = container.Resolve<IBankAccountRepository>();
 
             testEntity = new Core.Entities.BankAccount()
             {
@@ -57,22 +63,22 @@ namespace Finances.IntegrationTests.MS
             Core.Entities.BankAccount read;
             var entity = testEntity;// new Core.Entities.BankAccount() { Name = "TestCRUD-" + Guid.NewGuid().ToString() };
 
-            _repository.Add(entity);
+            repository.Add(entity);
             Assert.IsTrue(entity.BankAccountId > 0, "BankAccountId not set");
 
-            read = _repository.Read(entity.BankAccountId);
+            read = repository.Read(entity.BankAccountId);
             Assert.IsNotNull(read);
             CompareBankAccounts(entity, read, "Read");
 
             entity.Name += "-UPDATE";
-            _repository.Update(entity);
-            read = _repository.Read(entity.BankAccountId);
+            repository.Update(entity);
+            read = repository.Read(entity.BankAccountId);
             Assert.IsNotNull(read);
             CompareBankAccounts(entity, read, "Update");
 
-            _repository.Delete(entity);
+            repository.Delete(entity);
 
-            read = _repository.Read(entity.BankAccountId);
+            read = repository.Read(entity.BankAccountId);
             Assert.IsNull(read);
         }
 
@@ -80,7 +86,7 @@ namespace Finances.IntegrationTests.MS
         [TestMethod]
         public void TestReadList()
         {
-            var list = _repository.ReadList();
+            var list = repository.ReadList();
             Assert.IsNotNull(list);
             Assert.IsTrue(list.Count > 0);
         }
@@ -88,7 +94,7 @@ namespace Finances.IntegrationTests.MS
         [TestMethod]
         public void TestReadListByBankId()
         {
-            var list = _repository.ReadListByBankId(1);
+            var list = repository.ReadListByBankId(1);
             Assert.IsNotNull(list);
             Assert.IsTrue(list.Count > 0);
             Assert.IsTrue(list.TrueForAll(b=>b.Bank.BankId==1));
@@ -97,7 +103,7 @@ namespace Finances.IntegrationTests.MS
         [TestMethod]
         public void TestReadListDataIdName()
         {
-            var list = _repository.ReadListDataIdName();
+            var list = repository.ReadListDataIdName();
             Assert.IsNotNull(list);
             Assert.IsTrue(list.Count > 0);
 

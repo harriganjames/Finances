@@ -5,27 +5,23 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using AutoMapper;
 using System.Linq;
 using System.Collections.Generic;
+using Finances.Core.Factories;
+
 
 namespace Finances.IntegrationTests.MS
 {
     [TestClass]
-    public class CashflowRepositoryEFTests
+    public class CashflowRepositoryEFTests : IntegrationBase
     {
-        ICashflowRepository _repository;
+        ICashflowRepository repository;
         Core.Entities.Cashflow testEntity;
-        //Core.Entities.Bank testBank;
 
         [TestInitialize]
         public void Initialize()
         {
-            string connectionString = "data source=MIKE_LAPTOP;initial catalog=FinanceINT;integrated security=True;App=MSTest;";
-            var mcfactory = new ModelContextFactory(connectionString);
+            repository = container.Resolve<ICashflowRepository>();
 
-            new Finances.Persistence.EF.MappingCreator().CreateMappings();
-
-            _repository = new CashflowRepository(mcfactory,Mapper.Engine);
-
-            testEntity = new Core.Entities.Cashflow()
+            testEntity = new Core.Entities.Cashflow(null)
             {
                 Name = "cflow-" + Guid.NewGuid().ToString(),
                 OpeningBalance = 123M,
@@ -45,10 +41,10 @@ namespace Finances.IntegrationTests.MS
             Core.Entities.Cashflow read;
             var entity = testEntity;
 
-            _repository.Add(entity);
+            repository.Add(entity);
             Assert.IsTrue(entity.CashflowId > 0, "CashflowId not set");
 
-            read = _repository.Read(entity.CashflowId);
+            read = repository.Read(entity.CashflowId);
             Assert.IsNotNull(read);
             Assert.IsNotNull(read.CashflowBankAccounts);
             
@@ -58,14 +54,14 @@ namespace Finances.IntegrationTests.MS
             entity.CashflowBankAccounts.Remove(entity.CashflowBankAccounts[0]);
             entity.CashflowBankAccounts.Add(new Core.Entities.CashflowBankAccount() { BankAccount = new Core.Entities.BankAccount() { BankAccountId = 3 } });
 
-            _repository.Update(entity);
-            read = _repository.Read(entity.CashflowId);
+            repository.Update(entity);
+            read = repository.Read(entity.CashflowId);
             Assert.IsNotNull(read);
             CompareCashflows(entity, read, "Update");
 
-            _repository.Delete(entity);
+            repository.Delete(entity);
 
-            read = _repository.Read(entity.CashflowId);
+            read = repository.Read(entity.CashflowId);
             Assert.IsNull(read);
         }
 
@@ -73,7 +69,7 @@ namespace Finances.IntegrationTests.MS
         [TestMethod]
         public void TestReadList()
         {
-            var list = _repository.ReadList();
+            var list = repository.ReadList();
             Assert.IsNotNull(list);
             Assert.IsTrue(list.Count > 0);
 
@@ -98,7 +94,7 @@ namespace Finances.IntegrationTests.MS
         [TestMethod]
         public void TestReadListDataIdName()
         {
-            var list = _repository.ReadListDataIdName();
+            var list = repository.ReadListDataIdName();
             Assert.IsNotNull(list);
             Assert.IsTrue(list.Count > 0);
 
