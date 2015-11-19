@@ -10,10 +10,10 @@ namespace Finances.Core.Entities
 {
     public class Schedule //: IScheduleEntity
     {
-        readonly IEnumerable<IScheduleFrequencyCalculator> calculators;
-        IScheduleFrequencyCalculator calculator;
+        readonly IEnumerable<IScheduleFrequency> calculators;
+        IScheduleFrequency calculator;
 
-        public Schedule(IEnumerable<IScheduleFrequencyCalculator> calculators)
+        public Schedule(IEnumerable<IScheduleFrequency> calculators)
         {
             this.calculators = calculators;
 
@@ -70,7 +70,7 @@ namespace Finances.Core.Entities
         }
 
 
-        private IScheduleFrequencyCalculator Calculator
+        private IScheduleFrequency Calculator
         {
             get
             {

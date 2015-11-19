@@ -15,9 +15,9 @@ namespace Finances.IntegrationTests.MS.Fakes
     {
         public Core.Entities.Schedule Create()
         {
-            return new Schedule(new IScheduleFrequencyCalculator[] { 
-                                new ScheduleFrequencyCalculatorMonthly(),
-                                new ScheduleFrequencyCalculatorWeekly() });
+            return new Schedule(new IScheduleFrequency[] { 
+                                new ScheduleFrequencyMonthly(),
+                                new ScheduleFrequencyWeekly() });
         }
 
         public void Release(Core.Entities.Schedule s)

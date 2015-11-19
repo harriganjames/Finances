@@ -33,13 +33,13 @@ namespace Finances.WinClient.ViewModels
         readonly ITransferRepository transferRepository;
         readonly IBankAccountRepository bankAccountRepository;
         readonly IBankAccountAgent bankAccountAgent;
-        readonly IEnumerable<IScheduleFrequencyCalculator> frequencyCalculators;
+        readonly IEnumerable<IScheduleFrequency> frequencyCalculators;
 
         public TransferEditorViewModel(
                 ITransferRepository transferRepository,
                 IBankAccountRepository bankAccountRepository,
                 IBankAccountAgent bankAccountAgent,
-                IEnumerable<IScheduleFrequencyCalculator> frequencyCalculators,
+                IEnumerable<IScheduleFrequency> frequencyCalculators,
                 Transfer entity
             )
         {
@@ -126,14 +126,14 @@ namespace Finances.WinClient.ViewModels
             }
         }
 
-        ObservableCollection<IScheduleFrequencyCalculator> frequencies;
-        public ObservableCollection<IScheduleFrequencyCalculator> Frequencies
+        ObservableCollection<IScheduleFrequency> frequencies;
+        public ObservableCollection<IScheduleFrequency> Frequencies
         {
             get
             {
                 if (frequencies == null)
                 {
-                    frequencies = new ObservableCollection<IScheduleFrequencyCalculator>();
+                    frequencies = new ObservableCollection<IScheduleFrequency>();
                     this.frequencyCalculators.ToList().ForEach(fc => frequencies.Add(fc));
                 }
                 return frequencies;
@@ -347,7 +347,7 @@ namespace Finances.WinClient.ViewModels
             }
         }
 
-        public IScheduleFrequencyCalculator Frequency
+        public IScheduleFrequency Frequency
         {
             get
             {

@@ -4,8 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-using Finances.Core.Engines.Cashflow;
+//using Finances.Core.Engines.Cashflow;
 using Finances.Core.Entities;
+using Finances.Core.ValueObjects;
 
 namespace Finances.Core.Interfaces
 {

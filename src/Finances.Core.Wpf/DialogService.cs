@@ -7,25 +7,26 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Input;
+using Finances.Interface;
 
 namespace Finances.Core.Wpf
 {
-    public interface IDialog
-    {
-        ICommand DialogAcceptCommand { get; }
-        void DialogOkClicked();
-    }
+    //public interface IDialog
+    //{
+    //    ICommand DialogAcceptCommand { get; }
+    //    void DialogOkClicked();
+    //}
 
-    public interface IDialogService
-    {
-        //bool ShowDialog(object vm);
-        bool ShowDialog(IDialog vm);
-        bool ShowDialogView(IDialog vm);
-        void ShowDialogNonModal(IDialog vm);
-        ICommand DialogAcceptCommand { get; }
-        MessageBoxResultEnum ShowMessageBox(string title, string message, MessageBoxButtonEnum buttons);
-        string[] ShowOpenFileDialog(string filter = "", bool multi = false);
-    }
+    //public interface IDialogService
+    //{
+    //    //bool ShowDialog(object vm);
+    //    bool ShowDialog(IDialog vm);
+    //    bool ShowDialogView(IDialog vm);
+    //    void ShowDialogNonModal(IDialog vm);
+    //    ICommand DialogAcceptCommand { get; }
+    //    MessageBoxResultEnum ShowMessageBox(string title, string message, MessageBoxButtonEnum buttons);
+    //    string[] ShowOpenFileDialog(string filter = "", bool multi = false);
+    //}
 
     public class DialogService : IDialogService
     {

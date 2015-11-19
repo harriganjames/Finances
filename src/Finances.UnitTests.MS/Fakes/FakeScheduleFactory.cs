@@ -15,9 +15,9 @@ namespace Finances.UnitTests.MS.Fakes
     {
         public Schedule Create()
         {
-            return new Schedule(new IScheduleFrequencyCalculator[] { 
-                                new ScheduleFrequencyCalculatorMonthly(),
-                                new ScheduleFrequencyCalculatorWeekly() });
+            return new Schedule(new IScheduleFrequency[] { 
+                                new ScheduleFrequencyMonthly(),
+                                new ScheduleFrequencyWeekly() });
         }
 
         public void Release(Schedule s)

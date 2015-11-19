@@ -1,7 +1,8 @@
-﻿
-using System;
+﻿using System;
 using Castle.DynamicProxy;
+
 using Finances.Core.Wpf;
+using Finances.Interface;
 
 namespace Finances.WinClient.Interceptors
 {
@@ -24,10 +25,10 @@ namespace Finances.WinClient.Interceptors
             catch (Exception e)
             {
                 this.exceptionService.ShowException(e, invocation.TargetType.Name);
-                
+
                 object rv = null;
 
-                if(invocation.Method.ReturnType==typeof(bool))
+                if (invocation.Method.ReturnType == typeof(bool))
                 {
                     rv = false;
                 }

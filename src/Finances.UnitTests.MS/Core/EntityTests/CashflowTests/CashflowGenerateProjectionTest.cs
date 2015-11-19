@@ -26,11 +26,11 @@ namespace Finances.UnitTests.MS.Core.EntityTests.CashflowTests
         
         Mock<ITransferRepository> mockTransferRepository = new Mock<ITransferRepository>();
 
-        IScheduleFrequencyCalculator[] scheduleFrequencyCalculators = 
-                    new IScheduleFrequencyCalculator[] 
+        IScheduleFrequency[] scheduleFrequencyCalculators = 
+                    new IScheduleFrequency[] 
                     { 
-                                new ScheduleFrequencyCalculatorMonthly(),
-                                new ScheduleFrequencyCalculatorWeekly() 
+                                new ScheduleFrequencyMonthly(),
+                                new ScheduleFrequencyWeekly() 
 
                     };
 
@@ -80,8 +80,8 @@ namespace Finances.UnitTests.MS.Core.EntityTests.CashflowTests
             fakeBankAccountRepository = new FakeBankAccountRepository();
 
 
-            sut = new Cashflow(new ProjectionTransferGenerator(fakeBankAccountRepository,
-                                new TransferDirectionGenerator(mockTransferRepository.Object)))
+            sut = new Cashflow(new CashflowProjection(new CashflowProjectionTransferGenerator(fakeBankAccountRepository,
+                                new TransferDirectionGenerator(mockTransferRepository.Object))))
             {
                 OpeningBalance = cashflowOperningBalance,
                 StartDate = cashflowStartDate,
@@ -105,7 +105,7 @@ namespace Finances.UnitTests.MS.Core.EntityTests.CashflowTests
             Decimal openingBalance = 10000;
             int qtyMonths = 6;
             DateTime endDate = cashflowStartDate.AddMonths(qtyMonths);
-            var mode = new AggregatedProjectionItemsGeneratorMonthlySummary();
+            var mode = new CashflowProjectionModeMonthlySummary();
 
             var cpi = sut.GenerateProjection(endDate, openingBalance, 5000, mode);
 

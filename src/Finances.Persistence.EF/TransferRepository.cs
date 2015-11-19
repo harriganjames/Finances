@@ -2,16 +2,18 @@
 using System.Linq;
 using System.Data.Entity;
 using System.Collections.Generic;
-using Finances.Core.Interfaces;
-using AutoMapper;
-using AutoMapper.QueryableExtensions;
 using System.Data.Entity.Validation;
 using System.Text;
 using System.Data;
 
+using AutoMapper;
+using AutoMapper.QueryableExtensions;
+
+using Finances.Core.Interfaces;
+
 namespace Finances.Persistence.EF
 {
-    public class TransferRepository : ITransferRepository, IRepository
+    public class TransferRepository : ITransferRepository
     {
         private readonly IModelContextFactory factory;
         private readonly IMappingEngine mapper;
@@ -28,83 +30,55 @@ namespace Finances.Persistence.EF
         public int Add(Core.Entities.Transfer entity)
         {
             int id=0;
-            try
+            var ef = mapper.Map<Transfer>(entity);
+            using (FinanceEntities context = factory.CreateContext())
             {
-                var ef = mapper.Map<Transfer>(entity);
-                using (FinanceEntities context = factory.CreateContext())
-                {
-                    context.Entry(ef).State = EntityState.Added;
-                    context.SaveChanges();
-                }
-                //read back columns which may have changed
-                entity.TransferId = ef.TransferId;
-                entity.RecordCreatedDateTime = ef.RecordCreatedDateTime;
-                entity.RecordUpdatedDateTime = ef.RecordUpdatedDateTime;
-                id = ef.TransferId;
+                context.Entry(ef).State = EntityState.Added;
+                context.SaveChanges();
             }
-            catch (DbEntityValidationException e)
-            {
-                CommonRepository.HandleDbEntityValidationException(e);
-            }
+            //read back columns which may have changed
+            entity.TransferId = ef.TransferId;
+            entity.RecordCreatedDateTime = ef.RecordCreatedDateTime;
+            entity.RecordUpdatedDateTime = ef.RecordUpdatedDateTime;
+            id = ef.TransferId;
             return id;
         }
 
         public bool Update(Core.Entities.Transfer entity)
         {
-            try
+            var ef = mapper.Map<Transfer>(entity);
+            using (FinanceEntities context = factory.CreateContext())
             {
-                var ef = mapper.Map<Transfer>(entity);
-                using (FinanceEntities context = factory.CreateContext())
-                {
-                    context.Entry(ef).State = EntityState.Modified;
-                    context.SaveChanges();
-                }
-                //read back columns which may have changed
-                entity.RecordUpdatedDateTime = ef.RecordUpdatedDateTime;
+                context.Entry(ef).State = EntityState.Modified;
+                context.SaveChanges();
             }
-            catch (DbEntityValidationException e)
-            {
-                CommonRepository.HandleDbEntityValidationException(e);
-            }
+            //read back columns which may have changed
+            entity.RecordUpdatedDateTime = ef.RecordUpdatedDateTime;
             return true;
         }
 
 
         public bool Delete(Core.Entities.Transfer entity)
         {
-            try
+            var ef = mapper.Map<Transfer>(entity);
+            using (FinanceEntities context = factory.CreateContext())
             {
-                var ef = mapper.Map<Transfer>(entity);
-                using (FinanceEntities context = factory.CreateContext())
-                {
-                    context.Entry(ef).State = EntityState.Deleted;
-                    context.SaveChanges();
-                }
-            }
-            catch (DbEntityValidationException e)
-            {
-                CommonRepository.HandleDbEntityValidationException(e);
+                context.Entry(ef).State = EntityState.Deleted;
+                context.SaveChanges();
             }
             return true;
         }
 
         public bool Delete(List<int> ids)
         {
-            try
+            using (FinanceEntities context = factory.CreateContext())
             {
-                using (FinanceEntities context = factory.CreateContext())
+                foreach (var id in ids)
                 {
-                    foreach (var id in ids)
-                    {
-                        var ef = new Transfer() { TransferId = id };
-                        context.Entry(ef).State = EntityState.Deleted;
-                    }
-                    context.SaveChanges();
+                    var ef = new Transfer() { TransferId = id };
+                    context.Entry(ef).State = EntityState.Deleted;
                 }
-            }
-            catch (DbEntityValidationException e)
-            {
-                CommonRepository.HandleDbEntityValidationException(e);
+                context.SaveChanges();
             }
             return true;
         }
@@ -113,25 +87,18 @@ namespace Finances.Persistence.EF
         public Core.Entities.Transfer Read(int id)
         {
             Core.Entities.Transfer entity = null;
-            try
+            using (FinanceEntities context = factory.CreateContext())
             {
-                using (FinanceEntities context = factory.CreateContext())
-                {
-                    var ef = (from b in context.Transfers
-                                    .Include(a => a.FromBankAccount)
-                                    .Include(a => a.FromBankAccount.Bank)
-                                    .Include(a => a.ToBankAccount)
-                                    .Include(a => a.ToBankAccount.Bank)
-                                    .Include(a => a.TransferCategory)
-                              where b.TransferId==id
-                              select b).FirstOrDefault();
+                var ef = (from b in context.Transfers
+                                .Include(a => a.FromBankAccount)
+                                .Include(a => a.FromBankAccount.Bank)
+                                .Include(a => a.ToBankAccount)
+                                .Include(a => a.ToBankAccount.Bank)
+                                .Include(a => a.TransferCategory)
+                            where b.TransferId==id
+                            select b).FirstOrDefault();
 
-                    entity = mapper.Map<Core.Entities.Transfer>(ef);
-                }
-            }
-            catch (DbEntityValidationException e)
-            {
-                CommonRepository.HandleDbEntityValidationException(e);
+                entity = mapper.Map<Core.Entities.Transfer>(ef);
             }
             return entity;
         }
@@ -139,27 +106,17 @@ namespace Finances.Persistence.EF
         public List<Core.Entities.Transfer> ReadList()
         {
             List<Core.Entities.Transfer> list = null;
-            try
+            using (FinanceEntities context = factory.CreateContext())
             {
-                using (FinanceEntities context = factory.CreateContext())
-                {
-                    var ef = (from b in context.Transfers
-                                    .Include(a => a.FromBankAccount)
-                                    .Include(a => a.FromBankAccount.Bank)
-                                    .Include(a => a.ToBankAccount)
-                                    .Include(a => a.ToBankAccount.Bank)
-                                    .Include(a => a.TransferCategory)
-                              select b).ToList();
+                var ef = (from b in context.Transfers
+                                .Include(a => a.FromBankAccount)
+                                .Include(a => a.FromBankAccount.Bank)
+                                .Include(a => a.ToBankAccount)
+                                .Include(a => a.ToBankAccount.Bank)
+                                .Include(a => a.TransferCategory)
+                            select b).ToList();
 
-                    list = mapper.Map<List<Core.Entities.Transfer>>(ef);
-
-                    //var x = (from b in context.BankAccounts.Include(ba=>ba.Bank)
-                    //        select b).Project(mapper).To<Core.Entities.BankAccount>().ToList();
-                }
-            }
-            catch (DbEntityValidationException e)
-            {
-                CommonRepository.HandleDbEntityValidationException(e);
+                list = mapper.Map<List<Core.Entities.Transfer>>(ef);
             }
             return list;
         }
@@ -168,23 +125,11 @@ namespace Finances.Persistence.EF
         public List<Core.Entities.DataIdName> ReadListDataIdName()
         {
             List<Core.Entities.DataIdName> list = null;
-            try
+            using (FinanceEntities context = factory.CreateContext())
             {
-                using (FinanceEntities context = factory.CreateContext())
-                {
-                    //var ef = (from b in context.Transfers
-                    //          select b).ToList();
+                list = (from b in context.Transfers
+                        select b).Project(mapper).To<Core.Entities.DataIdName>().ToList();
 
-                    //list = mapper.Map<List<Core.Entities.DataIdName>>(ef);
-
-                    list = (from b in context.Transfers
-                            select b).Project(mapper).To<Core.Entities.DataIdName>().ToList();
-
-                }
-            }
-            catch (DbEntityValidationException e)
-            {
-                CommonRepository.HandleDbEntityValidationException(e);
             }
             return list;
         }
@@ -193,48 +138,17 @@ namespace Finances.Persistence.EF
         public List<Core.Entities.TransferCategory> ReadListTransferCategories()
         {
             List<Core.Entities.TransferCategory> list = null;
-            try
+            using (FinanceEntities context = factory.CreateContext())
             {
-                using (FinanceEntities context = factory.CreateContext())
-                {
-                    var ef = (from b in context.TransferCategories
-                              select b).ToList();
+                var ef = (from b in context.TransferCategories
+                            select b).ToList();
 
-                    list = mapper.Map<List<Core.Entities.TransferCategory>>(ef);
-                }
-            }
-            catch (DbEntityValidationException e)
-            {
-                CommonRepository.HandleDbEntityValidationException(e);
+                list = mapper.Map<List<Core.Entities.TransferCategory>>(ef);
             }
             return list;
         }
 
 
-
-        #region Privates
-
-        //private void SetChildEntitiesState(FinanceEntities context, Transfer ef)
-        //{
-        //    if (ef.FromBankAccount != null)
-        //    {
-        //        if (ef.FromBankAccount.Bank != null)
-        //        {
-        //            context.Entry(ef.FromBankAccount.Bank).State = EntityState.Detached;
-        //        }
-        //        context.Entry(ef.FromBankAccount).State = EntityState.Detached;
-        //    }
-        //    if (ef.ToBankAccount != null)
-        //    {
-        //        if (ef.ToBankAccount.Bank != null)
-        //        {
-        //            context.Entry(ef.ToBankAccount.Bank).State = EntityState.Detached;
-        //        }
-        //        context.Entry(ef.ToBankAccount).State = EntityState.Detached;
-        //    }
-        //}
-
-        #endregion
 
     }
 }

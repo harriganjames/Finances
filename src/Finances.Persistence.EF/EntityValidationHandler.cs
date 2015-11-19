@@ -24,5 +24,20 @@ namespace Finances.Persistence.EF
             }
             throw new Exception(message.ToString());
         }
+
+        public string ComposeErrorMessage(DbEntityValidationException e)
+        {
+            var message = new StringBuilder();
+
+            foreach (var err in e.EntityValidationErrors)
+            {
+                foreach (var inner in err.ValidationErrors)
+                {
+                    message.AppendLine(inner.ErrorMessage);
+                }
+            }
+            return message.ToString();
+        }
+
     }
 }

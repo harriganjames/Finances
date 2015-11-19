@@ -1,6 +1,6 @@
 ﻿using System;
 using AutoMapper;
-using Finances.Core.Interfaces;
+using Finances.Interface;
 
 namespace Finances.Persistence.EF.Mappings
 {

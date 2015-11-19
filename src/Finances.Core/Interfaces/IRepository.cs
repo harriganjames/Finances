@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Finances.Core.Interfaces
 {
-    // primarlily used for the Windsor error handling interceptor
+    // primarily used for the Windsor error handling interceptor
     public interface IRepository
     {
     }

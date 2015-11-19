@@ -1,17 +1,19 @@
 ﻿using System;
 using System.Linq;
 using System.Collections.Generic;
-using Finances.Core.Interfaces;
-//using Finances.Core.Entities;
-using AutoMapper;
-using AutoMapper.QueryableExtensions;
 using System.Data.Entity;
 using System.Data;
 using System.Data.Entity.Validation;
 
+using AutoMapper;
+using AutoMapper.QueryableExtensions;
+
+//using Finances.Interface;
+using Finances.Core.Interfaces;
+
 namespace Finances.Persistence.EF
 {
-    public class BankRepository : IBankRepository, IRepository
+    public class BankRepository : IBankRepository
     {
         private readonly IModelContextFactory factory;
         private readonly IMappingEngine mapper;
@@ -25,125 +27,67 @@ namespace Finances.Persistence.EF
         }
 
 
-        //public int Add(Core.Entities.Bank entity)
-        //{
-        //    var ef = mapper.Map<Bank>(entity);
-        //    CommonRepository.Add<Bank>(factory,ef);
-        //    mapper.Map<Bank, Core.Entities.Bank>(ef, entity);
-        //    return ef.BankId;
-        //}
-
-
         public int Add(Core.Entities.Bank entity)
         {
             int id = 0;
-            try
+
+            var ef = mapper.Map<Bank>(entity);
+            using (FinanceEntities context = factory.CreateContext())
             {
-                var ef = mapper.Map<Bank>(entity);
-                using (FinanceEntities context = factory.CreateContext())
-                {
-                    context.Entry(ef).State = EntityState.Added;
-                    context.SaveChanges();
-                }
-                //read back columns which may have changed
-                entity.BankId = ef.BankId;
-                //entity.RecordCreatedDateTime = ef.RecordCreatedDateTime;
-                //entity.RecordUpdatedDateTime = ef.RecordUpdatedDateTime;
-                id = ef.BankId;
+                context.Entry(ef).State = EntityState.Added;
+                context.SaveChanges();
             }
-            catch (DbEntityValidationException e)
-            {
-                CommonRepository.HandleDbEntityValidationException(e);
-            }
+            //read back columns which may have changed
+            entity.BankId = ef.BankId;
+            //entity.RecordCreatedDateTime = ef.RecordCreatedDateTime;
+            //entity.RecordUpdatedDateTime = ef.RecordUpdatedDateTime;
+            id = ef.BankId;
+
             return id;
         }
 
 
-        //public bool Update(Core.Entities.Bank entity)
-        //{
-        //    using (FinanceEntities context = factory.CreateContext())
-        //    {
-        //        var ef = mapper.Map<Bank>(entity);
-        //        context.Entry(ef).State = EntityState.Modified;
-        //        context.SaveChanges();
-        //    }
-        //    return true;
-        //}
-
         public bool Update(Core.Entities.Bank entity)
         {
-            try
+            var ef = mapper.Map<Bank>(entity);
+            using (FinanceEntities context = factory.CreateContext())
             {
-                var ef = mapper.Map<Bank>(entity);
-                using (FinanceEntities context = factory.CreateContext())
-                {
-                    context.Entry(ef).State = EntityState.Modified;
-                    context.SaveChanges();
-                }
-                //read back columns which may have changed
-                //entity.RecordUpdatedDateTime = ef.RecordUpdatedDateTime;
+                context.Entry(ef).State = EntityState.Modified;
+                context.SaveChanges();
             }
-            catch (DbEntityValidationException e)
-            {
-                CommonRepository.HandleDbEntityValidationException(e);
-            }
+            //read back columns which may have changed
+            //entity.RecordUpdatedDateTime = ef.RecordUpdatedDateTime;
+
             return true;
         }
 
 
-
-        //public bool Delete(Core.Entities.Bank entity)
-        //{
-        //    using (FinanceEntities context = factory.CreateContext())
-        //    {
-        //        var ef = mapper.Map<Bank>(entity);
-        //        context.Entry(ef).State = EntityState.Deleted;
-        //        context.SaveChanges();
-        //    }
-        //    return true;
-        //}
-
         public bool Delete(Core.Entities.Bank entity)
         {
-            try
+            var ef = mapper.Map<Bank>(entity);
+            using (FinanceEntities context = factory.CreateContext())
             {
-                var ef = mapper.Map<Bank>(entity);
-                using (FinanceEntities context = factory.CreateContext())
-                {
-                    context.Entry(ef).State = EntityState.Deleted;
-                    context.SaveChanges();
-                }
+                context.Entry(ef).State = EntityState.Deleted;
+                context.SaveChanges();
             }
-            catch (DbEntityValidationException e)
-            {
-                CommonRepository.HandleDbEntityValidationException(e);
-            }
+
             return true;
         }
 
 
         public bool Delete(List<int> ids)
         {
-            try
+            using (FinanceEntities context = factory.CreateContext())
             {
-                using (FinanceEntities context = factory.CreateContext())
+                foreach (var id in ids)
                 {
-                    foreach (var id in ids)
-                    {
-                        var ef = new Bank() { BankId = id };
-                        context.Entry(ef).State = EntityState.Deleted;
-                    }
-                    context.SaveChanges();
+                    var ef = new Bank() { BankId = id };
+                    context.Entry(ef).State = EntityState.Deleted;
                 }
-            }
-            catch (DbEntityValidationException e)
-            {
-                CommonRepository.HandleDbEntityValidationException(e);
+                context.SaveChanges();
             }
             return true;
         }
-
-
 
         public Core.Entities.Bank Read(int id)
         {

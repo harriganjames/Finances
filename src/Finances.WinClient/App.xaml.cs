@@ -3,20 +3,25 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
 using System.Globalization;
+using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Markup;
 using System.Windows.Media;
+using System.Windows.Threading;
 using Castle.Core;
 using Castle.Facilities.TypedFactory;
 using Castle.MicroKernel.ModelBuilder.Inspectors;
 using Castle.MicroKernel.Registration;
 using Castle.MicroKernel.Resolvers.SpecializedResolvers;
 using Castle.Windsor;
+using Castle.Windsor.Installer;
 using Finances.Core;
+using Finances.Service;
 using Finances.WinClient.CastleInstallers;
 using Finances.WinClient.ViewModels;
 using Finances.WinClient.Views;
@@ -42,7 +47,7 @@ namespace Finances.WinClient
             // are independant.
             // String.Format() seems to use the System locale (i.e. select language in system tray)
             // CultureInfo.CurrentCulture is locale of User - Region settings, Change location, Format tab
-            // I think Binding StringFormat always used en-US unless changed explicitly using the below:
+            // I think Binding StringFormat always uses en-US unless changed explicitly using the below:
             FrameworkElement.LanguageProperty.OverrideMetadata(typeof(FrameworkElement),
                 new FrameworkPropertyMetadata(XmlLanguage.GetLanguage(CultureInfo.CurrentCulture.IetfLanguageTag)));
 
@@ -70,28 +75,49 @@ namespace Finances.WinClient
 
             container.Kernel.AddFacility<TypedFactoryFacility>();
 
-            //AutoMapper.Mapper.Initialize(cfg => cfg.RecognizePrefixes("Schedule"));
-
-            container.Install(
-                            new SystemInstaller(),
-                            new ConnectionInstaller(),
-                            new EFModelContextFactoryInstaller(),
-                            new DialogServiceInstaller(w),
-                            new RepositoriesInstaller(),
-                            new DomainServicesInstaller(),
-                            new ExceptionServiceInstaller(),
-                            new InterceptorsInstaller(),
-                            new WorkspaceInstaller(),
-                            new ViewModelInstallers(),
-                            new UtilitiesInstaller(w),
-                            new MappingsCreatorInstaller(),
-                            new EnginesInstaller(),
-                            new EntityInstaller()
-                            );
+            container.Register(Component.For<Window>().Instance(w));
+            container.Register(Component.For<Dispatcher>().UsingFactoryMethod(() => w.Dispatcher));
 
 
 
-            //this.Resources.Add(null, new DataTemplate(typeof(MainViewModel)) { VisualTree = new MainView() });
+            container.Install(FromAssembly.InDirectory(
+                new AssemblyFilter(Path.GetDirectoryName(
+                    Assembly.GetExecutingAssembly().Location))));
+
+
+
+            //container.Install(
+            //                new SystemInstaller(),
+            //                new EnginesInstaller(),
+            //                new ConnectionInstaller(),
+            //                new EFModelContextFactoryInstaller(),
+            //                new DialogServiceInstaller(w),
+            //                //new RepositoriesInstaller(),
+            //                new InterceptorsInstaller(),
+            //                new MappingsCreatorInstaller(),
+            //                new EntityInstaller(),
+            //                new Finances.Service.ServiceInstaller(),
+            //                new Finances.Persistence.EF.BootstrapInstaller(),
+            //                new DomainServicesInstaller(),
+            //                new ExceptionServiceInstaller(),
+            //                new UtilitiesInstaller(w),
+
+            //                new WorkspaceInstaller(),
+            //                new ViewModelInstallers()
+            //                );
+
+
+
+            foreach (var handler in container.Kernel.GetAssignableHandlers(typeof(object)))
+            {
+                Console.Write("{0} :",handler.ComponentModel.Implementation);
+                foreach (var service in handler.ComponentModel.Services)
+                {
+                    Console.Write(" {0}", service.Name);
+                }
+                Console.WriteLine();
+            }
+
 
             container.Resolve<Apex>();
 

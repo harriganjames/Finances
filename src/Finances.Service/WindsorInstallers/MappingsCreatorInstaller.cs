@@ -1,0 +1,23 @@
+﻿using Castle.Windsor;
+using Castle.MicroKernel.SubSystems.Configuration;
+using Castle.MicroKernel.Registration;
+//using Finances.Core;
+using AutoMapper;
+using Finances.Service;
+
+namespace Finances.Service.WindsorInstallers
+{
+    public class MappingsCreatorInstaller : IWindsorInstaller
+    {
+        public void Install(IWindsorContainer container, IConfigurationStore store)
+        {
+            // this is only used to create the mappings. the instance isn't used anywhere
+            container.Register(Component.For<MappingsCreator>().ImplementedBy<MappingsCreator>());
+
+            container.Register(Component.For<IMappingEngine>().UsingFactoryMethod(() =>
+                {
+                    return Mapper.Engine;
+                }));
+        }
+    }
+}

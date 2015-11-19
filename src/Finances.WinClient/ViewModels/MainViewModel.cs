@@ -4,7 +4,8 @@ using System.Configuration;
 using Finances.Core;
 using Finances.Core.Interfaces;
 using Finances.Core.Wpf;
-using Finances.Core.Wpf.ObjectInformation;
+using Finances.Core.Wpf.ObjectInfo;
+using Finances.Interface;
 namespace Finances.WinClient.ViewModels
 {
     public interface IMainViewModel

@@ -7,6 +7,7 @@ using Castle.Facilities.TypedFactory;
 using Castle.MicroKernel.ModelBuilder.Inspectors;
 using Castle.MicroKernel.Resolvers.SpecializedResolvers;
 using Castle.Windsor;
+using Finances.Persistence.EF.WindsorInstallers;
 using Finances.WinClient.CastleInstallers;
 
 namespace Finances.IntegrationTests.MS
@@ -36,16 +37,20 @@ namespace Finances.IntegrationTests.MS
                             new ConnectionInstaller(),
                             new EFModelContextFactoryInstaller(),
                             //new DialogServiceInstaller(w),
-                            new RepositoriesInstaller(),
+                            //new RepositoriesInstaller(),
+                            //new BankInstaller(),
+                            //new BankAccountInstaller(),
+                            //new TransferInstaller(),
+                            new CashflowInstaller()
                             //new DomainServicesInstaller(),
                             //new ExceptionServiceInstaller(),
                             //new InterceptorsInstaller(),
                             //new WorkspaceInstaller(),
                             //new ViewModelInstallers(),
                             //new UtilitiesInstaller(w),
-                            new MappingsCreatorInstaller(),
-                            new EnginesInstaller(),
-                            new EntityInstaller()
+                            //new MappingsCreatorInstaller()
+                            //new EnginesInstaller(),
+                            //new EntityInstaller()
                             );
 
 

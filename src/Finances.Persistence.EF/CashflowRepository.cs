@@ -13,7 +13,7 @@ using System.Data;
 
 namespace Finances.Persistence.EF
 {
-    public class CashflowRepository : ICashflowRepository, IRepositoryRead<Core.Entities.Cashflow>, IRepository
+    public class CashflowRepository : IRepositoryRead<Core.Entities.Cashflow>, IRepositoryWrite<Core.Entities.Cashflow>  //ICashflowRepository //, IRepository
     {
         private readonly IModelContextFactory factory;
         private readonly IMappingEngine mapper;
@@ -30,8 +30,8 @@ namespace Finances.Persistence.EF
         public int Add(Core.Entities.Cashflow entity)
         {
             int id=0;
-            try
-            {
+            //try
+            //{
                 var ef = mapper.Map<Cashflow>(entity);
                 using (FinanceEntities context = factory.CreateContext())
                 {
@@ -58,18 +58,21 @@ namespace Finances.Persistence.EF
                 }
 
                 id = ef.CashflowId;
-            }
-            catch (DbEntityValidationException e)
-            {
-                CommonRepository.HandleDbEntityValidationException(e);
-            }
+            //}
+            //catch (DbEntityValidationException e)
+            //{
+            //    CommonRepository.HandleDbEntityValidationException(e);
+            //}
             return id;
         }
 
         public bool Update(Core.Entities.Cashflow entity)
         {
-            try
-            {
+
+            //throw new Exception("testing");
+
+            //try
+            //{
                 var ef = mapper.Map<Cashflow>(entity);
                 using (FinanceEntities context = factory.CreateContext())
                 {
@@ -97,6 +100,7 @@ namespace Finances.Persistence.EF
                     context.Entry(ef).State = EntityState.Modified;
 
                     var s = ShowEntityStates(context);
+
                     context.SaveChanges();
                 }
                 //read back data which may have changed
@@ -118,19 +122,19 @@ namespace Finances.Persistence.EF
                     i++;
                 }
 
-            }
-            catch (DbEntityValidationException e)
-            {
-                CommonRepository.HandleDbEntityValidationException(e);
-            }
+            //}
+            //catch (DbEntityValidationException e)
+            //{
+            //    CommonRepository.HandleDbEntityValidationException(e);
+            //}
             return true;
         }
 
 
         public bool Delete(Core.Entities.Cashflow entity)
         {
-            try
-            {
+            //try
+            //{
                 var ef = mapper.Map<Cashflow>(entity);
                 ef.CashflowBankAccounts.Clear();
                 using (FinanceEntities context = factory.CreateContext())
@@ -139,18 +143,18 @@ namespace Finances.Persistence.EF
                     // deletes are cascaded to CashflowBankAccount
                     context.SaveChanges();
                 }
-            }
-            catch (DbEntityValidationException e)
-            {
-                CommonRepository.HandleDbEntityValidationException(e);
-            }
+            //}
+            //catch (DbEntityValidationException e)
+            //{
+            //    CommonRepository.HandleDbEntityValidationException(e);
+            //}
             return true;
         }
 
         public bool Delete(List<int> ids)
         {
-            try
-            {
+            //try
+            //{
                 using (FinanceEntities context = factory.CreateContext())
                 {
                     //context.Cashflows.Delete(e=>ids.Contains(e.CashflowId));
@@ -164,11 +168,11 @@ namespace Finances.Persistence.EF
                     // deletes are cascaded to CashflowBankAccount
                     context.SaveChanges();
                 }
-            }
-            catch (DbEntityValidationException e)
-            {
-                CommonRepository.HandleDbEntityValidationException(e);
-            }
+            //}
+            //catch (DbEntityValidationException e)
+            //{
+            //    CommonRepository.HandleDbEntityValidationException(e);
+            //}
             return true;
         }
 

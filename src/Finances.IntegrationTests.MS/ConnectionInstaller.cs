@@ -1,7 +1,7 @@
 ﻿using Castle.Windsor;
 using Castle.MicroKernel.SubSystems.Configuration;
 using Castle.MicroKernel.Registration;
-using Finances.Core;
+using Finances.Interface;
 
 namespace Finances.IntegrationTests.MS
 {

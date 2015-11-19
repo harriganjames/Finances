@@ -1,15 +1,12 @@
 ﻿Currently working on:
 
+Move these:
+Apex --> Service
+ObjectInformation --> Service
+ObjectInfoViewModel --> Wpf
 
-Convert to EF
 
-How to add EF5.0 properly? 
-POCO + entities in separate project? No keep wher ethey are. They contain sepcific things like reference properties.
 
-Maybe move the domain services closer to the repository to acheive a dependancy map whereby the business layer does not
-depend on the repository. This means the service will become specifc to the ORM. 
-e.g. The BankService is tied in to EF because it uses EF-generated entities.
-The business layer uses IBankService to abstract it.
 
 
 Dependancy map

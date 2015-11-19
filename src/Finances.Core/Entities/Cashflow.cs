@@ -3,16 +3,19 @@ using System.Linq;
 using System.Collections.Generic;
 using Finances.Core.Engines.Cashflow;
 using Finances.Core.Interfaces;
+using Finances.Core.ValueObjects;
 
 namespace Finances.Core.Entities
 {
     public class Cashflow : Entity
     {
-        readonly IProjectionTransferGenerator projectionTransferGenerator;
+        readonly ICashflowProjectionTransferGenerator projectionTransferGenerator;
+        readonly ICashflowProjection cashflowProjection;
 
-        public Cashflow(IProjectionTransferGenerator projectionTransferGenerator)
+        public Cashflow(ICashflowProjection cashflowProjection)
         {
             this.projectionTransferGenerator = projectionTransferGenerator;
+            this.cashflowProjection = cashflowProjection;
 
             CashflowBankAccounts = new List<CashflowBankAccount>();
         }
@@ -26,70 +29,66 @@ namespace Finances.Core.Entities
 
         public List<CashflowBankAccount> CashflowBankAccounts { get; set; }
 
-        //public void AddCashflowBankAccount(BankAccount a)
-        //{
-        //    CashflowBankAccounts.Add(new CashflowBankAccount() { BankAccount = a });
-        //}
-
-
         public List<CashflowProjectionItem> GenerateProjection(
                         DateTime endDate,
                         decimal openingBalance,
                         decimal threshold,
-                        IAggregatedProjectionItemsGenerator projectionMode
+                        ICashflowProjectionMode projectionMode
                         )
         {
-            List<CashflowProjectionTransfer> cpts = projectionTransferGenerator.GenerateProjectionTransfers(this.CashflowBankAccounts, this.StartDate, endDate);
+            return this.cashflowProjection.GenerateProjection(this.CashflowBankAccounts, this.StartDate, endDate, openingBalance, threshold, projectionMode);
 
-            List<CashflowProjectionItem> cpis = projectionMode.GenerateAggregatedProjectionItems(cpts); 
+            //List<CashflowProjectionTransfer> cpts = projectionTransferGenerator.GenerateCashflowProjectionTransfers(this.CashflowBankAccounts, this.StartDate, endDate);
 
-            ApplyBalancesAndThreshold(cpis, this.StartDate, openingBalance, threshold);
+            //List<CashflowProjectionItem> cpis = projectionMode.GenerateAggregatedProjectionItems(cpts); 
 
-            return cpis;
+            //ApplyBalancesAndThreshold(cpis, this.StartDate, openingBalance, threshold);
+
+            //return cpis;
         }
 
 
-        List<CashflowProjectionItem> ApplyBalancesAndThreshold(List<CashflowProjectionItem> cashflowProjectionItems,
-                                                                DateTime startDate,
-                                                                decimal openingBalance,
-                                                                decimal threshold)
-        {
+        //List<CashflowProjectionItem> ApplyBalancesAndThreshold(List<CashflowProjectionItem> cashflowProjectionItems,
+        //                                                        DateTime startDate,
+        //                                                        decimal openingBalance,
+        //                                                        decimal threshold)
+        //{
 
-            cashflowProjectionItems.Insert(0, new CashflowProjectionItem()
-            {
-                Period = startDate.ToString("yyyy-MM-dd"),
-                Item = "Opening Balance",
-                In = null,
-                Out = null,
-                Balance = openingBalance
-            });
+        //    cashflowProjectionItems.Insert(0, new CashflowProjectionItem()
+        //    {
+        //        Period = startDate.ToString("yyyy-MM-dd"),
+        //        Item = "Opening Balance",
+        //        In = null,
+        //        Out = null,
+        //        Balance = openingBalance
+        //    });
 
-            // calculate the running balances
+        //    // calculate the running balances
 
 
-            var previousCpi = cashflowProjectionItems[0]; // start with opening balance item
-            foreach (var cpi in cashflowProjectionItems.Skip(1))
-            {
-                if (previousCpi.Period != cpi.Period)
-                    previousCpi.PeriodBalance = previousCpi.Balance;
-                cpi.Balance = previousCpi.Balance + (cpi.In ?? 0M) - (cpi.Out ?? 0M);
-                previousCpi = cpi;
-            }
-            previousCpi.PeriodBalance = previousCpi.Balance;
+        //    var previousCpi = cashflowProjectionItems[0]; // start with opening balance item
+        //    foreach (var cpi in cashflowProjectionItems.Skip(1))
+        //    {
+        //        if (previousCpi.Period != cpi.Period)
+        //            previousCpi.PeriodBalance = previousCpi.Balance;
+        //        cpi.Balance = previousCpi.Balance + (cpi.In ?? 0M) - (cpi.Out ?? 0M);
+        //        previousCpi = cpi;
+        //    }
+        //    previousCpi.PeriodBalance = previousCpi.Balance;
 
-            // set the BalanceState for threshold
-            foreach (var cpi in cashflowProjectionItems)
-            {
-                if (cpi.Balance < 0)
-                    cpi.BalanceState = BalanceStateEnum.Negative;
-                else if (cpi.Balance < threshold)
-                    cpi.BalanceState = BalanceStateEnum.BelowThreshold;
-                else
-                    cpi.BalanceState = BalanceStateEnum.OK;
-            }
+        //    // set the BalanceState for threshold
+        //    foreach (var cpi in cashflowProjectionItems)
+        //    {
+        //        if (cpi.Balance < 0)
+        //            cpi.BalanceState = BalanceStateEnum.Negative;
+        //        else if (cpi.Balance < threshold)
+        //            cpi.BalanceState = BalanceStateEnum.BelowThreshold;
+        //        else
+        //            cpi.BalanceState = BalanceStateEnum.OK;
+        //    }
 
-            return cashflowProjectionItems;
-        }
+        //    return cashflowProjectionItems;
+        //}
 
 
     

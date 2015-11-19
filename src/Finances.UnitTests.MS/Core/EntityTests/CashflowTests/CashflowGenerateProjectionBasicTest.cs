@@ -11,6 +11,7 @@ using Finances.Core.Entities;
 using System.Collections.Generic;
 using Finances.Core.Factories;
 using Finances.Core;
+using Finances.Core.ValueObjects;
 
 
 namespace Finances.UnitTests.MS.Core.EntityTests.CashflowTests
@@ -27,7 +28,7 @@ namespace Finances.UnitTests.MS.Core.EntityTests.CashflowTests
 
         //IEnumerable<IScheduleFrequencyCalculator> scheduleFrequencyCalculators;
 
-        Mock<IProjectionTransferGenerator> mockIProjectionTransferGenerator;
+        Mock<ICashflowProjectionTransferGenerator> mockIProjectionTransferGenerator;
 
 
         [TestInitialize]
@@ -43,7 +44,7 @@ namespace Finances.UnitTests.MS.Core.EntityTests.CashflowTests
 
 
             mockIProjectionTransferGenerator
-                .Setup(s => s.GenerateProjectionTransfers(
+                .Setup(s => s.GenerateCashflowProjectionTransfers(
                             It.IsAny<List<CashflowBankAccount>>(),
                             It.IsAny<DateTime>(),
                             It.IsAny<DateTime>()
@@ -62,7 +63,7 @@ namespace Finances.UnitTests.MS.Core.EntityTests.CashflowTests
             //    .Returns((Transfer t, DateTime d) => d.AddMonths(1));
 
 
-            sut = new Cashflow(mockIProjectionTransferGenerator.Object)
+            sut = new Cashflow(new CashflowProjection(mockIProjectionTransferGenerator.Object))
             {
                 OpeningBalance = 5000,
                 StartDate = new DateTime(2015, 08, 1),
@@ -83,7 +84,7 @@ namespace Finances.UnitTests.MS.Core.EntityTests.CashflowTests
         [TestMethod]
         public void TestGenerateProjectionBasic()
         {
-            var mode = new AggregatedProjectionItemsGeneratorMonthlySummary();
+            var mode = new CashflowProjectionModeMonthlySummary();
 
             var cpi = sut.GenerateProjection(new DateTime(2015,12,31),10000,5000,mode);
 

@@ -10,8 +10,10 @@ using Finances.WinClient.DomainServices;
 using Finances.WinClient.Factories;
 using System.Threading;
 using Remotion.Linq.Collections;
+
 using Finances.Core.Engines.Cashflow;
 using Finances.Core.Engines;
+using Finances.Core.ValueObjects;
 
 
 //
@@ -24,31 +26,27 @@ namespace Finances.WinClient.ViewModels
 {
     public class CashflowTableViewModel : Workspace
     {
-        readonly ICashflowRepository cashflowRepository;
-        readonly ICashflowEngineA cashflowEngineA;
-        readonly ICashflowEngineFactoryB cashflowEngineFactoryB;
-        readonly ICashflowEngineC cashflowEngineC;
-        readonly IEnumerable<IAggregatedProjectionItemsGenerator> aggregatedProjectionItemsGenerators;
-        //readonly IAggregatedProjectionItemsGeneratorFactory aggregatedProjectionItemsGeneratorFactory;
+        readonly IRepositoryRead<Cashflow> cashflowRepositoryRead;
+        //readonly ICashflowEngineA cashflowEngineA;
+        //readonly ICashflowEngineFactoryB cashflowEngineFactoryB;
+        //readonly ICashflowEngineC cashflowEngineC;
+        readonly IEnumerable<ICashflowProjectionMode> aggregatedProjectionItemsGenerators;
 
-        List<Cashflow> cashflowsTemp;
         List<CashflowProjectionItem> cashflowProjectionItems;
 
 
-        public CashflowTableViewModel(ICashflowRepository cashflowRepository,
-                                        ICashflowEngineA cashflowEngineA,
-                                        ICashflowEngineFactoryB cashflowEngineFactoryB,
-                                        ICashflowEngineC cashflowEngineC,
-                                        IEnumerable<IAggregatedProjectionItemsGenerator> aggregatedProjectionItemsGenerators            
-                                        //IAggregatedProjectionItemsGeneratorFactory aggregatedProjectionItemsGeneratorFactory
+        public CashflowTableViewModel(IRepositoryRead<Cashflow> cashflowRepositoryRead,
+                                        //ICashflowEngineA cashflowEngineA,
+                                        //ICashflowEngineFactoryB cashflowEngineFactoryB,
+                                        //ICashflowEngineC cashflowEngineC,
+                                        IEnumerable<ICashflowProjectionMode> aggregatedProjectionItemsGenerators
                                         )
         {
-            this.cashflowRepository = cashflowRepository;
-            this.cashflowEngineA = cashflowEngineA;
-            this.cashflowEngineFactoryB = cashflowEngineFactoryB;
-            this.cashflowEngineC = cashflowEngineC;
+            this.cashflowRepositoryRead = cashflowRepositoryRead;
+            //this.cashflowEngineA = cashflowEngineA;
+            //this.cashflowEngineFactoryB = cashflowEngineFactoryB;
+            //this.cashflowEngineC = cashflowEngineC;
             this.aggregatedProjectionItemsGenerators = aggregatedProjectionItemsGenerators;
-            //this.aggregatedProjectionItemsGeneratorFactory = aggregatedProjectionItemsGeneratorFactory;
 
             RefreshCommand = base.AddNewCommand(new ActionCommand(Refresh));
         }
@@ -157,14 +155,14 @@ namespace Finances.WinClient.ViewModels
             }
         }
 
-        List<IAggregatedProjectionItemsGenerator> modes;
-        public List<IAggregatedProjectionItemsGenerator> Modes
+        List<ICashflowProjectionMode> modes;
+        public List<ICashflowProjectionMode> Modes
         {
             get
             {
                 if (modes == null)
                 {
-                    modes = new List<IAggregatedProjectionItemsGenerator>(); 
+                    modes = new List<ICashflowProjectionMode>(); 
                     foreach (var m in this.aggregatedProjectionItemsGenerators)
                     {
                         modes.Add(m);
@@ -175,8 +173,8 @@ namespace Finances.WinClient.ViewModels
             }
         }
 
-        IAggregatedProjectionItemsGenerator selectedMode;
-        public IAggregatedProjectionItemsGenerator SelectedMode
+        ICashflowProjectionMode selectedMode;
+        public ICashflowProjectionMode SelectedMode
         {
             get
             {
@@ -191,77 +189,6 @@ namespace Finances.WinClient.ViewModels
                 }
             }
         }
-
-        //List<DataIdName> modes;
-        //public List<DataIdName> Modes
-        //{
-        //    get
-        //    {
-        //        if (modes == null)
-        //        {
-        //            modes = new List<DataIdName>();
-        //            foreach (var m in this.aggregatedProjectionItemsGenerators)
-        //            {
-        //                modes.Add(new DataIdName() { Code = m.ProjectionModeCode, Name = m.ProjectionModeName });
-        //            }
-        //            SelectedMode = modes.FirstOrDefault();
-        //        }
-        //        return modes;
-        //    }
-        //}
-
-        //DataIdName selectedMode;
-        //public DataIdName SelectedMode
-        //{
-        //    get
-        //    {
-        //        return selectedMode;
-        //    }
-        //    set
-        //    {
-        //        if (selectedMode != value)
-        //        {
-        //            selectedMode = value;
-        //            NotifyPropertyChanged(() => SelectedMode);
-        //        }
-        //    }
-        //}
-
-
-        //List<ProjectionModeEnum> modes_old;
-        //public List<ProjectionModeEnum> Modes_old
-        //{
-        //    get
-        //    {
-        //        if (modes_old == null)
-        //        {
-        //            modes_old = new List<ProjectionModeEnum>(); // { ProjectionModeEnum.Detail, ProjectionModeEnum.MonthlySummary };
-        //            foreach (var m in this.aggregatedProjectionItemsGenerators)
-        //            {
-        //                modes_old.Add(m.ProjectionMode);
-        //            }
-        //        }
-        //        return modes_old;
-        //    }
-        //}
-
-        //ProjectionModeEnum selectedMode_old;
-        //public ProjectionModeEnum SelectedMode_old
-        //{
-        //    get
-        //    {
-        //        return selectedMode_old;
-        //    }
-        //    set
-        //    {
-        //        if (selectedMode_old != value)
-        //        {
-        //            selectedMode_old = value;
-        //            NotifyPropertyChanged(() => SelectedMode_old);
-        //        }
-        //    }
-        //}
-
 
 
         public List<CashflowProjectionItem> CashflowProjectionItems
@@ -312,7 +239,7 @@ namespace Finances.WinClient.ViewModels
 
         private List<Cashflow> RetrieveCashflowsTask()
         {
-            return cashflowRepository.ReadList();
+            return cashflowRepositoryRead.ReadList();
         }
 
         private void PopulateCashflowsTask(List<Cashflow> data)
@@ -335,43 +262,14 @@ namespace Finances.WinClient.ViewModels
         {
             if (SelectedCashflow != null)
             {
-                // Engine A method
-                //CashflowProjectionItems = cashflowEngineA.GenerateProjection(SelectedCashflow.Entity.CashflowBankAccounts,
-                //                                    SelectedCashflow.Entity.StartDate,
-                //                                    SelectedCashflow.Entity.StartDate.AddMonths(Decimal.ToInt32(QtyMonths.Value)),
-                //                                    OpeningBalance.Value, Threshold.Value, SelectedMode_old);
-
-
-                // Engine B method
-                //ICashflowEngineB engineB = null;
-
-                //if (SelectedMode_old == ProjectionModeEnum.Detail)
-                //    engineB = cashflowEngineFactoryB.CreateDetail();
-                //else if (SelectedMode_old == ProjectionModeEnum.MonthlySummary)
-                //    engineB = cashflowEngineFactoryB.CreateMonthlySummary();
-
-                //CashflowProjectionItems = engineB.GenerateProjection(SelectedCashflow.Entity.CashflowBankAccounts,
-                //                    SelectedCashflow.Entity.StartDate,
-                //                    SelectedCashflow.Entity.StartDate.AddMonths(Decimal.ToInt32(QtyMonths.Value)),
-                //                    OpeningBalance.Value, Threshold.Value);
-
-
-
-                // Engine C method
-
-                //var apig = aggregatedProjectionItemsGenerators.FirstOrDefault(g => g.ProjectionMode == SelectedMode);
-
-                //var apig = this.aggregatedProjectionItemsGeneratorFactory.Create(SelectedMode);
-
-                CashflowProjectionItems = cashflowEngineC.GenerateProjection(SelectedCashflow.Entity.CashflowBankAccounts,
-                                    SelectedCashflow.Entity.StartDate,
+                CashflowProjectionItems = SelectedCashflow.Entity.GenerateProjection(
                                     SelectedCashflow.Entity.StartDate.AddMonths(Decimal.ToInt32(QtyMonths.Value)),
-                                    OpeningBalance.Value, Threshold.Value, SelectedMode);
-
+                                    OpeningBalance.Value, 
+                                    Threshold.Value, 
+                                    SelectedMode);
 
 
             }
-            //.GenerateProjection(SelectedCashflow.Entity,Decimal.ToInt32(QtyMonths.Value),150);
             else
                 CashflowProjectionItems = null;
         }

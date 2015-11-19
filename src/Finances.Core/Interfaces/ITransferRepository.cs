@@ -1,9 +1,10 @@
 ﻿using System.Collections.Generic;
 using Finances.Core.Entities;
+//using Finances.Core.ValueObjects;
 
 namespace Finances.Core.Interfaces
 {
-    public interface ITransferRepository
+    public interface ITransferRepository : IRepository
     {
         int Add(Transfer data);
         bool Update(Transfer data);
@@ -13,5 +14,6 @@ namespace Finances.Core.Interfaces
         List<Transfer> ReadList();
         List<DataIdName> ReadListDataIdName();
         List<TransferCategory> ReadListTransferCategories();
+        //List<TransferDirection> GetTransferDirections(List<BankAccount> bankAccounts);
     }
 }

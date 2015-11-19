@@ -3,7 +3,7 @@ using Finances.Core.Entities;
 
 namespace Finances.Core.Interfaces
 {
-    public interface IBankAccountRepository
+    public interface IBankAccountRepository : IRepository
     {
         int Add(BankAccount account);
         bool Update(BankAccount account);

@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using Finances.Interface;
 
 namespace Finances.Core.Wpf
 {

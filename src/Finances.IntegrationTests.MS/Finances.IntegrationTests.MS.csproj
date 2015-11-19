@@ -87,6 +87,10 @@
       <Project>{bb8793f8-877f-42b0-82ef-0786b2c214ef}</Project>
       <Name>Finances.Core</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Finances.Interface\Finances.Interface.csproj">
+      <Project>{482c90a7-4e96-4f46-8d51-93e902c265d0}</Project>
+      <Name>Finances.Interface</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Finances.Persistence.EF\Finances.Persistence.EF.csproj">
       <Project>{8bba6faa-e9db-4016-8af2-1466a7a751a0}</Project>
       <Name>Finances.Persistence.EF</Name>

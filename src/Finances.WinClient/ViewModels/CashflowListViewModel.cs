@@ -23,13 +23,15 @@ namespace Finances.WinClient.ViewModels
 
     public class CashflowListViewModel : ListViewModelBase<CashflowItemViewModel>, ICashflowListViewModel
     {
-        readonly ICashflowRepository cashflowRepository;
+        //readonly ICashflowRepository cashflowRepository;
+        readonly IRepositoryRead<Cashflow> cashflowRepository;
         readonly ICashflowAgent cashflowAgent;
 
         Dictionary<int, Cashflow> cashflows = new Dictionary<int, Cashflow>();
 
         public CashflowListViewModel(
-                        ICashflowRepository cashflowRepository,
+                        IRepositoryRead<Cashflow> cashflowRepository,
+                        //ICashflowRepository cashflowRepository,
                         ICashflowAgent cashflowAgent
                         )
         {

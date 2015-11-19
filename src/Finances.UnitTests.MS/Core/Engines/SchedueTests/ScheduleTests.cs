@@ -13,16 +13,16 @@ namespace Finances.UnitTests.MS.Core.Engines.ScheduleTests
     public class ScheduleTests
     {
         //IScheduleInfo sut;
-        IEnumerable<IScheduleFrequencyCalculator> scheduleFrequencyCalculators; 
+        IEnumerable<IScheduleFrequency> scheduleFrequencyCalculators; 
 
         [TestInitialize]
         public void Initialize()
         {
 
             //sut = new ScheduleInfo();
-            scheduleFrequencyCalculators = new IScheduleFrequencyCalculator[] { 
-                                new ScheduleFrequencyCalculatorMonthly(),
-                                new ScheduleFrequencyCalculatorWeekly() };
+            scheduleFrequencyCalculators = new IScheduleFrequency[] { 
+                                new ScheduleFrequencyMonthly(),
+                                new ScheduleFrequencyWeekly() };
 
         }
 

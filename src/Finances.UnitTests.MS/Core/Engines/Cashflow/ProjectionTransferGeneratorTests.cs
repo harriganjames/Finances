@@ -11,21 +11,22 @@ using Finances.Core.Entities;
 using System.Collections.Generic;
 using Finances.Core.Factories;
 using Finances.Core.Engines;
+using Finances.Core.ValueObjects;
 
 namespace Finances.UnitTests.MS.Finances.Core.Engines.Cashflow
 {
     [TestClass]
     public class ProjectionTransferGeneratorTests
     {
-        IProjectionTransferGenerator sut;
+        ICashflowProjectionTransferGenerator sut;
 
         IBankAccountRepository fakeBankAccountRepository;
 
-        Mock<IScheduleFrequencyCalculatorFactory> mockTransferFrequencyDateCalculatorFactory;
+        Mock<IScheduleFrequencyFactory> mockTransferFrequencyDateCalculatorFactory;
         Mock<ITransferDirectionGenerator> mockTransferDirectionGenerator;
-        Mock<IScheduleFrequencyCalculator> mockTransferFrequencyDateCalculatorMonthly;
+        Mock<IScheduleFrequency> mockTransferFrequencyDateCalculatorMonthly;
 
-        IEnumerable<IScheduleFrequencyCalculator> scheduleFrequencyCalculators;
+        IEnumerable<IScheduleFrequency> scheduleFrequencyCalculators;
 
         IScheduleFactory scheduleFactory;
 
@@ -38,10 +39,10 @@ namespace Finances.UnitTests.MS.Finances.Core.Engines.Cashflow
         {
             fakeBankAccountRepository = new FakeBankAccountRepository();
 
-            mockTransferFrequencyDateCalculatorFactory = new Mock<IScheduleFrequencyCalculatorFactory>();
+            mockTransferFrequencyDateCalculatorFactory = new Mock<IScheduleFrequencyFactory>();
             mockTransferDirectionGenerator = new Mock<ITransferDirectionGenerator>();
 
-            mockTransferFrequencyDateCalculatorMonthly = new Mock<IScheduleFrequencyCalculator>();
+            mockTransferFrequencyDateCalculatorMonthly = new Mock<IScheduleFrequency>();
 
             mockTransferFrequencyDateCalculatorMonthly.Setup(s => s.CalculateNextDate(It.IsAny<Schedule>(), It.IsAny<DateTime>()))
                 .Returns((Transfer t, DateTime d) => d.AddMonths(1));
@@ -49,15 +50,15 @@ namespace Finances.UnitTests.MS.Finances.Core.Engines.Cashflow
 
             allAccounts = new List<CashflowBankAccount>();
 
-            sut = new ProjectionTransferGenerator(
+            sut = new CashflowProjectionTransferGenerator(
                                     fakeBankAccountRepository,
                                     //mockTransferFrequencyDateCalculatorFactory.Object,
                                     mockTransferDirectionGenerator.Object
                                     );
 
-            scheduleFrequencyCalculators = new IScheduleFrequencyCalculator[] { 
-                                new ScheduleFrequencyCalculatorMonthly(),
-                                new ScheduleFrequencyCalculatorWeekly() };
+            scheduleFrequencyCalculators = new IScheduleFrequency[] { 
+                                new ScheduleFrequencyMonthly(),
+                                new ScheduleFrequencyWeekly() };
 
             scheduleFactory = new Fakes.FakeScheduleFactory();
 
@@ -73,7 +74,7 @@ namespace Finances.UnitTests.MS.Finances.Core.Engines.Cashflow
         {
             List<CashflowProjectionTransfer> results;
 
-            mockTransferFrequencyDateCalculatorFactory.Setup(s => s.GetCalculator(It.IsAny<Schedule>()))
+            mockTransferFrequencyDateCalculatorFactory.Setup(s => s.GetFrequency(It.IsAny<Schedule>()))
                 .Returns(mockTransferFrequencyDateCalculatorMonthly.Object);
 
             var testdata = new[] 
@@ -139,7 +140,7 @@ namespace Finances.UnitTests.MS.Finances.Core.Engines.Cashflow
                     .Returns(tds);
 
 
-                results = sut.GenerateProjectionTransfers(data.CashflowAccounts, data.StartDate, data.EndDate);
+                results = sut.GenerateCashflowProjectionTransfers(data.CashflowAccounts, data.StartDate, data.EndDate);
 
                 Assert.AreEqual(results.Count(c => c.TransferDirection.IsInbound), data.QtyInbound, data.Message);
 

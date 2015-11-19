@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Finances.Core.Entities;
 using Finances.Core.Interfaces;
 using Finances.Core.Wpf;
+using Finances.Interface;
 using Finances.WinClient.Factories;
 
 namespace Finances.WinClient.DomainServices

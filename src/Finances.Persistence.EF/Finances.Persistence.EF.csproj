@@ -11,6 +11,7 @@
     <AssemblyName>Finances.Persistence.EF</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <DontImportPostSharp>True</DontImportPostSharp>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -32,6 +33,12 @@
   <ItemGroup>
     <Reference Include="AutoMapper">
       <HintPath>..\..\libs\AutoMapper.3.2.1\lib\net40\AutoMapper.dll</HintPath>
+    </Reference>
+    <Reference Include="Castle.Core">
+      <HintPath>..\..\libs\Castle.Core.3.3.0\lib\net45\Castle.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Castle.Windsor">
+      <HintPath>..\..\libs\Castle.Windsor.3.3.0\lib\net45\Castle.Windsor.dll</HintPath>
     </Reference>
     <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -64,7 +71,13 @@
     <Compile Include="CashflowBankAccount.cs">
       <DependentUpon>Model.tt</DependentUpon>
     </Compile>
-    <Compile Include="CommonRepository.cs" />
+    <Compile Include="Interceptors\DbEntityValidationExceptionInterceptor.cs" />
+    <Compile Include="Interceptors\ErrorHandlingInterceptor.cs" />
+    <Compile Include="WindsorInstallers\CashflowInstaller.cs" />
+    <Compile Include="WindsorInstallers\MappingsInstaller.cs" />
+    <Compile Include="WindsorInstallers\RepositoriesInstaller.cs" />
+    <Compile Include="WindsorInstallers\EFModelContextFactoryInstaller.cs" />
+    <Compile Include="WindsorInstallers\EntityValidationInstaller.cs" />
     <Compile Include="CashflowRepository.cs" />
     <Compile Include="EntityValidationHandler.cs" />
     <Compile Include="GetDataTest_Result.cs">
@@ -90,7 +103,10 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Model.edmx</DependentUpon>
     </Compile>
-    <Compile Include="RepositoryReadEntityValidationHandler.cs" />
+    <Compile Include="RepositoryReadDecoratorTest.cs" />
+    <Compile Include="RepositoryWriteEntityValidationDecorator.cs" />
+    <Compile Include="RepositoryWriteDecoratorTest.cs" />
+    <Compile Include="RepositoryWriteExceptionHandlerDecorator.cs" />
     <Compile Include="Transfer.cs">
       <DependentUpon>Model.tt</DependentUpon>
     </Compile>
@@ -127,9 +143,18 @@
       <Project>{bb8793f8-877f-42b0-82ef-0786b2c214ef}</Project>
       <Name>Finances.Core</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Finances.Interface\Finances.Interface.csproj">
+      <Project>{482c90a7-4e96-4f46-8d51-93e902c265d0}</Project>
+      <Name>Finances.Interface</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Import Project="..\packages\PostSharp.4.1.28\tools\PostSharp.targets" Condition="Exists('..\packages\PostSharp.4.1.28\tools\PostSharp.targets')" />
+  <Target Name="EnsurePostSharpImported" BeforeTargets="BeforeBuild" Condition="'$(PostSharp30Imported)' == ''">
+    <Error Condition="!Exists('..\packages\PostSharp.4.1.28\tools\PostSharp.targets')" Text="This project references NuGet package(s) that are missing on this computer. Enable NuGet Package Restore to download them.  For more information, see http://www.postsharp.net/links/nuget-restore." />
+    <Error Condition="Exists('..\packages\PostSharp.4.1.28\tools\PostSharp.targets')" Text="The build restored NuGet packages. Build the project again to include these packages in the build. For more information, see http://www.postsharp.net/links/nuget-restore." />
+  </Target>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

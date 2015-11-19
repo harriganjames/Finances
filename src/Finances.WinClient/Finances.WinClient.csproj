@@ -110,20 +110,14 @@
     <Compile Include="AppWindow.xaml.cs">
       <DependentUpon>AppWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="CastleInstallers\ConnectionInstaller.cs" />
-    <Compile Include="CastleInstallers\EnginesInstaller.cs" />
-    <Compile Include="CastleInstallers\EFModelContextFactoryInstaller.cs" />
-    <Compile Include="CastleInstallers\EntityInstaller.cs" />
-    <Compile Include="CastleInstallers\MappingsCreatorInstaller.cs" />
-    <Compile Include="CastleInstallers\SystemInstaller.cs" />
-    <Compile Include="CastleInstallers\UtilitiesInstaller.cs" />
-    <Compile Include="CastleInstallers\RepositoriesInstaller.cs" />
-    <Compile Include="CastleInstallers\DomainServicesInstaller.cs" />
-    <Compile Include="CastleInstallers\DialogServiceInstaller.cs" />
-    <Compile Include="CastleInstallers\ExceptionServiceInstaller.cs" />
-    <Compile Include="CastleInstallers\InterceptorsInstaller.cs" />
-    <Compile Include="CastleInstallers\ViewModelInstallers.cs" />
-    <Compile Include="CastleInstallers\WorkspaceInstaller.cs" />
+    <Compile Include="InterceptorSelectors\ErrorHandlingInterceptorSelector.cs" />
+    <Compile Include="WindsorInstallers\BankInstaller.cs" />
+    <Compile Include="WindsorInstallers\BankAccountInstaller.cs" />
+    <Compile Include="WindsorInstallers\CashflowInstaller.cs" />
+    <Compile Include="WindsorInstallers\TransferInstaller.cs" />
+    <Compile Include="WindsorInstallers\InterceptorsInstaller.cs" />
+    <Compile Include="WindsorInstallers\MainInstaller.cs" />
+    <Compile Include="WindsorInstallers\WorkspaceInstaller.cs" />
     <Compile Include="Converters\AccountEleswhereToVisibileConverter.cs" />
     <Compile Include="Converters\AccountEleswhereToCollapsedConverter.cs" />
     <Compile Include="Converters\BalanceStateToColourConverter.cs" />
@@ -131,10 +125,10 @@
     <Compile Include="DomainServices\BankAgent.cs" />
     <Compile Include="DomainServices\BankAccountAgent.cs" />
     <Compile Include="DomainServices\TransferAgent.cs" />
-    <Compile Include="Factories\BankEditorViewModelFactory.cs" />
-    <Compile Include="Factories\BankAccountEditorViewModelFactory.cs" />
-    <Compile Include="Factories\CashflowEditorViewModelFactory.cs" />
-    <Compile Include="Factories\TransferEditorViewModelFactory.cs" />
+    <Compile Include="Factories\IBankEditorViewModelFactory.cs" />
+    <Compile Include="Factories\IBankAccountEditorViewModelFactory.cs" />
+    <Compile Include="Factories\ICashflowEditorViewModelFactory.cs" />
+    <Compile Include="Factories\ITransferEditorViewModelFactory.cs" />
     <Compile Include="InterceptorSelectors\RepositoryInterceptorSelector.cs" />
     <Compile Include="Interceptors\ErrorHandlingInterceptor.cs" />
     <Compile Include="ViewModels\BankAccountEditorViewModel.cs" />
@@ -329,9 +323,17 @@
       <Project>{bb8793f8-877f-42b0-82ef-0786b2c214ef}</Project>
       <Name>Finances.Core</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Finances.Interface\Finances.Interface.csproj">
+      <Project>{482c90a7-4e96-4f46-8d51-93e902c265d0}</Project>
+      <Name>Finances.Interface</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Finances.Persistence.EF\Finances.Persistence.EF.csproj">
       <Project>{8bba6faa-e9db-4016-8af2-1466a7a751a0}</Project>
       <Name>Finances.Persistence.EF</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Finances.Service\Finances.Service.csproj">
+      <Project>{96eaaebb-e7ff-4e57-88ce-195a404d9348}</Project>
+      <Name>Finances.Service</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

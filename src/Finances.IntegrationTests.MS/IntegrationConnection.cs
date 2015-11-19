@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Finances.Core;
+using Finances.Interface;
 
 namespace Finances.IntegrationTests.MS
 {

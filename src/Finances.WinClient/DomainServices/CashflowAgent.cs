@@ -7,6 +7,7 @@ using Finances.Core.Entities;
 using Finances.Core.Factories;
 using Finances.Core.Interfaces;
 using Finances.Core.Wpf;
+using Finances.Interface;
 using Finances.WinClient.Factories;
 
 namespace Finances.WinClient.DomainServices
@@ -14,7 +15,7 @@ namespace Finances.WinClient.DomainServices
     public interface ICashflowAgent
     {
         /// <summary>
-        /// Open dialog to add a new Cashflow
+        /// Opens dialog to add a new Cashflow
         /// Persists the Cashflow to the repository
         /// </summary>
         /// <returns>new CashflowId or 0 if aborted/failed</returns>
@@ -35,21 +36,25 @@ namespace Finances.WinClient.DomainServices
     public class CashflowAgent : ICashflowAgent
     {
         readonly ICashflowFactory cashflowFactory;
-        readonly ICashflowRepository cashflowRepository;
+        //readonly ICashflowRepository cashflowRepository;
+        readonly IRepositoryWrite<Cashflow> cashflowRepositoryWrite;
+        readonly IRepositoryRead<Cashflow> cashflowRepositoryRead;
         readonly IDialogService dialogService;
         readonly ICashflowEditorViewModelFactory cashflowEditorViewModelFactory;
 
         public CashflowAgent(
                         ICashflowFactory cashflowFactory,
-                        ICashflowRepository cashflowRepository,
+                        IRepositoryWrite<Cashflow> cashflowRepositoryWrite,
+                        IRepositoryRead<Cashflow> cashflowRepositoryRead,
                         IDialogService dialogService,
-                        ICashflowEditorViewModelFactory bankEditorViewModelFactory
+                        ICashflowEditorViewModelFactory cashflowEditorViewModelFactory
                         )
         {
             this.cashflowFactory = cashflowFactory;
-            this.cashflowRepository = cashflowRepository;
+            this.cashflowRepositoryWrite = cashflowRepositoryWrite;
+            this.cashflowRepositoryRead = cashflowRepositoryRead;
             this.dialogService = dialogService;
-            this.cashflowEditorViewModelFactory = bankEditorViewModelFactory;
+            this.cashflowEditorViewModelFactory = cashflowEditorViewModelFactory;
         }
 
 
@@ -66,7 +71,7 @@ namespace Finances.WinClient.DomainServices
 
             while (this.dialogService.ShowDialogView(editor))
             {
-                id = this.cashflowRepository.Add(entity);
+                id = this.cashflowRepositoryWrite.Add(entity);
 
                 if (id>0)
                 {
@@ -75,6 +80,7 @@ namespace Finances.WinClient.DomainServices
             }
 
             this.cashflowEditorViewModelFactory.Release(editor);
+            this.cashflowFactory.Release(entity);
 
             return id;
         }
@@ -87,7 +93,7 @@ namespace Finances.WinClient.DomainServices
         {
             bool result = false;
 
-            Cashflow entity = this.cashflowRepository.Read(id);
+            Cashflow entity = this.cashflowRepositoryRead.Read(id);
 
             var editor = this.cashflowEditorViewModelFactory.Create(entity);
 
@@ -95,7 +101,7 @@ namespace Finances.WinClient.DomainServices
 
             while (this.dialogService.ShowDialogView(editor))
             {
-                result = this.cashflowRepository.Update(entity);
+                result = this.cashflowRepositoryWrite.Update(entity);
                 if (result)
                 {
                     break;
@@ -103,6 +109,7 @@ namespace Finances.WinClient.DomainServices
             }
 
             this.cashflowEditorViewModelFactory.Release(editor);
+            this.cashflowFactory.Release(entity);
 
             return result;
         }
@@ -123,7 +130,7 @@ namespace Finances.WinClient.DomainServices
             if (ids.Count() == 1)
             {
                 title = "Delete Cashflow";
-                Cashflow entity = this.cashflowRepository.Read(ids[0]);
+                Cashflow entity = this.cashflowRepositoryRead.Read(ids[0]);
                 message = String.Format("Please confirm deletion of cashflow: {0}", entity.Name);
             }
             else
@@ -135,7 +142,7 @@ namespace Finances.WinClient.DomainServices
 
             if (this.dialogService.ShowMessageBox(title, message, MessageBoxButtonEnum.YesNo) == MessageBoxResultEnum.Yes)
             {
-                result = this.cashflowRepository.Delete(ids);
+                result = this.cashflowRepositoryWrite.Delete(ids);
             }
 
             return result;

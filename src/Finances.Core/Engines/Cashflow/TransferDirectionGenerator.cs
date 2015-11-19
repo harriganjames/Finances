@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 using Finances.Core.Entities;
 using Finances.Core.Interfaces;
+using Finances.Core.ValueObjects;
 
 
 namespace Finances.Core.Engines.Cashflow
