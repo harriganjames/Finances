@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Data;
 
 namespace Finances.Core.Wpf
 {
@@ -16,12 +18,15 @@ namespace Finances.Core.Wpf
 
     public abstract class ListViewModelBase<T> : Workspace, IListViewModelBase<T> where T : IItemViewModelBase
     {
-        ObservableCollection<T> _dataList = new ObservableCollection<T>();
+        protected ObservableCollection<T> dataList = new ObservableCollection<T>();
+        //CollectionViewSource dataListView;
 
         public ListViewModelBase()
         {
+            dataList.CollectionChanged += _dataList_CollectionChanged;
 
-            _dataList.CollectionChanged += _dataList_CollectionChanged;
+            //this.dataListView = new CollectionViewSource();
+            //this.dataListView.Source = dataList;        
         }
 
         // Manage the SelectedChanged events for the items in the list
@@ -52,18 +57,26 @@ namespace Finances.Core.Wpf
         {
             get
             {
-                return _dataList;
+                return dataList;
             }
         }
+
+        //public ListCollectionView DataListView
+        //{
+        //    get
+        //    {
+        //        return (ListCollectionView)this.dataListView.View;
+        //    }
+        //}
 
 
         public int GetQtySelected()
         {
-            return _dataList.Count(b => b.IsSelected);
+            return dataList.Count(b => b.IsSelected);
         }
         public IEnumerable<T> GetSelectedItems()
         {
-            return _dataList.Where(b => b.IsSelected);
+            return dataList.Where(b => b.IsSelected);
         }
 
         protected void ItemSelectionChangedHandler(object o, BooleanResultEventArgs e)
@@ -71,6 +84,66 @@ namespace Finances.Core.Wpf
             base.RefreshCommands();
         }
 
+
+        // sorting
+
+        //ColumnHeaderCaption columnHeader;
+        //public ColumnHeaderCaption ColumnHeader
+        //{
+        //    get
+        //    {
+        //        if (columnHeader == null)
+        //            columnHeader = new ColumnHeaderCaption(this.dataListView);
+
+        //        return columnHeader;
+        //    }
+        //}
+
+        //protected void SortColumn(object param)
+        //{
+        //    string propertyName = param as string;
+        //    ListSortDirection direction;
+        //    SortDescription existingSortDescription;
+
+        //    existingSortDescription = this.dataListView.SortDescriptions.FirstOrDefault(sd => sd.PropertyName == propertyName);
+        //    if (existingSortDescription != null && existingSortDescription.PropertyName != null)
+        //        direction = existingSortDescription.Direction == ListSortDirection.Ascending ? ListSortDirection.Descending : ListSortDirection.Ascending;
+        //    else
+        //        direction = ListSortDirection.Ascending;
+
+        //    this.dataListView.SortDescriptions.Clear();
+        //    this.dataListView.SortDescriptions.Add(new SortDescription(propertyName, direction));
+
+        //    NotifyPropertyChanged(() => this.ColumnHeader);
+        //}
+
+
+        //public class ColumnHeaderCaption
+        //{
+        //    CollectionViewSource cvs;
+        //    public ColumnHeaderCaption(CollectionViewSource cvs)
+        //    {
+        //        this.cvs = cvs;
+        //    }
+
+        //    public string this[string property]
+        //    {
+        //        get
+        //        {
+        //            var caption = new StringBuilder();
+        //            SortDescription existingSortDescription;
+
+        //            caption.Append(property);
+
+        //            existingSortDescription = cvs.SortDescriptions.FirstOrDefault(sd => sd.PropertyName == property);
+        //            if (existingSortDescription != null && existingSortDescription.PropertyName != null)
+        //                caption.AppendFormat(" {0}", existingSortDescription.Direction == ListSortDirection.Ascending ? "↓" : "↑");
+
+        //            return caption.ToString();
+        //        }
+        //    }
+
+        //}
 
     }
 }

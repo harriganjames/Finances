@@ -135,7 +135,7 @@ namespace Finances.Core.Wpf
 
 
 
-        public virtual void Dispose()
+        public virtual new void Dispose()
         {
             _commands = null;
             base.Dispose();

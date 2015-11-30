@@ -16,7 +16,6 @@
         protected override void OnMouseDoubleClick(System.Windows.Input.MouseButtonEventArgs e)
         {
             //base.OnMouseDoubleClick(e);
-            int i = 1;
             e.Handled = false;
         }
     }

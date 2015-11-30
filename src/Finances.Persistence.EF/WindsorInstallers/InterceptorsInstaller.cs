@@ -1,12 +1,14 @@
 ﻿using Castle.Core;
+using Castle.DynamicProxy;
 using Castle.MicroKernel.Registration;
 
-using Finances.Core.Interfaces;
+//using Finances.Core.Interfaces;
+
 using Finances.Persistence.EF.Interceptors;
 
 namespace Finances.Persistence.EF.WindsorInstallers
 {
-    public class RepositoriesInstaller : IWindsorInstaller
+    public class InterceptorsInstaller : IWindsorInstaller
     {
         public void Install(Castle.Windsor.IWindsorContainer container, Castle.MicroKernel.SubSystems.Configuration.IConfigurationStore store)
         {
@@ -14,10 +16,10 @@ namespace Finances.Persistence.EF.WindsorInstallers
             //container.Register(Component.For<DbEntityValidationExceptionInterceptor>().LifestyleTransient());
 
             container.Register(Classes.FromThisAssembly()
-                .BasedOn<IRepository>()
-                .WithService.FromInterface()   // registers all class whose interfaces extended IService
-                .Configure(cc => cc.Interceptors(InterceptorReference.ForType<ErrorHandlingInterceptor>()).AtIndex(0).Configuration()
-                                   .Interceptors(InterceptorReference.ForType<DbEntityValidationExceptionInterceptor>()).AtIndex(1).Configuration()));
+                    .BasedOn<IInterceptor>()
+                    //.WithService.FromInterface()
+                    .LifestyleTransient()
+                    );
         }
     }
 }

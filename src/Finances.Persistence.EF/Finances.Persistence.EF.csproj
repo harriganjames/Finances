@@ -74,6 +74,7 @@
     <Compile Include="Interceptors\DbEntityValidationExceptionInterceptor.cs" />
     <Compile Include="Interceptors\ErrorHandlingInterceptor.cs" />
     <Compile Include="WindsorInstallers\CashflowInstaller.cs" />
+    <Compile Include="WindsorInstallers\InterceptorsInstaller.cs" />
     <Compile Include="WindsorInstallers\MappingsInstaller.cs" />
     <Compile Include="WindsorInstallers\RepositoriesInstaller.cs" />
     <Compile Include="WindsorInstallers\EFModelContextFactoryInstaller.cs" />

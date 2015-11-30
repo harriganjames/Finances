@@ -2,7 +2,7 @@
 using Castle.MicroKernel.SubSystems.Configuration;
 using Castle.MicroKernel.Registration;
 
-using Finances.WinClient.InterceptorSelectors;
+//using Finances.WinClient.InterceptorSelectors;
 
 namespace Finances.WinClient.CastleInstallers
 {
@@ -10,9 +10,9 @@ namespace Finances.WinClient.CastleInstallers
     {
         public void Install(IWindsorContainer container, IConfigurationStore store)
         {
-            container.Register(Component.For<Finances.WinClient.Interceptors.ErrorHandlingInterceptor>());
+            //container.Register(Component.For<Finances.WinClient.Interceptors.ErrorHandlingInterceptor>());
 
-            container.Kernel.ProxyFactory.AddInterceptorSelector(new ErrorHandlingInterceptorSelector());
+            //container.Kernel.ProxyFactory.AddInterceptorSelector(new ErrorHandlingInterceptorSelector());
         }
     }
 }

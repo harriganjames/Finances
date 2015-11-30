@@ -5,6 +5,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Data;
 using AutoMapper;
 using Finances.Core.Entities;
 using Finances.Core.Interfaces;
@@ -20,14 +21,13 @@ namespace Finances.WinClient.ViewModels
         void Close();
     }
 
-    public class BankListViewModel : ListViewModelBase<BankItemViewModel>, IBankListViewModel
+    public class BankListViewModel : SortedListViewModelBase<BankItemViewModel>, IBankListViewModel
     {
         readonly IBankRepository bankRepository;
         readonly IBankAgent bankAgent;
 
         // internal/parallel list of entiities
         Dictionary<int, Bank> banks = new Dictionary<int, Bank>();
-
 
         public BankListViewModel(
                         IBankRepository bankRepository,
@@ -54,13 +54,24 @@ namespace Finances.WinClient.ViewModels
 
         #region PublicProperties
 
-        public ObservableCollection<BankItemViewModel> Banks
+
+        //public ObservableCollection<BankItemViewModel> Banks
+        public ListCollectionView Banks
         {
             get
             {
-                return base.DataList;
+                //if (this.dataListView == null)
+                //{
+                //    this.dataListView = new CollectionViewSource();
+                //    this.dataListView.Source = base.DataList;
+                //}
+                //return (ListCollectionView)this.dataListView.View;
+                //return base.DataList;
+                return base.DataListView;
             }
         }
+
+
 
         #endregion
 
@@ -222,6 +233,8 @@ namespace Finances.WinClient.ViewModels
             }
 
         }
+
+
 
         public override string Caption
         {

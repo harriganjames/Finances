@@ -5,7 +5,7 @@ using Finances.Interface;
 
 namespace Finances.Persistence.EF.Interceptors
 {
-    class ErrorHandlingInterceptor : IInterceptor
+    public class ErrorHandlingInterceptor : IInterceptor
     {
         readonly IExceptionService exceptionService;
 

@@ -61,6 +61,7 @@
     <Compile Include="ContainerWindow.xaml.cs">
       <DependentUpon>ContainerWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\DataContextSpy.cs" />
     <Compile Include="Controls\ListViewScroll.cs" />
     <Compile Include="Converters\MultiBooleanAndConverter.cs" />
     <Compile Include="Converters\ToggleBooleanConverter.cs" />
@@ -69,6 +70,7 @@
     <Compile Include="Converters\NullToVisibleConverter.cs" />
     <Compile Include="Converters\PercentageConverter.cs" />
     <Compile Include="Converters\PositiveVisibilityConverter.cs" />
+    <Compile Include="SortedListViewModelBase.cs" />
     <Compile Include="Events\TreeViewItemExpandedEventArgs.cs" />
     <Compile Include="Input\InputDecimal.cs" />
     <Compile Include="NotifyBase.cs" />
@@ -126,6 +128,9 @@
       <Project>{96eaaebb-e7ff-4e57-88ce-195a404d9348}</Project>
       <Name>Finances.Service</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ClassDiagram1.cd" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

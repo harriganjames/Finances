@@ -9,12 +9,12 @@ namespace Finances.Core.Entities
 {
     public class Cashflow : Entity
     {
-        readonly ICashflowProjectionTransferGenerator projectionTransferGenerator;
+        //readonly ICashflowProjectionTransferGenerator projectionTransferGenerator;
         readonly ICashflowProjection cashflowProjection;
 
         public Cashflow(ICashflowProjection cashflowProjection)
         {
-            this.projectionTransferGenerator = projectionTransferGenerator;
+            //this.projectionTransferGenerator = projectionTransferGenerator;
             this.cashflowProjection = cashflowProjection;
 
             CashflowBankAccounts = new List<CashflowBankAccount>();

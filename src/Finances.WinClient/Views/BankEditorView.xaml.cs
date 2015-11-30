@@ -28,7 +28,6 @@ namespace Finances.WinClient.Views
 
         void BankEditorView_Loaded(object sender, RoutedEventArgs e)
         {
-            int I = 1;
         }
     }
 }

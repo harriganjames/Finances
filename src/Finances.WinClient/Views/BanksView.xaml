@@ -18,8 +18,6 @@
             FocusManager.FocusedElement="{Binding ElementName=Items}"
             >
 
-
-
     <!--xmlns:aubconv="clr-namespace:Aub.Library.Converters;assembly=Aub.Library"-->
 
     <!--<UserControl.Resources>
@@ -42,7 +40,7 @@
                 <views:BankView DataContext="{Binding AddEditBankViewModel}"/>
             </Grid>-->
             <!--<Grid Name="List" Visibility="{Binding IsAddEditMode, Converter={StaticResource NegativeVisivilityConverter}}">-->
-            <Grid Name="List">
+            <Grid Name="List" Margin="0,1,0,-1">
                     <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="*"/>
@@ -96,9 +94,16 @@
 
                     <ListView.View>
                         <GridView>
-                            <GridViewColumn DisplayMemberBinding="{Binding Name}" Header="Name" Width="200"/>
-                            <GridViewColumn Header="Logo" Width="60">
-                                    <GridViewColumn.CellTemplate>
+                            <GridViewColumn DisplayMemberBinding="{Binding Name}" Width="200">
+                                <GridViewColumnHeader Command="{Binding SortColumnCommand}" 
+                                                      CommandParameter="Name">
+                                    <Label Content="{Binding ColumnHeaderSuffix[Name]}"
+                                        ContentStringFormat="Name {0}"/>
+                                </GridViewColumnHeader>
+                            </GridViewColumn>
+                            <GridViewColumn Width="60">
+                                <GridViewColumnHeader Content="Logo"/>
+                                <GridViewColumn.CellTemplate>
                                         <DataTemplate>
                                         <Image Source="{Binding Logo}" Height="25" />
                                     </DataTemplate>

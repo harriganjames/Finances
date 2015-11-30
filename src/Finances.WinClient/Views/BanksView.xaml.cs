@@ -25,6 +25,18 @@ namespace Finances.WinClient.Views
 
         }
 
+        private void debug_DataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
+        {
+            var x = sender;
+
+        }
+
+        private void StackPanel_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            var x = sender;
+
+        }
+
 
     }
 }
