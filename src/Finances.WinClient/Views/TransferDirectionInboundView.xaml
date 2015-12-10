@@ -1,0 +1,17 @@
+﻿<UserControl x:Class="Finances.WinClient.Views.TransferDirectionInboundView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Finances.WinClient.Views"
+             mc:Ignorable="d" 
+             d:DataContext="{d:DesignData Source=/DesignTimeData/Transfer.xaml}"
+             >
+    <!--DataContext is expected to be a TransferViewModel-->
+    <Grid>
+        <StackPanel Orientation="Horizontal">
+            <TextBlock Text="Incoming to " Foreground="Green" VerticalAlignment="Center"/>
+            <ContentPresenter Content="{Binding ToBankAccount}" ContentTemplate="{StaticResource BankAccountDataTemplate}"/>
+        </StackPanel>  
+    </Grid>
+</UserControl>

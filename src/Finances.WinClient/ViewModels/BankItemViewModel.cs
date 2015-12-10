@@ -19,8 +19,6 @@ namespace Finances.WinClient.ViewModels
             this.entity = entity;
         }
 
-
-
         #region PublicProperties
 
         public Bank Entity

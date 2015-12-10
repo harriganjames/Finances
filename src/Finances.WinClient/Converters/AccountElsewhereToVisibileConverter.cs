@@ -9,7 +9,7 @@ using Finances.WinClient.ViewModels;
 
 namespace Finances.WinClient.Converters
 {
-    public class AccountEleswhereToVisibileConverter : IValueConverter
+    public class AccountElsewhereToVisibileConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
         {

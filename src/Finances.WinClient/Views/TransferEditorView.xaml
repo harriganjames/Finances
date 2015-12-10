@@ -93,7 +93,7 @@
                             Grid.Column="1"
                             ItemsSource="{Binding BankAccounts}"
                             SelectedItem="{Binding FromBankAccount}"
-                            ItemTemplate="{StaticResource BankAccountNameDataTemplate}">
+                            ItemTemplate="{StaticResource BankAccountDataTemplate}">
                 </ComboBox>
                 <Button     Grid.Column="2"
                             Margin="20,0,0,0"
@@ -119,7 +119,7 @@
                             Grid.Column="1"
                             ItemsSource="{Binding BankAccounts}"
                             SelectedItem="{Binding ToBankAccount}"
-                            ItemTemplate="{StaticResource BankAccountNameDataTemplate}">
+                            ItemTemplate="{StaticResource BankAccountDataTemplate}">
                 </ComboBox>
                 <Button     Grid.Column="2"
                             Margin="20,0,0,0"

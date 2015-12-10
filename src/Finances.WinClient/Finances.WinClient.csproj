@@ -110,7 +110,37 @@
     <Compile Include="AppWindow.xaml.cs">
       <DependentUpon>AppWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Converters\AccountElsewhereToBooleanNotConverter.cs" />
+    <Compile Include="Converters\AccountElsewhereToBooleanConverter.cs" />
+    <Compile Include="Converters\TansferToDirectionConverter.cs" />
+    <Compile Include="DesignTimeData\BankAccount.cs" />
+    <Compile Include="DesignTimeData\Transfer.cs" />
     <Compile Include="InterceptorSelectors\ErrorHandlingInterceptorSelector.cs" />
+    <Compile Include="DesignTimeData\Bank.cs" />
+    <Compile Include="Views\BankAccountElsewhere.xaml.cs">
+      <DependentUpon>BankAccountElsewhere.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\BankAccountSelectableView.xaml.cs">
+      <DependentUpon>BankAccountSelectableView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\BankAccountView.xaml.cs">
+      <DependentUpon>BankAccountView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\BankView.xaml.cs">
+      <DependentUpon>BankView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\TransferDirectionInboundView.xaml.cs">
+      <DependentUpon>TransferDirectionInboundView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\TransferDirectionOutboundView.xaml.cs">
+      <DependentUpon>TransferDirectionOutboundView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\TransferDirectionTransferView.xaml.cs">
+      <DependentUpon>TransferDirectionTransferView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\TransferDirectionView.xaml.cs">
+      <DependentUpon>TransferDirectionView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="WindsorInstallers\BankInstaller.cs" />
     <Compile Include="WindsorInstallers\BankAccountInstaller.cs" />
     <Compile Include="WindsorInstallers\CashflowInstaller.cs" />
@@ -118,8 +148,8 @@
     <Compile Include="WindsorInstallers\InterceptorsInstaller.cs" />
     <Compile Include="WindsorInstallers\MainInstaller.cs" />
     <Compile Include="WindsorInstallers\WorkspaceInstaller.cs" />
-    <Compile Include="Converters\AccountEleswhereToVisibileConverter.cs" />
-    <Compile Include="Converters\AccountEleswhereToCollapsedConverter.cs" />
+    <Compile Include="Converters\AccountElsewhereToVisibileConverter.cs" />
+    <Compile Include="Converters\AccountElsewhereToCollapsedConverter.cs" />
     <Compile Include="Converters\BalanceStateToColourConverter.cs" />
     <Compile Include="DomainServices\CashflowAgent.cs" />
     <Compile Include="DomainServices\BankAgent.cs" />
@@ -200,6 +230,15 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <DesignData Include="DesignTimeData\Bank.xaml">
+      <SubType>Designer</SubType>
+    </DesignData>
+    <DesignData Include="DesignTimeData\BankAccount.xaml">
+      <SubType>Designer</SubType>
+    </DesignData>
+    <DesignData Include="DesignTimeData\Transfer.xaml">
+      <SubType>Designer</SubType>
+    </DesignData>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -228,7 +267,19 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="Views\BankAccountElsewhere.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\BankAccountSelectableView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\BankAccountsView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\BankAccountView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -245,6 +296,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Views\BankTreeView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\BankView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -269,6 +324,22 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\MainView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\TransferDirectionInboundView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\TransferDirectionOutboundView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\TransferDirectionTransferView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\TransferDirectionView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -373,6 +444,12 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Images\Symbols_Complete_and_ok_16xLG.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\DesignTime\Bank.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\Conditions_5855.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\AutoMapper.3.2.1\tools\AutoMapper.targets" Condition="Exists('..\packages\AutoMapper.3.2.1\tools\AutoMapper.targets')" />

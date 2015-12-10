@@ -1,41 +1,64 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:vm="clr-namespace:Finances.WinClient.ViewModels"
         xmlns:conv="clr-namespace:Finances.Core.Wpf.Converters;assembly=Finances.Core.Wpf"
         xmlns:finconv="clr-namespace:Finances.WinClient.Converters"
+        xmlns:vm="clr-namespace:Finances.WinClient.ViewModels"
+        xmlns:v="clr-namespace:Finances.WinClient.Views"
                     >
 
     <conv:NullToVisibleConverter x:Key="NullToVisibleConverter" />
     <conv:NullToCollapsedConverter x:Key="NullToCollapsedConverter" />
-    <finconv:AccountEleswhereToVisibileConverter x:Key="AccountEleswhereToVisibileConverter"/>
-    <finconv:AccountEleswhereToCollapsedConverter x:Key="AccountEleswhereToCollapsedConverter"/>
+    <!--<finconv:AccountElsewhereToVisibileConverter x:Key="AccountElsewhereToVisibileConverter"/>-->
+    <!--<finconv:AccountElsewhereToBooleanConverter x:Key="AccountElsewhereToCollapsedConverter"/>-->
 
 
-    <DataTemplate x:Key="BankAccountNameDataTemplate">
-        <Grid>
-            <StackPanel Orientation="Horizontal" 
-                        Visibility="{Binding ., Converter={StaticResource AccountEleswhereToCollapsedConverter}}">
-                <Image Source="{Binding Bank.Logo}" Height="20" Width="50"/>
-                <TextBlock Text="{Binding AccountName}" Padding="5,0,0,0"/>
-            </StackPanel>
-            <TextBlock Text="Elsewhere" Height="20" VerticalAlignment="Center"
-                       Visibility="{Binding ., Converter={StaticResource AccountEleswhereToVisibileConverter}}">
-            </TextBlock>
-        </Grid>
-    </DataTemplate>
 
 
     <DataTemplate x:Key="SelectableBankAccountDataTemplate">
-        <Grid>
+        <v:BankAccountSelectableView/>
+        <!--<Grid>
             <StackPanel Orientation="Horizontal">
                 <CheckBox IsChecked="{Binding IsSelected}" Margin="0,5,5,5" VerticalAlignment="Center"/>
-                <Image Source="{Binding Bank.Logo}" Height="20" Width="50"/>
-                <TextBlock Text="{Binding AccountName}" Padding="5,0,0,0" VerticalAlignment="Center"/>
+                <v:BankAccountView/>
             </StackPanel>
+        </Grid>-->
+    </DataTemplate>
+
+    <DataTemplate x:Key="BankDataTemplate">
+        <v:BankView/>
+    </DataTemplate>
+
+    <DataTemplate x:Key="BankAccountDataTemplate">
+        <v:BankAccountView/>
+    </DataTemplate>
+
+
+    <DataTemplate x:Key="ElsewhereBankAccountDataTemplate">
+        <Grid>
+            <Grid Visibility="{Binding ., Converter={StaticResource AccountElsewhereToCollapsedConverter}}">
+                <v:BankAccountView/>
+            </Grid>
+
+            <Grid Visibility="{Binding ., Converter={StaticResource AccountElsewhereToVisibileConverter}}">
+                <v:BankAccountElsewhere/>
+                <!--<TextBlock Text="Elsewhere" Height="20" VerticalAlignment="Center"/>-->
+            </Grid>
+
+            <!--<StackPanel Orientation="Horizontal" 
+                        Visibility="{Binding ., Converter={StaticResource AccountElsewhereToCollapsedConverter}}">
+                <v:BankAccountView/>
+            </StackPanel>
+            <TextBlock Text="Elsewhere" Height="20" VerticalAlignment="Center"
+                       Visibility="{Binding ., Converter={StaticResource AccountElsewhereToVisibileConverter}}">
+            </TextBlock>-->
         </Grid>
     </DataTemplate>
 
 
+    <DataTemplate x:Key="TransferDirectionDataTemplate">
+        <v:TransferDirectionView/>
+    </DataTemplate>
+    
 
     <Style TargetType="Button">
         <!--<Setter Property="Background" Value="#3030C0"/>-->

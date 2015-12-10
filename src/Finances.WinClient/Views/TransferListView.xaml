@@ -77,11 +77,22 @@
                                     </DataTemplate>
                                 </GridViewColumn.CellTemplate>
                             </GridViewColumn>
+
+                            <!--<GridViewColumn Header="Direction">
+                                <GridViewColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <ContentControl Content="{Binding .}" 
+                                                        ContentTemplate="{StaticResource TransferDirectionDataTemplate}"/>
+                                    </DataTemplate>
+                                </GridViewColumn.CellTemplate>
+                            </GridViewColumn>-->
+
+
                             <GridViewColumn Header="From">
                                 <GridViewColumn.CellTemplate>
                                     <DataTemplate>
                                         <ContentControl Content="{Binding FromBankAccount}" 
-                                                        ContentTemplate="{StaticResource BankAccountNameDataTemplate}"/>
+                                                        ContentTemplate="{StaticResource BankAccountDataTemplate}"/>
                                     </DataTemplate>
                                 </GridViewColumn.CellTemplate>
                             </GridViewColumn>
@@ -89,7 +100,7 @@
                                 <GridViewColumn.CellTemplate>
                                     <DataTemplate>
                                         <ContentControl Content="{Binding ToBankAccount}" 
-                                                        ContentTemplate="{StaticResource BankAccountNameDataTemplate}"/>
+                                                        ContentTemplate="{StaticResource BankAccountDataTemplate}"/>
                                     </DataTemplate>
                                 </GridViewColumn.CellTemplate>
                             </GridViewColumn>

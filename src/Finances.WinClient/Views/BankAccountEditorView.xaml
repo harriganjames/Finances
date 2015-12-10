@@ -78,8 +78,9 @@
                             Width="Auto"
                             Grid.Column="1"
                             ItemsSource="{Binding BankList}"
-                            SelectedItem="{Binding Bank}">
-                    <ComboBox.ItemTemplate>
+                            SelectedItem="{Binding Bank}"
+                            ItemTemplate="{StaticResource BankDataTemplate}">
+                    <!--<ComboBox.ItemTemplate>
                         <DataTemplate>
                             <Grid>
                                 <Grid.ColumnDefinitions>
@@ -91,7 +92,7 @@
                                 <Image Grid.Column="2" Source="{Binding Logo}" Height="25"/>
                             </Grid>
                         </DataTemplate>
-                    </ComboBox.ItemTemplate>
+                    </ComboBox.ItemTemplate>-->
                 </ComboBox>
                 <Button     Grid.Column="2"
                             Content="New Bank"

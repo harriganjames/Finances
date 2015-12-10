@@ -107,18 +107,34 @@
                             <GridViewColumn Header="Bank" Width="60">
                                 <GridViewColumn.CellTemplate>
                                     <DataTemplate>
-                                        <Image Source="{Binding Bank.Logo}" Height="25"/>
+                                        <ContentPresenter Content="{Binding Bank}" ContentTemplate="{StaticResource BankDataTemplate}" />
                                     </DataTemplate>
                                 </GridViewColumn.CellTemplate>
+
+
+                                <!--<GridViewColumn.CellTemplate>
+                                    
+                                    <DataTemplate>
+                                        <Image Source="{Binding Bank.Logo}" Height="25"/>
+                                    </DataTemplate>
+                                </GridViewColumn.CellTemplate>-->
+                                
                             </GridViewColumn>
-                            <GridViewColumn DisplayMemberBinding="{Binding AccountName}" Header="Name" Width="Auto"/>
+                            <GridViewColumn DisplayMemberBinding="{Binding AccountName}" Width="Auto">
+                                <GridViewColumnHeader Command="{Binding SortColumnCommand}" 
+                                                      CommandParameter="AccountName">
+                                    <Label Content="{Binding ColumnHeaderSuffix[AccountName]}"
+                                        ContentStringFormat="Name {0}"/>
+                                </GridViewColumnHeader>
+                            </GridViewColumn>
+
                             <GridViewColumn DisplayMemberBinding="{Binding SortCode}" Header="Sort Code" Width="Auto"/>
                             <GridViewColumn DisplayMemberBinding="{Binding AccountNumber}" Header="Account" Width="Auto"/>
                             <GridViewColumn DisplayMemberBinding="{Binding AccountOwner}" Header="Owner" Width="Auto"/>
                             <GridViewColumn Header="Tax" Width="Auto">
                                 <GridViewColumn.CellTemplate>
                                     <DataTemplate>
-                                        <ContentPresenter Content="{Binding PaysTaxableInterest}"/>
+                                        <ContentPresenter Content="{Binding PaysTaxableInterest}" />
                                     </DataTemplate>
                                 </GridViewColumn.CellTemplate>
                             </GridViewColumn>

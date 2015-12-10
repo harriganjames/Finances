@@ -13,8 +13,10 @@
     <conv:ToggleBooleanConverter x:Key="ToggleBooleanConverter" />
     <conv:MultiBooleanAndConverter x:Key="MultiBooleanAndConverter" />
     
-    <finconv:AccountEleswhereToVisibileConverter x:Key="AccountEleswhereToVisibileConverter"/>
-    <finconv:AccountEleswhereToCollapsedConverter x:Key="AccountEleswhereToCollapsedConverter"/>
+    <finconv:AccountElsewhereToVisibileConverter x:Key="AccountElsewhereToVisibileConverter"/>
+    <finconv:AccountElsewhereToCollapsedConverter x:Key="AccountElsewhereToCollapsedConverter"/>
+    <finconv:AccountElsewhereToBooleanConverter x:Key="AccountElsewhereToBooleanConverter"/>
+    <finconv:AccountElsewhereToBooleanNotConverter x:Key="AccountElsewhereToBooleanNotConverter"/>
     
 </ResourceDictionary>
     

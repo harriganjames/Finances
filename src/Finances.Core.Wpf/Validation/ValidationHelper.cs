@@ -83,12 +83,12 @@ namespace Finances.Core.Wpf.Validation
 
         public void Validate()
         {
-            Debug.WriteLine("Validate(helper) - start");
+            //Debug.WriteLine("Validate(helper) - start");
 
             if (!_enabled)
                 return;
 
-            Debug.WriteLine("Validate(helper) - clear");
+            //Debug.WriteLine("Validate(helper) - clear");
             // clear all ValidationResults
             validationResults.Clear();
 
@@ -103,7 +103,7 @@ namespace Finances.Core.Wpf.Validation
 
             }
 
-            Debug.WriteLine("Validate(helper) - start");
+            //Debug.WriteLine("Validate(helper) - start");
         }
 
 

@@ -1,0 +1,8 @@
+﻿<local:Bank
+    xmlns:local="clr-namespace:Finances.WinClient.DesignTimeData"
+    Logo="/Images/DesignTime/Bank.png"
+    >
+    <local:Bank.Name>
+        Test Bank
+    </local:Bank.Name>
+</local:Bank>

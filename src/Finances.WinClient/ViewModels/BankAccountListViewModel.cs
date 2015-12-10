@@ -11,6 +11,7 @@ using Finances.Core.Interfaces;
 using Finances.Core.Wpf;
 using Finances.WinClient.DomainServices;
 using Finances.WinClient.Factories;
+using System.Windows.Data;
 
 namespace Finances.WinClient.ViewModels
 {
@@ -20,7 +21,7 @@ namespace Finances.WinClient.ViewModels
         void Close();
     }
 
-    public class BankAccountListViewModel : ListViewModelBase<BankAccountItemViewModel>, IBankAccountListViewModel
+    public class BankAccountListViewModel : SortedListViewModelBase<BankAccountItemViewModel>, IBankAccountListViewModel
     {
         readonly IBankAccountRepository bankAccountRepository;
         readonly IBankAccountAgent bankAccountAgent;
@@ -53,11 +54,11 @@ namespace Finances.WinClient.ViewModels
 
         #region PublicProperties
 
-        public ObservableCollection<BankAccountItemViewModel> BankAccounts
+        public ListCollectionView BankAccounts
         {
             get
             {
-                return base.DataList;
+                return base.DataListView;
             }
         }
 

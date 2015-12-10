@@ -1,0 +1,17 @@
+﻿<local:BankAccount
+    xmlns:local="clr-namespace:Finances.WinClient.DesignTimeData"
+    AccountName="Current Account"
+    SortCode="12-34-56"
+    AccountNumber="123456789"
+    >
+    <local:BankAccount.Bank>
+        <local:Bank
+            Logo="/Images/DesignTime/Bank.png"
+            >
+            <local:Bank.Name>
+                Test Bank
+            </local:Bank.Name>
+        </local:Bank>
+    </local:BankAccount.Bank>
+</local:BankAccount>
+    

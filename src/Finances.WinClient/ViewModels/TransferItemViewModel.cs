@@ -148,6 +148,30 @@ namespace Finances.WinClient.ViewModels
             }
         }
 
+        public bool IsInbound
+        {
+            get
+            {
+                return entity.IsInbound;
+            }
+        }
+
+        public bool IsOutbound
+        {
+            get
+            {
+                return entity.IsOutound;
+            }
+        }
+
+
+        public bool IsTransfer
+        {
+            get
+            {
+                return entity.IsTransfer;
+            }
+        }
 
     }
 }

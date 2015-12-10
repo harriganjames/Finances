@@ -31,6 +31,57 @@ namespace Finances.Core.Entities
 
         public Schedule Schedule { get; set; }
 
+
+        public bool IsInbound
+        {
+            get
+            {
+                return (FromBankAccount == null || FromBankAccount.BankAccountId == -1);
+            }
+        }
+
+        public bool IsOutound
+        {
+            get
+            {
+                return (ToBankAccount == null || ToBankAccount.BankAccountId == -1);
+            }
+        }
+
+
+        public bool IsTransfer
+        {
+            get
+            {
+                return !this.IsInbound && !this.IsOutound;
+            }
+        }
+
+
+        public string DirectionNAme
+        {
+            get
+            {
+                string direction = "Unknown";
+
+                if (this.IsInbound)
+                {
+                    direction = "Inbound";
+                }
+                else if (this.IsOutound)
+                {
+                    direction = "Outbound";
+                }
+                else
+                {
+                    direction = "Transfer";
+                }
+
+                return direction;
+            }
+        }
+
+
         //#region IScheduleEntity
         //public System.DateTime StartDate { get; set; }
         //public Nullable<System.DateTime> EndDate { get; set; }

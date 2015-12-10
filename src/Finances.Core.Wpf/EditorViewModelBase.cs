@@ -79,7 +79,7 @@ namespace Finances.Core.Wpf
         {
             get
             {
-                Debug.WriteLine("Errors - qty={0}", _validationHelper.Errors.Count());
+                //Debug.WriteLine("Errors - qty={0}", _validationHelper.Errors.Count());
 
                 return _validationHelper.Errors;
             }
@@ -87,14 +87,14 @@ namespace Finances.Core.Wpf
 
         protected void Validate()
         {
-            Debug.WriteLine("Validate(base) - start");
+            //Debug.WriteLine("Validate(base) - start");
             _validationHelper.Enabled = true;
             _validationHelper.Validate();   // attribute validation
             this.ValidateData();            // custom validation
             base.RefreshCommands();
             this.IsValid = _validationHelper.Errors.Count() == 0;
             NotifyPropertyChanged(() => this.Errors);
-            Debug.WriteLine("Validate(base) - end");
+            //Debug.WriteLine("Validate(base) - end");
 
             return;
         }
@@ -134,7 +134,7 @@ namespace Finances.Core.Wpf
                 //Debug.WriteLine(String.Format("GetErrors({0} - qty {1})", propertyName, lst.Count));
             }
 
-            Debug.WriteLine("GetErrors({0}) - qty={1}",propertyName,lst.Count);
+            //Debug.WriteLine("GetErrors({0}) - qty={1}",propertyName,lst.Count);
 
             return lst;
         }

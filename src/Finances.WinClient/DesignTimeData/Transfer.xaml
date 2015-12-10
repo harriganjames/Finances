@@ -1,0 +1,37 @@
+﻿<local:Transfer     
+        xmlns:local="clr-namespace:Finances.WinClient.DesignTimeData"
+        >
+    <local:Transfer.FromBankAccount>
+        <local:BankAccount
+            AccountName="Xfer Current Account"
+            >
+            <local:BankAccount.Bank>
+                <local:Bank
+                    Logo="/Images/DesignTime/Bank.png"
+                    >
+                    <local:Bank.Name>
+                        Test Bank
+                    </local:Bank.Name>
+                </local:Bank>
+            </local:BankAccount.Bank>
+        </local:BankAccount>
+    </local:Transfer.FromBankAccount>
+
+    <local:Transfer.ToBankAccount>
+        <local:BankAccount
+            AccountName="Xfer Savings Account"
+            >
+            <local:BankAccount.Bank>
+                <local:Bank
+                    Logo="/Images/DesignTime/Bank.png"
+                    >
+                    <local:Bank.Name>
+                        Test Bank
+                    </local:Bank.Name>
+                </local:Bank>
+            </local:BankAccount.Bank>
+        </local:BankAccount>
+    </local:Transfer.ToBankAccount>
+
+</local:Transfer>
+    
