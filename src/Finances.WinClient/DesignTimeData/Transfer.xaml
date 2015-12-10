@@ -1,6 +1,14 @@
 ﻿<local:Transfer     
         xmlns:local="clr-namespace:Finances.WinClient.DesignTimeData"
         >
+    <local:Transfer.Name>
+        Test Transfer2
+    </local:Transfer.Name>
+    <local:Transfer.BankAccounts>
+        <local:BankAccount/>
+        <local:BankAccount/>
+    </local:Transfer.BankAccounts>
+    
     <local:Transfer.FromBankAccount>
         <local:BankAccount
             AccountName="Xfer Current Account"
