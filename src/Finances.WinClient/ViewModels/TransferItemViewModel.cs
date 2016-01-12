@@ -173,5 +173,12 @@ namespace Finances.WinClient.ViewModels
             }
         }
 
+        public string DirectionName
+        {
+            get
+            {
+                return entity.DirectionName;
+            }
+        }
     }
 }

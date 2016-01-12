@@ -12,6 +12,7 @@ using Finances.Core.Interfaces;
 using Finances.Core.Wpf;
 using Finances.WinClient.DomainServices;
 using Finances.WinClient.Factories;
+using System.Windows.Data;
 
 namespace Finances.WinClient.ViewModels
 {
@@ -21,7 +22,7 @@ namespace Finances.WinClient.ViewModels
         void Close();
     }
 
-    public class TransferListViewModel : ListViewModelBase<TransferItemViewModel>, ITransferListViewModel
+    public class TransferListViewModel : SortedListViewModelBase<TransferItemViewModel>, ITransferListViewModel
     {
         readonly ITransferRepository transferRepository;
         readonly ITransferAgent transferAgent;
@@ -55,11 +56,26 @@ namespace Finances.WinClient.ViewModels
 
         #region PublicProperties
 
-        public ObservableCollection<TransferItemViewModel> Transfers
+        public ListCollectionView Transfers
         {
             get
             {
-                return base.DataList;
+                return base.DataListView;
+            }
+        }
+
+
+        decimal amountSum;
+        public decimal AmountSum
+        {
+            get
+            {
+                return amountSum;
+            }
+            set
+            {
+                amountSum = value;
+                NotifyPropertyChanged(() => this.AmountSum);
             }
         }
 
@@ -194,6 +210,21 @@ namespace Finances.WinClient.ViewModels
 
         }
 
+
+        protected override void ItemSelectionChanged()
+        {
+            base.ItemSelectionChanged();
+            AggregateAmount();
+
+        }
+
+
+        void AggregateAmount()
+        {
+            //decimal amount = 0;
+            //this.DataList.ToList().ForEach(t=>amount+=t.IsSelected?t.Amount:0);
+            this.AmountSum = this.DataList.Where(t=>t.IsSelected).Sum(t=>t.Amount);
+        }
 
 
         public override string Caption

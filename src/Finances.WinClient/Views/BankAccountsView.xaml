@@ -13,7 +13,14 @@
 
     <!--FocusManager.FocusedElement="{Binding ElementName=Items}"-->
 
-    <tool:BusyIndicator IsBusy="{Binding IsBusy}">
+    <UserControl.Resources>
+        <Style TargetType="ListViewItem">
+            <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+            
+        </Style>
+    </UserControl.Resources>
+
+        <tool:BusyIndicator IsBusy="{Binding IsBusy}">
         <Grid>
             <!--<Grid Name="AddEdit" Visibility="{Binding IsAddEditMode, Converter={StaticResource PositiveVisivilityConverter}}">
                 <views:AccountView DataContext="{Binding AddEditAccountViewModel}"/>
@@ -78,9 +85,19 @@
                                        ItemsSource="{Binding BankAccounts}" 
                                        SelectionMode="Extended"
                                        Visibility="Visible"
+                                       HorizontalAlignment="Stretch"
+                                       ColumnWidthStore="{Binding ViewData[ListViewColumnWidths], Mode=TwoWay}"
+                                       MouseDoubleClickCommand="{Binding EditCommand}"
                                        >
 
-                    <i:Interaction.Triggers>
+                    <libctl:ListViewScroll.InputBindings>
+                        <KeyBinding Gesture="Return" Command="{Binding EditCommand}"/>
+                        <KeyBinding Gesture="Insert" Command="{Binding AddCommand}"/>
+                        <KeyBinding Gesture="Delete" Command="{Binding DeleteCommand}"/>
+                        <KeyBinding Gesture="Ctrl+R" Command="{Binding ReloadCommand}"/>
+                    </libctl:ListViewScroll.InputBindings>
+
+                    <!--<i:Interaction.Triggers>
                         <eii:KeyTrigger ActiveOnFocus="True" FiredOn="KeyDown" Key="Enter">
                             <i:InvokeCommandAction Command="{Binding EditCommand}"/>
                         </eii:KeyTrigger>
@@ -93,7 +110,7 @@
                         <i:EventTrigger EventName="MouseDoubleClick">
                             <i:InvokeCommandAction Command="{Binding EditCommand}"/>
                         </i:EventTrigger>
-                    </i:Interaction.Triggers>
+                    </i:Interaction.Triggers>-->
 
 
                     <ListView.Resources>
@@ -104,7 +121,12 @@
 
                     <ListView.View>
                         <GridView>
-                            <GridViewColumn Header="Bank" Width="60">
+                            <GridViewColumn>
+                                <GridViewColumnHeader Command="{Binding SortColumnCommand}" 
+                                                      CommandParameter="Bank.Name">
+                                    <Label Content="{Binding ColumnHeaderSuffix[Bank.Name]}"
+                                        ContentStringFormat="Bank {0}"/>
+                                </GridViewColumnHeader>
                                 <GridViewColumn.CellTemplate>
                                     <DataTemplate>
                                         <ContentPresenter Content="{Binding Bank}" ContentTemplate="{StaticResource BankDataTemplate}" />
@@ -120,7 +142,7 @@
                                 </GridViewColumn.CellTemplate>-->
                                 
                             </GridViewColumn>
-                            <GridViewColumn DisplayMemberBinding="{Binding AccountName}" Width="Auto">
+                            <GridViewColumn DisplayMemberBinding="{Binding AccountName}" >
                                 <GridViewColumnHeader Command="{Binding SortColumnCommand}" 
                                                       CommandParameter="AccountName">
                                     <Label Content="{Binding ColumnHeaderSuffix[AccountName]}"

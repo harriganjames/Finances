@@ -36,10 +36,10 @@ xmlns:libattach="clr-namespace:Finances.Core.Wpf.AttachedProperties;assembly=Fin
                 </StackPanel>
             </Border>
 
+        <!--IsSynchronizedWithCurrentItem="True"-->
 
-            <Border Grid.Column="1" BorderThickness="2" BorderBrush="DarkGray">
+        <Border Grid.Column="1" BorderThickness="2" BorderBrush="DarkGray">
             <TabControl Grid.Column="1"
-                        IsSynchronizedWithCurrentItem="True"
                         ItemsSource="{Binding OpenWorkspaces}"
                         SelectedItem="{Binding SelectedWorkspace}"
                         >
@@ -68,7 +68,7 @@ xmlns:libattach="clr-namespace:Finances.Core.Wpf.AttachedProperties;assembly=Fin
                                                     Content="{Binding Path=Caption}" 
                                                     VerticalAlignment="Center" 
                                                     />-->
-                                <TextBlock Text="{Binding Caption}"
+                            <TextBlock Text="{Binding Caption}"
                                            VerticalAlignment="Center"
                                            Padding="5,3"
                                            FontSize="14"/>

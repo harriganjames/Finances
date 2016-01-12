@@ -11,6 +11,11 @@
     <UserControl.Resources>
         <conv:BalanceStateToColourConverter x:Key="BalanceStateToColourConverter" />
     </UserControl.Resources>
+
+    <UserControl.InputBindings>
+        <KeyBinding Gesture="Ctrl+R" Command="{Binding RefreshCommand}"/>
+    </UserControl.InputBindings>
+
     <tool:BusyIndicator IsBusy="{Binding IsBusy}">
         <Grid>
             <Grid.RowDefinitions>
@@ -48,9 +53,16 @@
 
 
             <libctl:ListViewScroll Grid.Row="1" 
-                                       ItemsSource="{Binding CashflowProjectionItems}" 
-                                       SelectionMode="Extended"
-                                       >
+                                   ItemsSource="{Binding CashflowProjectionItems}" 
+                                   SelectionMode="Extended"
+                                   SelectedItem="{Binding SelectedCashflowProjectionItem}"
+                                   ColumnWidthStore="{Binding ViewData[ListViewColumnWidths], Mode=TwoWay}"
+                                   >
+
+                <!--<libctl:ListViewScroll.InputBindings>
+                    <KeyBinding Gesture="Ctrl+R" Command="{Binding RefreshCommand}"/>
+                </libctl:ListViewScroll.InputBindings>-->
+
                 <ListView.Resources>
                     <Style TargetType="{x:Type ListViewItem}">
                         <!--<Setter Property="IsSelected" Value="{Binding IsSelected, Mode=TwoWay}"/>-->

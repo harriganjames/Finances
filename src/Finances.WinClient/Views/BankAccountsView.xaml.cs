@@ -30,10 +30,17 @@ namespace Finances.WinClient.Views
             this.Unloaded += (s, e) =>
             {
                 //XamlUtils.DetachTriggers(s);
+                int x = 1;
             };
             this.Loaded += (s, e) =>
             {
                 //XamlUtils.AttachTriggers(s);
+                int x = 1;
+            };
+
+            this.Initialized += (s, e) =>
+            {
+                int x = 1;
             };
 
         }

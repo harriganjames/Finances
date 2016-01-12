@@ -15,8 +15,9 @@
              mc:Ignorable="d"
              x:Name="apex"
              d:DesignHeight="300" d:DesignWidth="300"
-            FocusManager.FocusedElement="{Binding ElementName=Items}"
             >
+
+    <!--FocusManager.FocusedElement="{Binding ElementName=Items}"-->
 
     <!--xmlns:aubconv="clr-namespace:Aub.Library.Converters;assembly=Aub.Library"-->
 
@@ -62,15 +63,18 @@
                             Grid.Row="1" 
                             ItemsSource="{Binding Banks}" 
                             SelectionMode="Extended"
+                            ColumnWidthStore="{Binding ViewData[ListViewColumnWidths], Mode=TwoWay}"
+                            MouseDoubleClickCommand="{Binding EditCommand}"
                             >
-                    <!--<ListView.InputBindings>
-                        <KeyBinding Key="Insert" Command="{Binding AddCommand}"/>
-                        <KeyBinding Key="Enter" Command="{Binding EditCommand}"/>
-                        <KeyBinding Key="Delete" Command="{Binding DeleteCommand}"/>
-                        <MouseBinding MouseAction="LeftDoubleClick" Command="{Binding EditCommand}"/>
-                    </ListView.InputBindings>-->
 
-                    <i:Interaction.Triggers>
+                    <libctl:ListViewScroll.InputBindings>
+                        <KeyBinding Gesture="Return" Command="{Binding EditCommand}"/>
+                        <KeyBinding Gesture="Insert" Command="{Binding AddCommand}"/>
+                        <KeyBinding Gesture="Delete" Command="{Binding DeleteCommand}"/>
+                        <KeyBinding Gesture="Ctrl+R" Command="{Binding ReloadCommand}"/>
+                    </libctl:ListViewScroll.InputBindings>
+
+                    <!--<i:Interaction.Triggers>
                         <eii:KeyTrigger ActiveOnFocus="True" FiredOn="KeyUp" Key="Enter" >
                             <i:InvokeCommandAction Command="{Binding EditCommand}"/>
                         </eii:KeyTrigger>
@@ -83,7 +87,7 @@
                         <i:EventTrigger EventName="MouseDoubleClick" >
                             <i:InvokeCommandAction Command="{Binding EditCommand}"/>
                         </i:EventTrigger>
-                    </i:Interaction.Triggers>
+                    </i:Interaction.Triggers>-->
 
 
                     <ListView.Resources>

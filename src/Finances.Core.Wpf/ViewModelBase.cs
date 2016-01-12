@@ -23,7 +23,7 @@ namespace Finances.Core.Wpf
 //        string Title { get; }
     }
 
-    public abstract class ViewModelBase : NotifyBase, IDisposable, IViewModelBase, IDialog
+    public abstract class ViewModelBase : ViewDataBase, IDisposable, IViewModelBase, IDialog
     {
         string _title;
         bool _isBusy = false;

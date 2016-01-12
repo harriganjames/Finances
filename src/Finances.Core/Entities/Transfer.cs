@@ -58,7 +58,7 @@ namespace Finances.Core.Entities
         }
 
 
-        public string DirectionNAme
+        public string DirectionName
         {
             get
             {

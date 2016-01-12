@@ -12,6 +12,7 @@
     <conv:NullToCollapsedConverter x:Key="NullToCollapsedConverter" />
     <conv:ToggleBooleanConverter x:Key="ToggleBooleanConverter" />
     <conv:MultiBooleanAndConverter x:Key="MultiBooleanAndConverter" />
+    <conv:EmptyConverter x:Key="EmptyConverter" />
     
     <finconv:AccountElsewhereToVisibileConverter x:Key="AccountElsewhereToVisibileConverter"/>
     <finconv:AccountElsewhereToCollapsedConverter x:Key="AccountElsewhereToCollapsedConverter"/>

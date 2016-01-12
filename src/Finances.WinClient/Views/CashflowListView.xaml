@@ -42,8 +42,19 @@
                 <libctl:ListViewScroll Grid.Row="1" 
                                        ItemsSource="{Binding Cashflows}" 
                                        SelectionMode="Extended"
+                                       ColumnWidthStore="{Binding ViewData[ListViewColumnWidths], Mode=TwoWay}"
+                                       MouseDoubleClickCommand="{Binding EditCommand}"
                                        >
-                    <i:Interaction.Triggers>
+
+                    <libctl:ListViewScroll.InputBindings>
+                        <KeyBinding Gesture="Return" Command="{Binding EditCommand}"/>
+                        <KeyBinding Gesture="Insert" Command="{Binding AddCommand}"/>
+                        <KeyBinding Gesture="Delete" Command="{Binding DeleteCommand}"/>
+                        <KeyBinding Gesture="Ctrl+R" Command="{Binding ReloadCommand}"/>
+                    </libctl:ListViewScroll.InputBindings>
+
+
+                    <!--<i:Interaction.Triggers>
                         <eii:KeyTrigger ActiveOnFocus="True" FiredOn="KeyUp" Key="Enter" >
                             <i:InvokeCommandAction Command="{Binding EditCommand}"/>
                         </eii:KeyTrigger>
@@ -56,7 +67,7 @@
                         <i:EventTrigger EventName="MouseDoubleClick" >
                             <i:InvokeCommandAction Command="{Binding EditCommand}"/>
                         </i:EventTrigger>
-                    </i:Interaction.Triggers>
+                    </i:Interaction.Triggers>-->
 
 
                     <ListView.Resources>

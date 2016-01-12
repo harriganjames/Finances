@@ -9,11 +9,11 @@ using Finances.Core.Interfaces;
 using Finances.WinClient.DomainServices;
 using Finances.WinClient.Factories;
 using System.Threading;
-using Remotion.Linq.Collections;
 
 using Finances.Core.Engines.Cashflow;
 using Finances.Core.Engines;
 using Finances.Core.ValueObjects;
+using System.Collections.ObjectModel;
 
 
 //
@@ -32,7 +32,7 @@ namespace Finances.WinClient.ViewModels
         //readonly ICashflowEngineC cashflowEngineC;
         readonly IEnumerable<ICashflowProjectionMode> aggregatedProjectionItemsGenerators;
 
-        List<CashflowProjectionItem> cashflowProjectionItems;
+        ObservableCollection<CashflowProjectionItem> cashflowProjectionItems;
 
 
         public CashflowTableViewModel(IRepositoryRead<Cashflow> cashflowRepositoryRead,
@@ -167,7 +167,7 @@ namespace Finances.WinClient.ViewModels
                     {
                         modes.Add(m);
                     }
-                    SelectedMode = modes.FirstOrDefault();
+                    //SelectedMode = modes.FirstOrDefault();
                 }
                 return modes;
             }
@@ -178,6 +178,8 @@ namespace Finances.WinClient.ViewModels
         {
             get
             {
+                if (selectedMode == null)
+                    selectedMode = Modes.FirstOrDefault();
                 return selectedMode;
             }
             set
@@ -191,15 +193,36 @@ namespace Finances.WinClient.ViewModels
         }
 
 
-        public List<CashflowProjectionItem> CashflowProjectionItems
+        public ObservableCollection<CashflowProjectionItem> CashflowProjectionItems
         {
-            get { return cashflowProjectionItems; }
-            set 
-            { 
-                cashflowProjectionItems = value;
-                NotifyPropertyChanged(() => CashflowProjectionItems);
+            get
+            {
+                if (cashflowProjectionItems == null)
+                    cashflowProjectionItems = new ObservableCollection<CashflowProjectionItem>();
+                return cashflowProjectionItems;
+            }
+            //set 
+            //{ 
+            //    cashflowProjectionItems = value;
+            //    NotifyPropertyChanged(() => CashflowProjectionItems);
+            //}
+        }
+
+        private CashflowProjectionItem selectedCashflowProjectionItem;
+        public CashflowProjectionItem SelectedCashflowProjectionItem
+        {
+            get
+            {
+                return selectedCashflowProjectionItem;
+            }
+
+            set
+            {
+                selectedCashflowProjectionItem = value;
+                NotifyPropertyChanged(() => this.SelectedCashflowProjectionItem);
             }
         }
+
 
 
         #endregion
@@ -211,6 +234,7 @@ namespace Finances.WinClient.ViewModels
         private void Refresh()
         {
             GenerateProjection();
+            //GenerateProjectionTask();
         }
 
 
@@ -231,7 +255,9 @@ namespace Finances.WinClient.ViewModels
             base.IsBusy = true;
 
             Task.Factory
-                .StartNew(() => GenerateProjectionTask())
+                .StartNew(() => RetreiveProjectionsTask())
+                .ContinueWith(t => PopulateProjectionsTask(t.Result), base.UIScheduler)
+                //.StartNew(() => GenerateProjectionTask())
                 .ContinueWith(t => base.IsBusy = false);
         }
 
@@ -258,21 +284,46 @@ namespace Finances.WinClient.ViewModels
             }
         }
 
-        private void GenerateProjectionTask()
+        private List<CashflowProjectionItem> RetreiveProjectionsTask()
         {
-            if (SelectedCashflow != null)
-            {
-                CashflowProjectionItems = SelectedCashflow.Entity.GenerateProjection(
+            return SelectedCashflow.Entity.GenerateProjection(
                                     SelectedCashflow.Entity.StartDate.AddMonths(Decimal.ToInt32(QtyMonths.Value)),
-                                    OpeningBalance.Value, 
-                                    Threshold.Value, 
+                                    OpeningBalance.Value,
+                                    Threshold.Value,
                                     SelectedMode);
-
-
-            }
-            else
-                CashflowProjectionItems = null;
         }
+
+        private void PopulateProjectionsTask(List<CashflowProjectionItem> items)
+        {
+            CashflowProjectionItems.Clear();
+            if (items != null)
+            {
+                items.ForEach(cpi => CashflowProjectionItems.Add(cpi));
+            }
+            this.SelectedCashflowProjectionItem = CashflowProjectionItems.FirstOrDefault();
+        }
+
+
+        //private void GenerateProjectionTask()
+        //{
+        //    if (SelectedCashflow != null)
+        //    {
+        //        List<CashflowProjectionItem> items = SelectedCashflow.Entity.GenerateProjection(
+        //                            SelectedCashflow.Entity.StartDate.AddMonths(Decimal.ToInt32(QtyMonths.Value)),
+        //                            OpeningBalance.Value, 
+        //                            Threshold.Value, 
+        //                            SelectedMode);
+
+        //        CashflowProjectionItems.Clear();
+        //        if (items!=null)
+        //        {
+        //            items.ForEach(cpi => CashflowProjectionItems.Add(cpi));
+        //        }
+
+        //    }
+        //    else
+        //        CashflowProjectionItems.Clear();
+        //}
 
     }
 

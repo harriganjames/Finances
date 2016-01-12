@@ -16,10 +16,16 @@ namespace Finances.Core.Wpf
      *  and to return base.DataListView
      *  
      * In View:
-     * Change GridViewColumnHeader like so, where Name is the :
-    <GridViewColumnHeader Content="{Binding ColumnHeader[Name]}"
-        Command="{Binding SortColumnCommand}" 
-        CommandParameter="Name">
+     * Change GridViewColumnHeader:
+        Remove the Header property
+        DirectionName is the property to sort on
+        Direction is the text that appears in the header
+
+        <GridViewColumnHeader Command="{Binding SortColumnCommand}" 
+                                CommandParameter="DirectionName">
+            <Label Content="{Binding ColumnHeaderSuffix[DirectionName]}"
+                ContentStringFormat="Direction {0}"/>
+        </GridViewColumnHeader>
 
      * 
      */

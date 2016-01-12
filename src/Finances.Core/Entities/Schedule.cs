@@ -15,9 +15,15 @@ namespace Finances.Core.Entities
 
         public Schedule(IEnumerable<IScheduleFrequency> calculators)
         {
+            if(calculators==null || calculators.Count()==0)
+                throw new Exceptions.FinancesCoreException("Schedule ctor: calculators is null or empty");
+
+
             this.calculators = calculators;
 
             this.FrequencyEvery = 1;
+
+            this.Frequency = this.calculators.FirstOrDefault().Frequency;
         }
 
         public DateTime StartDate { get; set; }

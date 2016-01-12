@@ -25,7 +25,7 @@
     <UpdateRequired>false</UpdateRequired>
     <MapFileExtensions>true</MapFileExtensions>
     <AutorunEnabled>true</AutorunEnabled>
-    <ApplicationRevision>10</ApplicationRevision>
+    <ApplicationRevision>11</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
@@ -115,6 +115,7 @@
     <Compile Include="Converters\TansferToDirectionConverter.cs" />
     <Compile Include="DesignTimeData\BankAccount.cs" />
     <Compile Include="DesignTimeData\Transfer.cs" />
+    <Compile Include="DesignTimeData\TransferList.cs" />
     <Compile Include="InterceptorSelectors\ErrorHandlingInterceptorSelector.cs" />
     <Compile Include="DesignTimeData\Bank.cs" />
     <Compile Include="Views\BankAccountElsewhere.xaml.cs">
@@ -237,6 +238,9 @@
       <SubType>Designer</SubType>
     </DesignData>
     <DesignData Include="DesignTimeData\Transfer.xaml">
+      <SubType>Designer</SubType>
+    </DesignData>
+    <DesignData Include="DesignTimeData\TransferList.xaml">
       <SubType>Designer</SubType>
     </DesignData>
     <Page Include="MainWindow.xaml">

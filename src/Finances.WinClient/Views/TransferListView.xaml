@@ -16,10 +16,12 @@
              xmlns:libctl="clr-namespace:Finances.Core.Wpf.Controls;assembly=Finances.Core.Wpf"
              mc:Ignorable="d"
              x:Name="apex"
-             d:DesignHeight="300" d:DesignWidth="300"
-            FocusManager.FocusedElement="{Binding ElementName=Items}"
+             d:DataContext="{d:DesignData Source=/DesignTimeData/TransferList.xaml}"
+             d:DesignHeight="300" d:DesignWidth="400"
+             FocusManager.FocusedElement="{Binding ElementName=Items}"
             >
     
+
     <tool:BusyIndicator IsBusy="{Binding IsBusy}">
         <Grid>
             <Grid Name="List">
@@ -38,14 +40,23 @@
                         <Button Content="Edit" Command="{Binding EditCommand}"/>
                         <Button Content="Delete" Command="{Binding DeleteCommand}"/>
                         <Button Content="Reload" Command="{Binding ReloadCommand}"/>
+                        <StackPanel Orientation="Horizontal">
+                            <Label Content="Amount Sum"/>
+                            <TextBlock Text="{Binding AmountSum, StringFormat=c}" 
+                                       TextAlignment="Right" 
+                                       VerticalAlignment="Center"/>
+                        </StackPanel>
                     </ToolBarPanel>
                 </ToolBar>
-                <libctl:ListViewScroll Grid.Row="1" 
+                <libctl:ListViewScroll Name="Items"
+                                       Grid.Row="1" 
                                        ItemsSource="{Binding Transfers}" 
                                        SelectionMode="Extended"
+                                       ColumnWidthStore="{Binding ViewData[ListViewColumnWidths], Mode=TwoWay}"
+                                       MouseDoubleClickCommand="{Binding EditCommand}"
                                        >
                     <i:Interaction.Triggers>
-                        <eii:KeyTrigger ActiveOnFocus="True" FiredOn="KeyUp" Key="Enter" >
+                        <!--<eii:KeyTrigger ActiveOnFocus="True" FiredOn="KeyUp" Key="Enter" >
                             <i:InvokeCommandAction Command="{Binding EditCommand}"/>
                         </eii:KeyTrigger>
                         <eii:KeyTrigger ActiveOnFocus="True" FiredOn="KeyUp" Key="Insert"  >
@@ -53,13 +64,20 @@
                         </eii:KeyTrigger>
                         <eii:KeyTrigger ActiveOnFocus="True" FiredOn="KeyUp" Key="Delete">
                             <i:InvokeCommandAction Command="{Binding DeleteCommand}"/>
-                        </eii:KeyTrigger>
-                        <i:EventTrigger EventName="MouseDoubleClick" >
+                        </eii:KeyTrigger>-->
+                        <!--<i:EventTrigger EventName="MouseDoubleClick" >
                             <i:InvokeCommandAction Command="{Binding EditCommand}"/>
-                        </i:EventTrigger>
+                        </i:EventTrigger>-->
                     </i:Interaction.Triggers>
 
 
+                    <libctl:ListViewScroll.InputBindings>
+                        <KeyBinding Gesture="Return" Command="{Binding EditCommand}"/>
+                        <KeyBinding Gesture="Insert" Command="{Binding AddCommand}"/>
+                        <KeyBinding Gesture="Delete" Command="{Binding DeleteCommand}"/>
+                        <KeyBinding Gesture="Ctrl+R" Command="{Binding ReloadCommand}"/>
+                    </libctl:ListViewScroll.InputBindings>
+                    
                     <ListView.Resources>
                         <Style TargetType="{x:Type ListViewItem}">
                             <Setter Property="IsSelected" Value="{Binding IsSelected, Mode=TwoWay}"/>
@@ -67,10 +85,47 @@
                         </Style>
                     </ListView.Resources>
 
+                    <!--<ListView.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <StackPanel Orientation="Vertical">
+                                <StackPanel.InputBindings>
+                                    <MouseBinding Gesture="RightClick" Command="{Binding EditCommand, Converter={StaticResource EmptyConverter}}"/>
+                                    <KeyBinding Gesture="CTRL+E" Command="{Binding EditCommand}"/>
+                                </StackPanel.InputBindings>
+                            </StackPanel>
+                        </ItemsPanelTemplate>
+                    </ListView.ItemsPanel>-->
+                    
+                    <!--<ListView.ItemTemplate>
+                        <DataTemplate>
+                            <Grid Margin="2">
+                                <Grid.InputBindings>
+                                    <MouseBinding Gesture="LeftDoubleClick" Command="{Binding testCommand}"/>
+                                    <KeyBinding Gesture="CTRL+F" Command="{Binding EditCommand}"/>
+                                </Grid.InputBindings>
+                            </Grid>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>-->
+                    
+                    
                     <ListView.View>
                         <GridView>
-                            <GridViewColumn DisplayMemberBinding="{Binding Name}" Header="Name" />
-                            <GridViewColumn Header="Category">
+                            <GridViewColumn DisplayMemberBinding="{Binding Name}">
+                                <GridViewColumnHeader Command="{Binding SortColumnCommand}" 
+                                                      CommandParameter="Name">
+                                    <Label Content="{Binding ColumnHeaderSuffix[Name]}"
+                                        ContentStringFormat="Name {0}"/>
+                                </GridViewColumnHeader>
+                            </GridViewColumn>
+
+                            <!--<GridViewColumn DisplayMemberBinding="{Binding Name}" Header="Name" />-->
+                            
+                            <GridViewColumn>
+                                <GridViewColumnHeader Command="{Binding SortColumnCommand}" 
+                                                      CommandParameter="Category.Name">
+                                    <Label Content="{Binding ColumnHeaderSuffix[Category.Name]}"
+                                        ContentStringFormat="Category {0}"/>
+                                </GridViewColumnHeader>
                                 <GridViewColumn.CellTemplate>
                                     <DataTemplate>
                                         <TextBlock  Text="{Binding Category.Name}"/>
@@ -78,33 +133,45 @@
                                 </GridViewColumn.CellTemplate>
                             </GridViewColumn>
 
-                            <!--<GridViewColumn Header="Direction">
+                            <GridViewColumn>
+                                <GridViewColumnHeader Command="{Binding SortColumnCommand}" 
+                                                      CommandParameter="DirectionName">
+                                    <Label Content="{Binding ColumnHeaderSuffix[DirectionName]}"
+                                        ContentStringFormat="Direction {0}"/>
+                                </GridViewColumnHeader>
                                 <GridViewColumn.CellTemplate>
                                     <DataTemplate>
                                         <ContentControl Content="{Binding .}" 
                                                         ContentTemplate="{StaticResource TransferDirectionDataTemplate}"/>
                                     </DataTemplate>
                                 </GridViewColumn.CellTemplate>
-                            </GridViewColumn>-->
+                            </GridViewColumn>
 
 
-                            <GridViewColumn Header="From">
+                            <!--<GridViewColumn Header="From">
                                 <GridViewColumn.CellTemplate>
                                     <DataTemplate>
                                         <ContentControl Content="{Binding FromBankAccount}" 
                                                         ContentTemplate="{StaticResource BankAccountDataTemplate}"/>
                                     </DataTemplate>
                                 </GridViewColumn.CellTemplate>
-                            </GridViewColumn>
-                            <GridViewColumn Header="To" >
+                            </GridViewColumn>-->
+                            
+                            <!--<GridViewColumn Header="To" >
                                 <GridViewColumn.CellTemplate>
                                     <DataTemplate>
                                         <ContentControl Content="{Binding ToBankAccount}" 
                                                         ContentTemplate="{StaticResource BankAccountDataTemplate}"/>
                                     </DataTemplate>
                                 </GridViewColumn.CellTemplate>
-                            </GridViewColumn>
-                            <GridViewColumn Header="Amount">
+                            </GridViewColumn>-->
+                            
+                            <GridViewColumn>
+                                <GridViewColumnHeader Command="{Binding SortColumnCommand}" 
+                                                      CommandParameter="Amount">
+                                    <Label Content="{Binding ColumnHeaderSuffix[Amount]}"
+                                        ContentStringFormat="Amount {0}"/>
+                                </GridViewColumnHeader>
                                 <GridViewColumn.CellTemplate>
                                     <DataTemplate>
                                         <TextBlock  TextAlignment="Right"
@@ -112,7 +179,9 @@
                                     </DataTemplate>
                                 </GridViewColumn.CellTemplate>
                             </GridViewColumn>
+                            
                             <GridViewColumn DisplayMemberBinding="{Binding ScheduleDescription}" Header="Schedule" />
+                            
                             <GridViewColumn Header="Enabled">
                                 <GridViewColumn.CellTemplate>
                                     <DataTemplate>

@@ -2,8 +2,17 @@
 {
     public class Bank
     {
-        public virtual int BankId { get; set; }
-        public virtual string Name { get; set; }
-        public virtual byte[] Logo { get; set; }
+        public int BankId { get; set; }
+        public string Name { get; set; }
+        public byte[] Logo { get; set; }
+
+        public bool HasLogo
+        {
+            get
+            {
+                return !(Logo == null);
+            }
+        }
+
     }
 }

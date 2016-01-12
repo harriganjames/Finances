@@ -58,6 +58,15 @@ namespace Finances.WinClient.ViewModels
             }
         }
 
+        public bool HasLogo
+        {
+            get
+            {
+                return entity.HasLogo;
+            }
+        }
+
+
 
         #endregion
 

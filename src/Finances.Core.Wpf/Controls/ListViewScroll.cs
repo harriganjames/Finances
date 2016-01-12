@@ -1,12 +1,14 @@
 ﻿using System.ComponentModel;
+using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 
 namespace Finances.Core.Wpf.Controls
 {
     /// <summary>
     /// New list items (or selected item) are brought into view
     /// </summary>
-    public class ListViewScroll : System.Windows.Controls.ListView
+    public class ListViewScroll : ListViewMouseDoubleClick
     {
         public ListViewScroll()
             : base()
@@ -18,6 +20,7 @@ namespace Finances.Core.Wpf.Controls
 
                 // ListView needs to be non-virtualizing for off-screen items to be brought into view
                 SetValue(VirtualizingPanel.IsVirtualizingProperty, false);
+
             }
         }
 
@@ -25,6 +28,7 @@ namespace Finances.Core.Wpf.Controls
         {
             ScrollIntoView(SelectedItem);
         }
+
 
     }
 }

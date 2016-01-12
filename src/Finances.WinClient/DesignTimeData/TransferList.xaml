@@ -1,0 +1,8 @@
+﻿<local:TransferList
+        xmlns:local="clr-namespace:Finances.WinClient.DesignTimeData"
+        >
+    <local:TransferList.AmountSum>
+        123
+    </local:TransferList.AmountSum>
+</local:TransferList>
+    
