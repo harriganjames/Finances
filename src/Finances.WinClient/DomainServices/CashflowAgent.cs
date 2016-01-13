@@ -36,23 +36,21 @@ namespace Finances.WinClient.DomainServices
     public class CashflowAgent : ICashflowAgent
     {
         readonly ICashflowFactory cashflowFactory;
-        //readonly ICashflowRepository cashflowRepository;
-        readonly IRepositoryWrite<Cashflow> cashflowRepositoryWrite;
-        readonly IRepositoryRead<Cashflow> cashflowRepositoryRead;
+        readonly ICashflowRepository cashflowRepository;
+        //readonly IRepositoryWrite<Cashflow> cashflowRepositoryWrite;
+        //readonly IRepositoryRead<Cashflow> cashflowRepositoryRead;
         readonly IDialogService dialogService;
         readonly ICashflowEditorViewModelFactory cashflowEditorViewModelFactory;
 
         public CashflowAgent(
                         ICashflowFactory cashflowFactory,
-                        IRepositoryWrite<Cashflow> cashflowRepositoryWrite,
-                        IRepositoryRead<Cashflow> cashflowRepositoryRead,
+                        ICashflowRepository cashflowRepository,
                         IDialogService dialogService,
                         ICashflowEditorViewModelFactory cashflowEditorViewModelFactory
                         )
         {
             this.cashflowFactory = cashflowFactory;
-            this.cashflowRepositoryWrite = cashflowRepositoryWrite;
-            this.cashflowRepositoryRead = cashflowRepositoryRead;
+            this.cashflowRepository = cashflowRepository;
             this.dialogService = dialogService;
             this.cashflowEditorViewModelFactory = cashflowEditorViewModelFactory;
         }
@@ -71,7 +69,7 @@ namespace Finances.WinClient.DomainServices
 
             while (this.dialogService.ShowDialogView(editor))
             {
-                id = this.cashflowRepositoryWrite.Add(entity);
+                id = this.cashflowRepository.Add(entity);
 
                 if (id>0)
                 {
@@ -93,7 +91,7 @@ namespace Finances.WinClient.DomainServices
         {
             bool result = false;
 
-            Cashflow entity = this.cashflowRepositoryRead.Read(id);
+            Cashflow entity = this.cashflowRepository.Read(id);
 
             var editor = this.cashflowEditorViewModelFactory.Create(entity);
 
@@ -101,7 +99,7 @@ namespace Finances.WinClient.DomainServices
 
             while (this.dialogService.ShowDialogView(editor))
             {
-                result = this.cashflowRepositoryWrite.Update(entity);
+                result = this.cashflowRepository.Update(entity);
                 if (result)
                 {
                     break;
@@ -130,7 +128,7 @@ namespace Finances.WinClient.DomainServices
             if (ids.Count() == 1)
             {
                 title = "Delete Cashflow";
-                Cashflow entity = this.cashflowRepositoryRead.Read(ids[0]);
+                Cashflow entity = this.cashflowRepository.Read(ids[0]);
                 message = String.Format("Please confirm deletion of cashflow: {0}", entity.Name);
             }
             else
@@ -142,7 +140,7 @@ namespace Finances.WinClient.DomainServices
 
             if (this.dialogService.ShowMessageBox(title, message, MessageBoxButtonEnum.YesNo) == MessageBoxResultEnum.Yes)
             {
-                result = this.cashflowRepositoryWrite.Delete(ids);
+                result = this.cashflowRepository.Delete(ids);
             }
 
             return result;

@@ -26,26 +26,17 @@ namespace Finances.WinClient.ViewModels
 {
     public class CashflowTableViewModel : Workspace
     {
-        readonly IRepositoryRead<Cashflow> cashflowRepositoryRead;
-        //readonly ICashflowEngineA cashflowEngineA;
-        //readonly ICashflowEngineFactoryB cashflowEngineFactoryB;
-        //readonly ICashflowEngineC cashflowEngineC;
+        readonly ICashflowRepository cashflowRepository;
         readonly IEnumerable<ICashflowProjectionMode> aggregatedProjectionItemsGenerators;
 
         ObservableCollection<CashflowProjectionItem> cashflowProjectionItems;
 
 
-        public CashflowTableViewModel(IRepositoryRead<Cashflow> cashflowRepositoryRead,
-                                        //ICashflowEngineA cashflowEngineA,
-                                        //ICashflowEngineFactoryB cashflowEngineFactoryB,
-                                        //ICashflowEngineC cashflowEngineC,
+        public CashflowTableViewModel(ICashflowRepository cashflowRepository,
                                         IEnumerable<ICashflowProjectionMode> aggregatedProjectionItemsGenerators
                                         )
         {
-            this.cashflowRepositoryRead = cashflowRepositoryRead;
-            //this.cashflowEngineA = cashflowEngineA;
-            //this.cashflowEngineFactoryB = cashflowEngineFactoryB;
-            //this.cashflowEngineC = cashflowEngineC;
+            this.cashflowRepository = cashflowRepository;
             this.aggregatedProjectionItemsGenerators = aggregatedProjectionItemsGenerators;
 
             RefreshCommand = base.AddNewCommand(new ActionCommand(Refresh));
@@ -265,7 +256,7 @@ namespace Finances.WinClient.ViewModels
 
         private List<Cashflow> RetrieveCashflowsTask()
         {
-            return cashflowRepositoryRead.ReadList();
+            return cashflowRepository.ReadList();
         }
 
         private void PopulateCashflowsTask(List<Cashflow> data)

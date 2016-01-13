@@ -24,20 +24,18 @@ namespace Finances.WinClient.ViewModels
         Dictionary<int, BankAccount> allBankAccounts = new Dictionary<int,BankAccount>();
         Cashflow entity;
 
-        //readonly ICashflowRepository cashflowRepository;
+        readonly ICashflowRepository cashflowRepository;
         //readonly IRepositoryWrite<Cashflow> cashflowRepositoryWrite;
-        readonly IRepositoryRead<Cashflow> cashflowRepositoryRead;
+        //readonly IRepositoryRead<Cashflow> cashflowRepositoryRead;
         readonly IBankAccountRepository bankAccountRepository;
 
         public CashflowEditorViewModel(
-                //IRepositoryWrite<Cashflow> cashflowRepositoryWrite,
-                IRepositoryRead<Cashflow> cashflowRepositoryRead,
+                ICashflowRepository cashflowRepository,
                 IBankAccountRepository bankAccountRepository,
                 Cashflow entity
             )
         {
-            //this.cashflowRepositoryWrite = cashflowRepositoryWrite;
-            this.cashflowRepositoryRead = cashflowRepositoryRead;
+            this.cashflowRepository = cashflowRepository;
             this.bankAccountRepository = bankAccountRepository;
             this.entity = entity;
 
@@ -196,7 +194,7 @@ namespace Finances.WinClient.ViewModels
         {
             Task.Factory.StartNew(() =>
                 {
-                    existingCashflows = cashflowRepositoryRead.ReadListDataIdName();
+                    existingCashflows = cashflowRepository.ReadListDataIdName();
                 });
 
         }

@@ -13,15 +13,17 @@ namespace Finances.IntegrationTests.MS
     [TestClass]
     public class CashflowRepositoryEFTests : IntegrationBase
     {
-        IRepositoryRead<Core.Entities.Cashflow> repositoryRead;
-        IRepositoryWrite<Core.Entities.Cashflow> repositoryWrite;
+        //IRepositoryRead<Core.Entities.Cashflow> repository;
+        //IRepositoryWrite<Core.Entities.Cashflow> repository;
+        ICashflowRepository repository;
         Core.Entities.Cashflow testEntity;
 
         [TestInitialize]
         public void Initialize()
         {
-            repositoryRead = container.Resolve<IRepositoryRead<Core.Entities.Cashflow>>();
-            repositoryWrite = container.Resolve<IRepositoryWrite<Core.Entities.Cashflow>>();
+            //repository = container.Resolve<IRepositoryRead<Core.Entities.Cashflow>>();
+            //repository = container.Resolve<IRepositoryWrite<Core.Entities.Cashflow>>();
+            repository = container.Resolve<ICashflowRepository>();
 
             testEntity = new Core.Entities.Cashflow(null)
             {
@@ -43,10 +45,10 @@ namespace Finances.IntegrationTests.MS
             Core.Entities.Cashflow read;
             var entity = testEntity;
 
-            repositoryWrite.Add(entity);
+            repository.Add(entity);
             Assert.IsTrue(entity.CashflowId > 0, "CashflowId not set");
 
-            read = repositoryRead.Read(entity.CashflowId);
+            read = repository.Read(entity.CashflowId);
             Assert.IsNotNull(read);
             Assert.IsNotNull(read.CashflowBankAccounts);
             
@@ -56,14 +58,14 @@ namespace Finances.IntegrationTests.MS
             entity.CashflowBankAccounts.Remove(entity.CashflowBankAccounts[0]);
             entity.CashflowBankAccounts.Add(new Core.Entities.CashflowBankAccount() { BankAccount = new Core.Entities.BankAccount() { BankAccountId = 3 } });
 
-            repositoryWrite.Update(entity);
-            read = repositoryRead.Read(entity.CashflowId);
+            repository.Update(entity);
+            read = repository.Read(entity.CashflowId);
             Assert.IsNotNull(read);
             CompareCashflows(entity, read, "Update");
 
-            repositoryWrite.Delete(entity);
+            repository.Delete(entity);
 
-            read = repositoryRead.Read(entity.CashflowId);
+            read = repository.Read(entity.CashflowId);
             Assert.IsNull(read);
         }
 
@@ -71,7 +73,7 @@ namespace Finances.IntegrationTests.MS
         [TestMethod]
         public void TestReadList()
         {
-            var list = repositoryRead.ReadList();
+            var list = repository.ReadList();
             Assert.IsNotNull(list);
             Assert.IsTrue(list.Count > 0);
 
@@ -96,7 +98,7 @@ namespace Finances.IntegrationTests.MS
         [TestMethod]
         public void TestReadListDataIdName()
         {
-            var list = repositoryRead.ReadListDataIdName();
+            var list = repository.ReadListDataIdName();
             Assert.IsNotNull(list);
             Assert.IsTrue(list.Count > 0);
 

@@ -13,7 +13,7 @@ using System.Data;
 
 namespace Finances.Persistence.EF
 {
-    public class CashflowRepository : IRepositoryRead<Core.Entities.Cashflow>, IRepositoryWrite<Core.Entities.Cashflow>  //ICashflowRepository //, IRepository
+    public class CashflowRepository : ICashflowRepository //IRepositoryRead<Core.Entities.Cashflow>, IRepositoryWrite<Core.Entities.Cashflow>  //ICashflowRepository //, IRepository
     {
         private readonly IModelContextFactory factory;
         private readonly IMappingEngine mapper;
