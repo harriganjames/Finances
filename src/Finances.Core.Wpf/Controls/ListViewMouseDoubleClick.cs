@@ -15,10 +15,13 @@ namespace Finances.Core.Wpf.Controls
     {
         public ListViewMouseDoubleClick() : base()
         {
+            Console.WriteLine("ListViewMouseDoubleClick start");
             if (!DesignerProperties.GetIsInDesignMode(this))
             {
-                this.MouseDoubleClick += ListViewScroll_MouseDoubleClick;
+                //                this.MouseDoubleClick += ListViewScroll_MouseDoubleClick;
+                // now using ListViewDoubleClickCommandBahavior.cs instead
             }
+            Console.WriteLine("ListViewMouseDoubleClick start");
 
         }
 
@@ -27,9 +30,9 @@ namespace Finances.Core.Wpf.Controls
             if (TryFindParent<GridViewColumnHeader>(e.OriginalSource as DependencyObject) == null)
             {
                 var cmd = this.MouseDoubleClickCommand;
-                if(cmd!= null)
+                if (cmd != null)
                 {
-                    if(cmd.CanExecute(this.SelectedItem))
+                    if (cmd.CanExecute(this.SelectedItem))
                         cmd.Execute(this.SelectedItem);
                 }
             }

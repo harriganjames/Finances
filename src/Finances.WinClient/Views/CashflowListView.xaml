@@ -13,6 +13,7 @@
              xmlns:lib="clr-namespace:Finances.Core.Wpf;assembly=Finances.Core.Wpf"
              xmlns:conv="clr-namespace:Finances.Core.Wpf.Converters;assembly=Finances.Core.Wpf"
              xmlns:libctl="clr-namespace:Finances.Core.Wpf.Controls;assembly=Finances.Core.Wpf"
+             xmlns:libattach="clr-namespace:Finances.Core.Wpf.AttachedProperties;assembly=Finances.Core.Wpf"
              mc:Ignorable="d"
              x:Name="apex"
              d:DesignHeight="300" d:DesignWidth="300"
@@ -43,7 +44,7 @@
                                        ItemsSource="{Binding Cashflows}" 
                                        SelectionMode="Extended"
                                        ColumnWidthStore="{Binding ViewData[ListViewColumnWidths], Mode=TwoWay}"
-                                       MouseDoubleClickCommand="{Binding EditCommand}"
+                                       libattach:ListViewDoubleClickBehavior.DoubleClickCommand="{Binding EditCommand}"
                                        >
 
                     <libctl:ListViewScroll.InputBindings>

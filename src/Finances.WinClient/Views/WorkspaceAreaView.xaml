@@ -40,13 +40,13 @@ xmlns:libattach="clr-namespace:Finances.Core.Wpf.AttachedProperties;assembly=Fin
 
         <Border Grid.Column="1" BorderThickness="2" BorderBrush="DarkGray">
             <TabControl Grid.Column="1"
-                        ItemsSource="{Binding OpenWorkspaces}"
-                        SelectedItem="{Binding SelectedWorkspace}"
-                        >
-                <!--libattach:TabItemGeneratorBehavior.ItemsSource="{Binding OpenWorkspaces}"
+                libattach:TabItemGeneratorBehavior.ItemsSource="{Binding OpenWorkspaces}"
                                             libattach:TabItemGeneratorBehavior.SelectedItem="{Binding SelectedWorkspace}"
-                                            >-->
-                    <TabControl.ItemTemplate>
+                                            >
+                <!--ItemsSource="{Binding OpenWorkspaces}"
+                        SelectedItem="{Binding SelectedWorkspace}"-->
+
+                <TabControl.ItemTemplate>
                         <DataTemplate>
                             <DockPanel>
                                 <Button Command="{Binding Path=CloseCommand}"

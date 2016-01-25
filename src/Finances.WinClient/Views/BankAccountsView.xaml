@@ -7,6 +7,7 @@
              xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
              xmlns:eii="clr-namespace:Microsoft.Expression.Interactivity.Input;assembly=Microsoft.Expression.Interactions"
              xmlns:libctl="clr-namespace:Finances.Core.Wpf.Controls;assembly=Finances.Core.Wpf"
+             xmlns:libattach="clr-namespace:Finances.Core.Wpf.AttachedProperties;assembly=Finances.Core.Wpf"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300"
             >
@@ -87,8 +88,11 @@
                                        Visibility="Visible"
                                        HorizontalAlignment="Stretch"
                                        ColumnWidthStore="{Binding ViewData[ListViewColumnWidths], Mode=TwoWay}"
-                                       MouseDoubleClickCommand="{Binding EditCommand}"
+                                       libattach:ListViewDoubleClickBehavior.DoubleClickCommand="{Binding EditCommand}"
                                        >
+
+                                       <!--MouseDoubleClickCommand="{Binding EditCommand}"-->
+
 
                     <libctl:ListViewScroll.InputBindings>
                         <KeyBinding Gesture="Return" Command="{Binding EditCommand}"/>

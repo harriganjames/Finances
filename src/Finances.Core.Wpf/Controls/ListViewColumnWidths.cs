@@ -21,6 +21,8 @@ namespace Finances.Core.Wpf.Controls
 
         public ListViewColumnWidths() : base()
         {
+            Console.WriteLine("ListViewColumnWidths start");
+
             if (!DesignerProperties.GetIsInDesignMode(this))
             {
 
@@ -66,6 +68,7 @@ namespace Finances.Core.Wpf.Controls
                     }
 
                 };
+                Console.WriteLine("ListViewColumnWidths start");
 
             }
         }

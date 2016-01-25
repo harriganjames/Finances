@@ -55,6 +55,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ActionCommand.cs" />
+    <Compile Include="AttachedProperties\ListViewDoubleClickCommandBahavior.cs" />
     <Compile Include="AttachedProperties\TabItemGeneratorBehavior.cs" />
     <Compile Include="AttachedProperties\TreeViewItemExpandedBehavor.cs" />
     <Compile Include="BooleanResultEventArgs.cs" />

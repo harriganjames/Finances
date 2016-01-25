@@ -14,6 +14,7 @@
              xmlns:lib="clr-namespace:Finances.Core.Wpf;assembly=Finances.Core.Wpf"
              xmlns:conv="clr-namespace:Finances.Core.Wpf.Converters;assembly=Finances.Core.Wpf"
              xmlns:libctl="clr-namespace:Finances.Core.Wpf.Controls;assembly=Finances.Core.Wpf"
+             xmlns:libattach="clr-namespace:Finances.Core.Wpf.AttachedProperties;assembly=Finances.Core.Wpf"
              mc:Ignorable="d"
              x:Name="apex"
              d:DataContext="{d:DesignData Source=/DesignTimeData/TransferList.xaml}"
@@ -53,7 +54,7 @@
                                        ItemsSource="{Binding Transfers}" 
                                        SelectionMode="Extended"
                                        ColumnWidthStore="{Binding ViewData[ListViewColumnWidths], Mode=TwoWay}"
-                                       MouseDoubleClickCommand="{Binding EditCommand}"
+                                       libattach:ListViewDoubleClickBehavior.DoubleClickCommand="{Binding EditCommand}"
                                        >
                     <i:Interaction.Triggers>
                         <!--<eii:KeyTrigger ActiveOnFocus="True" FiredOn="KeyUp" Key="Enter" >
