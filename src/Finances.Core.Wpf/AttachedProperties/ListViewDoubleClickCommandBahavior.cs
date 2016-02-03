@@ -75,7 +75,7 @@ namespace Finances.Core.Wpf.AttachedProperties
             if (listView == null)
                 return;
 
-            if (TryFindParent<GridViewColumnHeader>(e.OriginalSource as DependencyObject) == null)
+            if(TryFindParent<ListViewItem>(e.OriginalSource as DependencyObject)!=null)
             {
                 var cmd = GetDoubleClickCommand(listView);
                 if (cmd != null)
