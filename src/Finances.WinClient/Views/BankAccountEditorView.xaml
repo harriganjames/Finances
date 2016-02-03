@@ -21,7 +21,7 @@
             
             <Style TargetType="Label">
                 <Setter Property="VerticalContentAlignment" Value="Center" />
-                <Setter Property="Height" Value="25" />
+                <!--<Setter Property="Height" Value="25" />-->
             </Style>
             <Style TargetType="TextBox" BasedOn="{StaticResource {x:Type Control}}" >
                 <Setter Property="Background" Value="Beige" />
@@ -33,7 +33,7 @@
             </Style>
             <Style TargetType="ComboBox" BasedOn="{StaticResource {x:Type Control}}">
                 <Setter Property="Background" Value="Beige" />
-                <Setter Property="Height" Value="25" />
+                <!--<Setter Property="Height" Value="25" />-->
                 <Setter Property="Width" Value="350" />
                 <Setter Property="HorizontalAlignment" Value="Left" />
                 <Setter Property="VerticalContentAlignment" Value="Center" />
@@ -41,7 +41,7 @@
             </Style>
             <Style TargetType="DatePicker" >
                 <!--<Setter Property="Background" Value="Beige" />-->
-                <Setter Property="Height" Value="25" />
+                <Setter Property="MinHeight" Value="25" />
                 <Setter Property="HorizontalAlignment" Value="Left" />
                 <Setter Property="VerticalContentAlignment" Value="Center" />
                 <Setter Property="Validation.ErrorTemplate" Value="{StaticResource validationTemplate}" />
@@ -189,7 +189,25 @@
                 </Grid.ColumnDefinitions>
 
                 <Label      Content="Login ID" />
-                <Grid Grid.Column="1" Width="Auto">
+
+                <StackPanel Grid.Column="1" Orientation="Horizontal">
+
+                    <TextBox    Text="{Binding LoginId, UpdateSourceTrigger=PropertyChanged}"
+                                MinWidth="80"
+                                HorizontalAlignment="Left"/>
+
+                    <Label      Content="Hint" 
+                                HorizontalAlignment="Right"
+                                Margin="20,0,5,0"/>
+                    <TextBox    Grid.Column="2"
+                                Text="{Binding PasswordHint, UpdateSourceTrigger=PropertyChanged}"
+                                MinWidth="70"
+                                HorizontalAlignment="Left"/>
+
+                </StackPanel>
+                
+                
+                <Grid Grid.Column="1" Width="Auto" Visibility="Collapsed">
 
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="80"/>
@@ -222,7 +240,20 @@
                 </Grid.ColumnDefinitions>
 
                 <Label      Content="Date Opened"/>
-                <Grid Grid.Column="1">
+
+                <StackPanel Grid.Column="1" Orientation="Horizontal">
+                    <DatePicker SelectedDate="{Binding OpenedDate, UpdateSourceTrigger=PropertyChanged}"/>
+
+                    <Label      Content="Date Closed" 
+                                Grid.Column="1"
+                                HorizontalAlignment="Right"
+                                Margin="20,0,5,0"/>
+
+                    <DatePicker SelectedDate="{Binding ClosedDate, UpdateSourceTrigger=PropertyChanged}"/>
+
+                </StackPanel>
+                
+                <!--<Grid Grid.Column="1" Visibility="Collapsed">
 
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="125"/>
@@ -243,7 +274,7 @@
                                 Grid.Column="2"
                                 />
 
-                </Grid>
+                </Grid>-->
 
             </Grid>
 
@@ -255,7 +286,26 @@
                 </Grid.ColumnDefinitions>
 
                 <Label Content="Initial Rate %" />
-                <Grid Grid.Column="1">
+
+                <StackPanel Grid.Column="1" Orientation="Horizontal">
+                
+                    <TextBox    Text="{Binding InitialRate, UpdateSourceTrigger=LostFocus, Converter={StaticResource PercentageConverter}}"
+                                MinWidth="45"
+                                HorizontalAlignment="Left"/>
+
+                    <Label      Content="Pays Taxable Interest" 
+                                Grid.Column="1"
+                                HorizontalAlignment="Right"
+                                Margin="20,0,5,0"/>
+                    
+                    <CheckBox   IsChecked="{Binding PaysTaxableInterest, UpdateSourceTrigger=PropertyChanged}"
+                                VerticalAlignment="Center"
+                                HorizontalAlignment="Left"
+                                />
+
+                </StackPanel>
+                
+                <!--<Grid Grid.Column="1" Visibility="Collapsed">
 
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="45"/>
@@ -279,7 +329,8 @@
                                 HorizontalAlignment="Left"
                                 Width="13"
                                 />
-                </Grid>
+                </Grid>-->
+                
             </Grid>
 
             <!--Milestone Date-->
