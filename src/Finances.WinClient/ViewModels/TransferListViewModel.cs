@@ -100,6 +100,7 @@ namespace Finances.WinClient.ViewModels
 
         public void Close()
         {
+            transfers.Clear();
             base.DataList.Clear();
         }
 
@@ -108,7 +109,37 @@ namespace Finances.WinClient.ViewModels
             LoadData();
         }
 
-        private void LoadData()
+        private async void LoadData()
+        {
+            base.IsBusy = true;
+
+            var task = new Task(() =>
+            {
+                transfers.Clear();
+
+                var entities = this.transferRepository.ReadList();
+
+                if (entities != null)
+                    entities.ForEach(t => transfers.Add(t.TransferId, t));
+            });
+
+            task.Start();
+
+            await task;
+
+            base.DataList.Clear();
+            if (transfers != null)
+            {
+                transfers.Values.ToList().ForEach(t =>
+                {
+                    base.DataList.Add(new TransferItemViewModel(t));
+                });
+            }
+
+            base.IsBusy = false;
+        }
+
+        private void LoadData_old()
         {
             base.IsBusy = true;
 
