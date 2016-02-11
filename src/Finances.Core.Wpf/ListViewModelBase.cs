@@ -11,14 +11,14 @@ namespace Finances.Core.Wpf
 {
     public interface IListViewModelBase<T> : IWorkspace where T : IItemViewModelBase
     {
-        ObservableCollection<T> DataList { get; }
+        ObservableCollectionSafe<T> DataList { get; }
         int GetQtySelected();
         IEnumerable<T> GetSelectedItems();
     }
 
     public abstract class ListViewModelBase<T> : Workspace, IListViewModelBase<T> where T : IItemViewModelBase
     {
-        protected ObservableCollection<T> dataList = new ObservableCollection<T>();
+        protected ObservableCollectionSafe<T> dataList = new ObservableCollectionSafe<T>();
         //CollectionViewSource dataListView;
 
         public ListViewModelBase()
@@ -53,7 +53,7 @@ namespace Finances.Core.Wpf
 
 
 
-        public ObservableCollection<T> DataList
+        public ObservableCollectionSafe<T> DataList
         {
             get
             {

@@ -31,6 +31,9 @@ namespace Finances.Core.Wpf.Controls
         void ListViewScroll_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
         {
             ScrollIntoView(SelectedItem);
+            ListViewItem item = this.ItemContainerGenerator.ContainerFromItem(SelectedItem) as ListViewItem;
+            if(item!=null)
+                item.Focus();
         }
 
 

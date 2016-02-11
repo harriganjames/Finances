@@ -30,12 +30,23 @@ namespace Finances.Core.Wpf
         List<ActionCommand> _commands = new List<ActionCommand>();
         TaskScheduler uiScheduler;
 
-        //public event PropertyChangedEventHandler PropertyChanged;
+        private static SynchronizationContext _syncContext;
+        public static SynchronizationContext SynchronizationContext
+        {
+            get
+            {
+                if (_syncContext == null)
+                    _syncContext = SynchronizationContext.Current;
+                return _syncContext;
+            }
+        }
 
+        //public event PropertyChangedEventHandler PropertyChanged;
 
         public ViewModelBase()
         {
-            this.uiScheduler = TaskScheduler.FromCurrentSynchronizationContext();
+            if(!Thread.CurrentThread.IsBackground)
+                this.uiScheduler = TaskScheduler.FromCurrentSynchronizationContext();
         }
 
 

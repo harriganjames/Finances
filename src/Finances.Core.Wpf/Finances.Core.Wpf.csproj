@@ -74,6 +74,7 @@
     <Compile Include="Converters\NullToVisibleConverter.cs" />
     <Compile Include="Converters\PercentageConverter.cs" />
     <Compile Include="Converters\PositiveVisibilityConverter.cs" />
+    <Compile Include="ObservableCollectionSafe.cs" />
     <Compile Include="SortedListViewModelBase.cs" />
     <Compile Include="Events\TreeViewItemExpandedEventArgs.cs" />
     <Compile Include="Input\InputDecimal.cs" />

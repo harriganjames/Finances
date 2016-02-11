@@ -56,6 +56,26 @@ from	dbo.Transfer
 
 exec sp_rename 'dbo.Transfer.FrequencyDays','FrequencyEvery', 'column'
 
+select * from dbo.Bank
+
+delete	dbo.BankAccount
+where	AccountNumber='00000000'
+
+go
+declare @qty int = 100
+declare @loop int = 1
+declare @name varchar(100)
+
+while(@loop<=@qty)
+begin
+	select @name='Testing Account '+convert(varchar,@loop)
+	print @name
+
+	INSERT	dbo.BankAccount (Name,BankId,SortCode,AccountNumber,AccountOwner,OpenedDate,PaysTaxableInterest)
+	SELECT	@name,1,'000000','00000000','Mike','2014-01-01',1
+
+	set @loop+=1
+end
 
 
 

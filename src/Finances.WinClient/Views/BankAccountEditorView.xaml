@@ -28,7 +28,7 @@
                 <!--<Setter Property="Height" Value="25" />-->
                 <!--<Setter Property="Width" Value="350" />-->
                 <Setter Property="HorizontalAlignment" Value="Left" />
-                <!--<Setter Property="VerticalContentAlignment" Value="Center" />-->
+                <Setter Property="VerticalContentAlignment" Value="Center" />
                 <Setter Property="Validation.ErrorTemplate" Value="{StaticResource validationTemplate}" />
             </Style>
             <Style TargetType="ComboBox" BasedOn="{StaticResource {x:Type Control}}">

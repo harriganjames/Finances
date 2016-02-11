@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Threading.Tasks.Dataflow;
 using Finances.Core.Entities;
 using Finances.Core.Interfaces;
 
@@ -66,6 +67,11 @@ namespace Finances.UnitTests.MS.Fakes
         }
 
         public List<DataIdName> ReadListDataIdName()
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task PostList(ITargetBlock<BankAccount> target)
         {
             throw new NotImplementedException();
         }

@@ -5,11 +5,14 @@ using System.Collections.Generic;
 using System.Data.Entity.Validation;
 using System.Text;
 using System.Data;
+using System.Threading.Tasks;
+using System.Threading.Tasks.Dataflow;
 
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
 
 using Finances.Core.Interfaces;
+using Finances.Core;
 
 namespace Finances.Persistence.EF
 {
@@ -108,6 +111,41 @@ namespace Finances.Persistence.EF
                 list = mapper.Map<List<Core.Entities.BankAccount>>(ef);
             }
             return list;
+        }
+
+        public async Task PostList(ITargetBlock<Core.Entities.BankAccount> target)
+        {
+            Diag.ThreadPrint("PostList - start");
+
+            var transform = new TransformBlock<BankAccount, Core.Entities.BankAccount>(ef =>
+                 mapper.Map<Core.Entities.BankAccount>(ef), new ExecutionDataflowBlockOptions() { MaxDegreeOfParallelism = 4 });
+
+            transform.LinkTo(target);
+
+            await Task.Run(() => 
+            {
+                Diag.ThreadPrint("PostList - task start");
+
+                using (FinanceEntities context = factory.CreateContext())
+                {
+                    (from b in context.BankAccounts.Include(a => a.Bank)
+                     select b).AsParallel().ForAll(ef => transform.Post(ef));
+                    transform.Complete();
+                    //await transform.Completion;
+                    transform.Completion.ContinueWith(t =>
+                    {
+                        if (t.IsFaulted) target.Fault(t.Exception);
+                        else
+                        {
+                            Diag.ThreadPrint("PostList - task set target complete");
+                            target.Complete();
+                        }
+                    });
+                }
+                Diag.ThreadPrint("PostList - task end");
+            });
+
+            Diag.ThreadPrint("PostList - end");
         }
 
         public List<Core.Entities.BankAccount> ReadListByBankId(int bankId)

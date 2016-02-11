@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Concurrent;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
@@ -12,6 +13,8 @@ using Finances.Core.Wpf;
 using Finances.WinClient.DomainServices;
 using Finances.WinClient.Factories;
 using System.Windows.Data;
+using System.Threading.Tasks.Dataflow;
+using Finances.Core;
 
 namespace Finances.WinClient.ViewModels
 {
@@ -26,7 +29,10 @@ namespace Finances.WinClient.ViewModels
         readonly IBankAccountRepository bankAccountRepository;
         readonly IBankAccountAgent bankAccountAgent;
 
-        Dictionary<int, BankAccount> bankAccounts = new Dictionary<int, BankAccount>();
+        ConcurrentDictionary<int, BankAccount> bankAccounts = new ConcurrentDictionary<int, BankAccount>();
+
+        
+
 
         public BankAccountListViewModel(
                         IBankAccountRepository bankAccountRepository,
@@ -76,9 +82,11 @@ namespace Finances.WinClient.ViewModels
         }
 
 
-        public void Open()
+        public async void Open()
         {
-            LoadBankAccounts();
+            Diag.ThreadPrint("Open start");
+            await LoadBankAccounts();
+            Diag.ThreadPrint("Open end");
         }
 
         public void Close()
@@ -86,43 +94,139 @@ namespace Finances.WinClient.ViewModels
             base.DataList.Clear();
         }
 
-        private void Reload()
+        private async void Reload()
         {
-            LoadBankAccounts();
+            Diag.ThreadPrint("Reload start");
+            await LoadBankAccounts();
+            Diag.ThreadPrint("Reload end");
         }
 
-        private void LoadBankAccounts()
+
+
+        private async Task LoadBankAccounts()
         {
+            Diag.ThreadPrint("Load start");
             base.IsBusy = true;
 
-            BackgroundWorker bw = new BackgroundWorker();
-            bw.DoWork += (s, e) =>
+            var target = new ActionBlock<BankAccount>(a =>
             {
-                bankAccounts.Clear();
+                bankAccounts.GetOrAdd(a.BankAccountId, a);
+                base.DataList.Add(new BankAccountItemViewModel(a));
+                //Diag.ThreadPrint("In target. Account={0}", a.Name);
 
-                var entities = this.bankAccountRepository.ReadList();
+            }, new ExecutionDataflowBlockOptions() { MaxDegreeOfParallelism = 1 });
 
-                if (entities != null)
-                    entities.ForEach(a => bankAccounts.Add(a.BankAccountId, a));
+            bankAccounts.Clear();
+            base.DataList.Clear();
+            Diag.ThreadPrint("Load - before repo");
+            await this.bankAccountRepository.PostList(target);
+            Diag.ThreadPrint("Load - after repo. qty={0}", bankAccounts.Count);
+            await target.Completion;
+            Diag.ThreadPrint("Load - after target completion. qty={0}", bankAccounts.Count);
 
-            };
-            bw.RunWorkerCompleted += (s, e) =>
-            {
-                base.DataList.Clear();
-                if (bankAccounts != null)
-                {
-                    bankAccounts.Values.ToList().ForEach(a =>
-                    {
-                        base.DataList.Add(new BankAccountItemViewModel(a));
-                    });
-                }
-
-                base.IsBusy = false;
-            };
-
-            bw.RunWorkerAsync();
-
+            base.IsBusy = false;
+            Diag.ThreadPrint("Load end");
         }
+
+
+        private async Task LoadBankAccounts_old2()
+        {
+            var ts = TaskScheduler.FromCurrentSynchronizationContext();
+
+            Diag.ThreadPrint("Load start");
+            base.IsBusy = true;
+
+            var tf = new TaskFactory(ts);
+
+            var target = new ActionBlock<BankAccount>(async a =>
+            {
+                await tf.StartNew(() =>
+                {
+                    bankAccounts.GetOrAdd(a.BankAccountId, a);
+                    base.DataList.Add(new BankAccountItemViewModel(a));
+                    Diag.ThreadPrint("In target. Account={0}", a.Name);
+                });
+            }, new ExecutionDataflowBlockOptions() { MaxDegreeOfParallelism = 1 });
+
+            bankAccounts.Clear();
+            base.DataList.Clear();
+
+            Diag.ThreadPrint("Load - before repo");
+            await this.bankAccountRepository.PostList(target);
+            await target.Completion;
+
+            Diag.ThreadPrint("Load - after repo. qty={0}", bankAccounts.Count);
+
+            base.IsBusy = false;
+            Diag.ThreadPrint("Load end");
+        }
+
+
+        private async Task LoadBankAccounts_ok()
+        {
+            Diag.ThreadPrint("Load start");
+            base.IsBusy = true;
+
+            var target = new ActionBlock<BankAccount>(a =>
+            {
+                bankAccounts.GetOrAdd(a.BankAccountId, a);
+                Diag.ThreadPrint("In target. Account={0}", a.Name);
+
+            }, new ExecutionDataflowBlockOptions() { MaxDegreeOfParallelism=4 });
+
+            bankAccounts.Clear();
+            Diag.ThreadPrint("Load - before repo");
+            await this.bankAccountRepository.PostList(target);
+            Diag.ThreadPrint("Load - after repo. qty={0}", bankAccounts.Count);
+
+            base.DataList.Clear();
+            Diag.ThreadPrint("Load - after clear");
+            if (bankAccounts != null)
+            {
+                Diag.ThreadPrint("Load - before populate");
+                bankAccounts.Values.ToList().ForEach(a =>
+                {
+                    base.DataList.Add(new BankAccountItemViewModel(a));
+                });
+                Diag.ThreadPrint("Load - after populate");
+            }
+
+            base.IsBusy = false;
+            Diag.ThreadPrint("Load end");
+        }
+
+        //private void LoadBankAccounts_old()
+        //{
+        //    base.IsBusy = true;
+
+        //    BackgroundWorker bw = new BackgroundWorker();
+        //    bw.DoWork += (s, e) =>
+        //    {
+        //        bankAccounts.Clear();
+
+        //        var entities = this.bankAccountRepository.ReadList();
+
+        //        if (entities != null)
+        //            entities.ForEach(a => bankAccounts.Add(a.BankAccountId, a));
+
+        //    };
+        //    bw.RunWorkerCompleted += (s, e) =>
+        //    {
+        //        base.DataList.Clear();
+        //        if (bankAccounts != null)
+        //        {
+        //            bankAccounts.Values.ToList().ForEach(a =>
+        //            {
+        //                base.DataList.Add(new BankAccountItemViewModel(a));
+        //            });
+        //        }
+
+        //        base.IsBusy = false;
+        //    };
+
+        //    bw.RunWorkerAsync();
+
+        //}
 
         private void Add()
         {
@@ -131,7 +235,7 @@ namespace Finances.WinClient.ViewModels
             {
                 var entity = this.bankAccountRepository.Read(id);
 
-                this.bankAccounts.Add(entity.BankAccountId, entity);
+                this.bankAccounts.GetOrAdd(entity.BankAccountId, entity);
 
                 var vm = new BankAccountItemViewModel(entity);
 
