@@ -12,7 +12,7 @@ namespace Finances.Core.Interfaces
 {
     public interface ICashflowProjectionTransferGenerator
     {
-        List<CashflowProjectionTransfer> GenerateCashflowProjectionTransfers(
+        Task<List<CashflowProjectionTransfer>> GenerateCashflowProjectionTransfersAsync(
                                 List<CashflowBankAccount> accounts,
                                 DateTime startDate,
                                 DateTime endDate);

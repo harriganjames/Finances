@@ -15,13 +15,13 @@ using Finances.WinClient.Factories;
 
 namespace Finances.WinClient.ViewModels
 {
-    public interface ICashflowListViewModel
-    {
-        void Open();
-        void Close();
-    }
+    //public interface ICashflowListViewModel
+    //{
+    //    void Open();
+    //    void Close();
+    //}
 
-    public class CashflowListViewModel : ListViewModelBase<CashflowItemViewModel>, ICashflowListViewModel
+    public class CashflowListViewModel : ListViewModelBase<CashflowItemViewModel>//, ICashflowListViewModel
     {
         readonly ICashflowRepository cashflowRepository;
         //readonly IRepositoryRead<Cashflow> cashflowRepository;

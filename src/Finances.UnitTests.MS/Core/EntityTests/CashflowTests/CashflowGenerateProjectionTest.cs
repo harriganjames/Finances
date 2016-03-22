@@ -81,7 +81,7 @@ namespace Finances.UnitTests.MS.Core.EntityTests.CashflowTests
 
 
             sut = new Cashflow(new CashflowProjection(new CashflowProjectionTransferGenerator(fakeBankAccountRepository,
-                                new TransferDirectionGenerator(mockTransferRepository.Object))))
+                                new TransferDirectionGenerator(mockTransferRepository.Object)),null))
             {
                 OpeningBalance = cashflowOperningBalance,
                 StartDate = cashflowStartDate,
@@ -107,7 +107,7 @@ namespace Finances.UnitTests.MS.Core.EntityTests.CashflowTests
             DateTime endDate = cashflowStartDate.AddMonths(qtyMonths);
             var mode = new CashflowProjectionModeMonthlySummary();
 
-            var cpi = sut.GenerateProjection(endDate, openingBalance, 5000, mode);
+            var cpi = sut.GenerateProjectionAsync(cashflowStartDate, endDate, openingBalance, 5000, mode).Result;
 
             int qtyProjections = qtyMonths + 1;
 

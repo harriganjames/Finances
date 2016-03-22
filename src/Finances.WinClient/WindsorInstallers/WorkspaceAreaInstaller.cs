@@ -6,7 +6,7 @@ using Finances.WinClient.ViewModels;
 
 namespace Finances.WinClient.CastleInstallers
 {
-    public class WorkspaceInstaller : IWindsorInstaller
+    public class WorkspaceAreaInstaller : IWindsorInstaller
     {
         public void Install(IWindsorContainer container, IConfigurationStore store)
         {

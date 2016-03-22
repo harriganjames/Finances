@@ -13,5 +13,6 @@ namespace Finances.Core.Interfaces
     {
         List<CashflowProjectionItem> GenerateAggregatedProjectionItems(List<CashflowProjectionTransfer> cashflowProjectionTransfers);
         string ProjectionModeName { get; }
+        int Order { get; }
     }
 }

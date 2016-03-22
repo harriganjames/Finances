@@ -130,7 +130,6 @@ namespace Finances.Persistence.EF
                 {
                     (from b in context.BankAccounts.Include(a => a.Bank)
                      select b).AsParallel().ForAll(ef => transform.Post(ef));
-                    transform.Complete();
                     //await transform.Completion;
                     transform.Completion.ContinueWith(t =>
                     {
@@ -141,9 +140,10 @@ namespace Finances.Persistence.EF
                             target.Complete();
                         }
                     });
+                    transform.Complete();
                 }
                 Diag.ThreadPrint("PostList - task end");
-            });
+            }).ConfigureAwait(false);
 
             Diag.ThreadPrint("PostList - end");
         }

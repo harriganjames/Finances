@@ -10,11 +10,11 @@ namespace Finances.WinClient.DesignTimeData
     {
         public string Name { get; set; }
 
-        public List<BankAccount> BankAccounts { get; }
+        public List<BankAccount> BankAccounts { get; set;  }
 
-        public BankAccount FromBankAccount { get; }
+        public BankAccount FromBankAccount { get; set;  }
 
-        public BankAccount ToBankAccount { get; }
+        public BankAccount ToBankAccount { get; set;  }
 
     }
 }

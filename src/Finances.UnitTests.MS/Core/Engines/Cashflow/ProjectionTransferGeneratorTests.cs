@@ -140,7 +140,7 @@ namespace Finances.UnitTests.MS.Finances.Core.Engines.Cashflow
                     .Returns(tds);
 
 
-                results = sut.GenerateCashflowProjectionTransfers(data.CashflowAccounts, data.StartDate, data.EndDate);
+                results = sut.GenerateCashflowProjectionTransfersAsync(data.CashflowAccounts, data.StartDate, data.EndDate).Result;
 
                 Assert.AreEqual(results.Count(c => c.TransferDirection.IsInbound), data.QtyInbound, data.Message);
 

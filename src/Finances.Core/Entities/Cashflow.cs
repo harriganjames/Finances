@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using Finances.Core.Engines.Cashflow;
 using Finances.Core.Interfaces;
 using Finances.Core.ValueObjects;
+using System.Threading.Tasks;
 
 namespace Finances.Core.Entities
 {
@@ -29,68 +30,41 @@ namespace Finances.Core.Entities
 
         public List<CashflowBankAccount> CashflowBankAccounts { get; set; }
 
-        public List<CashflowProjectionItem> GenerateProjection(
+        public async Task<List<CashflowProjectionItem>> GenerateProjectionAsync(
+                DateTime startDate,
+                int months,
+                decimal openingBalance,
+                decimal threshold,
+                ICashflowProjectionMode projectionMode
+                )
+        {
+            var endDate = startDate.AddDays(-startDate.Day).AddDays(1).AddMonths(months + 1).AddDays(-1); // last day of month
+
+            return await GenerateProjectionAsync(startDate, endDate, openingBalance, threshold, projectionMode);
+        }
+
+        public async Task<List<CashflowProjectionItem>> GenerateProjectionAsync(
+                        DateTime startDate,
                         DateTime endDate,
                         decimal openingBalance,
                         decimal threshold,
                         ICashflowProjectionMode projectionMode
                         )
         {
-            return this.cashflowProjection.GenerateProjection(this.CashflowBankAccounts, this.StartDate, endDate, openingBalance, threshold, projectionMode);
+            return await this.cashflowProjection.GenerateProjectionAsync(this.CashflowBankAccounts, startDate, endDate, openingBalance, threshold, projectionMode);
+        }
 
-            //List<CashflowProjectionTransfer> cpts = projectionTransferGenerator.GenerateCashflowProjectionTransfers(this.CashflowBankAccounts, this.StartDate, endDate);
-
-            //List<CashflowProjectionItem> cpis = projectionMode.GenerateAggregatedProjectionItems(cpts); 
-
-            //ApplyBalancesAndThreshold(cpis, this.StartDate, openingBalance, threshold);
-
-            //return cpis;
+        public async Task<CashflowProjectionGroup> GenerateProjectionAsync(
+                        DateTime startDate,
+                        int months,
+                        decimal openingBalance,
+                        decimal threshold
+                        )
+        {
+            var endDate = startDate.AddDays(-startDate.Day).AddDays(1).AddMonths(months + 1).AddDays(-1); // last day of month
+            return await this.cashflowProjection.GenerateProjectionAsync(this.CashflowBankAccounts, startDate, endDate, openingBalance, threshold);
         }
 
 
-        //List<CashflowProjectionItem> ApplyBalancesAndThreshold(List<CashflowProjectionItem> cashflowProjectionItems,
-        //                                                        DateTime startDate,
-        //                                                        decimal openingBalance,
-        //                                                        decimal threshold)
-        //{
-
-        //    cashflowProjectionItems.Insert(0, new CashflowProjectionItem()
-        //    {
-        //        Period = startDate.ToString("yyyy-MM-dd"),
-        //        Item = "Opening Balance",
-        //        In = null,
-        //        Out = null,
-        //        Balance = openingBalance
-        //    });
-
-        //    // calculate the running balances
-
-
-        //    var previousCpi = cashflowProjectionItems[0]; // start with opening balance item
-        //    foreach (var cpi in cashflowProjectionItems.Skip(1))
-        //    {
-        //        if (previousCpi.Period != cpi.Period)
-        //            previousCpi.PeriodBalance = previousCpi.Balance;
-        //        cpi.Balance = previousCpi.Balance + (cpi.In ?? 0M) - (cpi.Out ?? 0M);
-        //        previousCpi = cpi;
-        //    }
-        //    previousCpi.PeriodBalance = previousCpi.Balance;
-
-        //    // set the BalanceState for threshold
-        //    foreach (var cpi in cashflowProjectionItems)
-        //    {
-        //        if (cpi.Balance < 0)
-        //            cpi.BalanceState = BalanceStateEnum.Negative;
-        //        else if (cpi.Balance < threshold)
-        //            cpi.BalanceState = BalanceStateEnum.BelowThreshold;
-        //        else
-        //            cpi.BalanceState = BalanceStateEnum.OK;
-        //    }
-
-        //    return cashflowProjectionItems;
-        //}
-
-
-    
     }
 }

@@ -18,13 +18,13 @@ using Finances.Core;
 
 namespace Finances.WinClient.ViewModels
 {
-    public interface IBankAccountListViewModel 
-    {
-        void Open();
-        void Close();
-    }
+    //public interface IBankAccountListViewModel 
+    //{
+    //    void Open();
+    //    void Close();
+    //}
 
-    public class BankAccountListViewModel : SortedListViewModelBase<BankAccountItemViewModel>, IBankAccountListViewModel
+    public class BankAccountListViewModel : SortedListViewModelBase<BankAccountItemViewModel> //, IBankAccountListViewModel
     {
         readonly IBankAccountRepository bankAccountRepository;
         readonly IBankAccountAgent bankAccountAgent;
@@ -119,9 +119,9 @@ namespace Finances.WinClient.ViewModels
             bankAccounts.Clear();
             base.DataList.Clear();
             Diag.ThreadPrint("Load - before repo");
-            await this.bankAccountRepository.PostList(target);
+            await this.bankAccountRepository.PostList(target).ConfigureAwait(false);
             Diag.ThreadPrint("Load - after repo. qty={0}", bankAccounts.Count);
-            await target.Completion;
+            await target.Completion.ConfigureAwait(false);
             Diag.ThreadPrint("Load - after target completion. qty={0}", bankAccounts.Count);
 
             base.IsBusy = false;

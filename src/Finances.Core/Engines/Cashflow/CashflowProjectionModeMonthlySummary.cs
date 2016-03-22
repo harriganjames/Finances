@@ -19,11 +19,18 @@ namespace Finances.Core.Engines.Cashflow
             }
         }
 
+        public int Order
+        {
+            get
+            {
+                return 1;
+            }
+        }
+
         public override string ToString()
         {
             return this.ProjectionModeName;
         }
-
 
         public List<CashflowProjectionItem> GenerateAggregatedProjectionItems(List<CashflowProjectionTransfer> cashflowProjectionTransfers)
         {
@@ -41,12 +48,14 @@ namespace Finances.Core.Engines.Cashflow
                         let outAmount = grp.Sum(c => c.TransferDirection.IsOutbound ? c.TransferDirection.Transfer.Amount : 0M)
                         select new CashflowProjectionItem
                         {
+                            PeriodGroup = new DateTime(grp.Key.Year, grp.Key.Month, 1).ToString("yyyy-MM"),
                             Period = new DateTime(grp.Key.Year, grp.Key.Month, 1).ToString("yyyy-MM"),
                             PeriodStartDate = grp.Min(c => c.Date),
                             PeriodEndDate = grp.Max(c => c.Date),
                             Item = grp.Key.Item,
                             In = inAmount == 0 ? (decimal?)null : inAmount,
-                            Out = outAmount == 0 ? (decimal?)null : outAmount
+                            Out = outAmount == 0 ? (decimal?)null : outAmount,
+                            CashflowProjectionMode = this
                         };
 
             cpis.AddRange(x);

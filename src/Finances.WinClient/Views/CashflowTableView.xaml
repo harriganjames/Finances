@@ -5,9 +5,10 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:tool="http://schemas.xceed.com/wpf/xaml/toolkit"
              xmlns:libctl="clr-namespace:Finances.Core.Wpf.Controls;assembly=Finances.Core.Wpf"
+             xmlns:libattach="clr-namespace:Finances.Core.Wpf.AttachedProperties;assembly=Finances.Core.Wpf"
              xmlns:conv="clr-namespace:Finances.WinClient.Converters"
              mc:Ignorable="d" 
-             d:DesignHeight="100" d:DesignWidth="800">
+             d:DesignHeight="100" d:DesignWidth="1000">
     <UserControl.Resources>
         <conv:BalanceStateToColourConverter x:Key="BalanceStateToColourConverter" />
     </UserControl.Resources>
@@ -22,16 +23,30 @@
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
-            <ToolBar>
-                <ToolBarPanel Orientation="Horizontal">
+            <Grid Margin="3">
+                <StackPanel Orientation="Horizontal"
+                            >
+                    <StackPanel.Resources>
+                        <Style TargetType="TextBox">
+                            <Setter Property="VerticalContentAlignment" Value="Center"/>
+                        </Style>
+                    </StackPanel.Resources>
                     <ComboBox ItemsSource="{Binding Cashflows}"
                               SelectedItem="{Binding SelectedCashflow}"
                               MinWidth="120"/>
+
+                    <TextBlock  Text="Start Date:"
+                                Padding="5,0"
+                                VerticalAlignment="Center"
+                                />
+                    <DatePicker SelectedDate="{Binding StartDate, UpdateSourceTrigger=LostFocus}"/>
+
                     <TextBlock Text="Months:"
                                Padding="5,0"
                                VerticalAlignment="Center"/>
                     <TextBox Text="{Binding QtyMonths.Input, UpdateSourceTrigger=LostFocus}"
-                             Width="30"/>
+                             Width="30"
+                             VerticalContentAlignment="Center"/>
                     <TextBlock Text="Opening Balance:"
                                Padding="5,0"
                                VerticalAlignment="Center"/>
@@ -43,21 +58,28 @@
                     <TextBox Text="{Binding Threshold.Input, UpdateSourceTrigger=LostFocus}"
                              HorizontalAlignment="Right"
                              Width="80"/>
-                    <ComboBox ItemsSource="{Binding Modes}"
+                    <!--<ComboBox ItemsSource="{Binding Modes}"
                               SelectedItem="{Binding SelectedMode}"
-                              MinWidth="130"/>
+                              MinWidth="130"/>-->
                     <Label Width="5"/>
-                    <Button Content="Refresh" Command="{Binding RefreshCommand}"/>
-                </ToolBarPanel>
-            </ToolBar>
+                    <Button Content="Refresh" Command="{Binding RefreshCommand}"
+                            />
+                </StackPanel>
+            </Grid>
 
 
             <libctl:ListViewScroll Grid.Row="1" 
                                    ItemsSource="{Binding CashflowProjectionItems}" 
                                    SelectionMode="Extended"
                                    SelectedItem="{Binding SelectedCashflowProjectionItem}"
-                                   ColumnWidthStore="{Binding ViewData[ListViewColumnWidths], Mode=TwoWay}"
+                                   libattach:ListViewDoubleClickBehavior.DoubleClickCommand="{Binding ToggleModeCommand}"
                                    >
+
+                <!--ColumnWidthStore="{Binding ViewData[ListViewColumnWidths], Mode=TwoWay}"-->
+
+                <libctl:ListViewScroll.InputBindings>
+                    <KeyBinding Gesture="Return" Command="{Binding ToggleModeCommand}"/>
+                </libctl:ListViewScroll.InputBindings>
 
                 <!--<libctl:ListViewScroll.InputBindings>
                     <KeyBinding Gesture="Ctrl+R" Command="{Binding RefreshCommand}"/>
@@ -101,7 +123,7 @@
                             </GridViewColumn.CellTemplate>
                         </GridViewColumn>
 
-                        <GridViewColumn Header="Period Balance">
+                        <!--<GridViewColumn Header="Period Balance">
                             <GridViewColumn.CellTemplate>
                                 <DataTemplate>
                                     <TextBlock  TextAlignment="Right"
@@ -110,7 +132,7 @@
                                                 />
                                 </DataTemplate>
                             </GridViewColumn.CellTemplate>
-                        </GridViewColumn>
+                        </GridViewColumn>-->
 
                         <GridViewColumn DisplayMemberBinding="{Binding BalanceState}" Header="State"/>
 

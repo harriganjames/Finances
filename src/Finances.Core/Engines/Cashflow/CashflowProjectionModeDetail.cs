@@ -19,6 +19,14 @@ namespace Finances.Core.Engines.Cashflow
             }
         }
 
+        public int Order
+        {
+            get
+            {
+                return 2;
+            }
+        }
+
         public override string ToString()
         {
             return this.ProjectionModeName;
@@ -32,12 +40,14 @@ namespace Finances.Core.Engines.Cashflow
             {
                 var cpi = new CashflowProjectionItem()
                 {
+                    PeriodGroup = cpt.Date.ToString("yyyy-MM"),
                     Period = cpt.Date.ToString("yyyy-MM-dd"),
                     PeriodStartDate = cpt.Date,
                     PeriodEndDate = cpt.Date,
                     Item = (cpt.TransferDirection.Transfer.Category.Code == "NONE" ? "" : cpt.TransferDirection.Transfer.Category.Name + " -> ") + cpt.TransferDirection.Transfer.Name,
                     In = cpt.TransferDirection.IsInbound ? cpt.TransferDirection.Transfer.Amount : (decimal?)null,
-                    Out = cpt.TransferDirection.IsOutbound ? cpt.TransferDirection.Transfer.Amount : (decimal?)null
+                    Out = cpt.TransferDirection.IsOutbound ? cpt.TransferDirection.Transfer.Amount : (decimal?)null,
+                    CashflowProjectionMode = this
                 };
 
                 cpis.Add(cpi);

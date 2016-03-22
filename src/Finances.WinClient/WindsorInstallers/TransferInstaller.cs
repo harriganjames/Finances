@@ -21,11 +21,6 @@ namespace Finances.WinClient.WindsorInstallers
             bool debug;
             bool.TryParse(appSettings.GetSetting("debug"),out debug);
 
-            container.Register(Component.For<IWorkspace>()
-                .Forward<ITransferListViewModel>() // for dashboard
-                .ImplementedBy<TransferListViewModel>()
-                .LifeStyle.Transient
-                );
             container.Register(Component.For<TransferEditorViewModel>()
                 .ImplementedBy<TransferEditorViewModel>()
                 .LifeStyle.Transient

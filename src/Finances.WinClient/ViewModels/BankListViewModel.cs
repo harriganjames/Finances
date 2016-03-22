@@ -15,13 +15,13 @@ using Finances.WinClient.Factories;
 
 namespace Finances.WinClient.ViewModels
 {
-    public interface IBankListViewModel 
-    {
-        void Open();
-        void Close();
-    }
+    //public interface IBankListViewModel 
+    //{
+    //    void Open();
+    //    void Close();
+    //}
 
-    public class BankListViewModel : SortedListViewModelBase<BankItemViewModel>, IBankListViewModel
+    public class BankListViewModel : SortedListViewModelBase<BankItemViewModel>//, IBankListViewModel
     {
         readonly IBankRepository bankRepository;
         readonly IBankAgent bankAgent;

@@ -22,11 +22,6 @@ namespace Finances.WinClient.WindsorInstallers
             bool.TryParse(appSettings.GetSetting("debug"), out debug);
 
             // Banks
-            container.Register(Component.For<IWorkspace>()
-                .Forward<IBankListViewModel>()
-                .ImplementedBy<BankListViewModel>()
-                .LifeStyle.Transient
-                );
             container.Register(Component.For<BankEditorViewModel>()
                 .ImplementedBy<BankEditorViewModel>()
                 .LifeStyle.Transient

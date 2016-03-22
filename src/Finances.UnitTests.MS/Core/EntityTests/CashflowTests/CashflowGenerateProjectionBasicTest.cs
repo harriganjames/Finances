@@ -12,7 +12,7 @@ using System.Collections.Generic;
 using Finances.Core.Factories;
 using Finances.Core;
 using Finances.Core.ValueObjects;
-
+using System.Threading.Tasks;
 
 namespace Finances.UnitTests.MS.Core.EntityTests.CashflowTests
 {
@@ -44,13 +44,13 @@ namespace Finances.UnitTests.MS.Core.EntityTests.CashflowTests
 
 
             mockIProjectionTransferGenerator
-                .Setup(s => s.GenerateCashflowProjectionTransfers(
+                .Setup(s => s.GenerateCashflowProjectionTransfersAsync(
                             It.IsAny<List<CashflowBankAccount>>(),
                             It.IsAny<DateTime>(),
                             It.IsAny<DateTime>()
                             )
                 )
-                .Returns(cashflowProjectionTransfers);
+                .Returns(Task.Factory.StartNew(()=>cashflowProjectionTransfers));
 
             //fakeBankAccountRepository = new FakeBankAccountRepository();
 
@@ -63,7 +63,7 @@ namespace Finances.UnitTests.MS.Core.EntityTests.CashflowTests
             //    .Returns((Transfer t, DateTime d) => d.AddMonths(1));
 
 
-            sut = new Cashflow(new CashflowProjection(mockIProjectionTransferGenerator.Object))
+            sut = new Cashflow(new CashflowProjection(mockIProjectionTransferGenerator.Object,null))
             {
                 OpeningBalance = 5000,
                 StartDate = new DateTime(2015, 08, 1),
@@ -86,7 +86,7 @@ namespace Finances.UnitTests.MS.Core.EntityTests.CashflowTests
         {
             var mode = new CashflowProjectionModeMonthlySummary();
 
-            var cpi = sut.GenerateProjection(new DateTime(2015,12,31),10000,5000,mode);
+            var cpi = sut.GenerateProjectionAsync(new DateTime(2015, 01, 01), new DateTime(2015, 12, 31), 10000, 5000, mode).Result;
 
 
             //CashflowProjectionItems = cashflowEngineC.GenerateProjection(SelectedCashflow.Entity.CashflowBankAccounts,

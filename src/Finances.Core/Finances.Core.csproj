@@ -53,10 +53,12 @@
     <Compile Include="Apex.cs" />
     <Compile Include="AppSettings.cs" />
     <Compile Include="Diag.cs" />
+    <Compile Include="Factories\ICashflowProjectionGroupFactory.cs" />
     <Compile Include="Interfaces\ICashflowProjection.cs" />
     <Compile Include="Interfaces\IRepositoryWrite.cs" />
     <Compile Include="ValueObjects\BalanceState.cs" />
     <Compile Include="ValueObjects\BalanceStateOK.cs" />
+    <Compile Include="Engines\Cashflow\CashflowProjectionGroup.cs" />
     <Compile Include="ValueObjects\CashflowProjectionTransfer.cs" />
     <Compile Include="Engines\Cashflow\CashflowProjectionModeDetail.cs" />
     <Compile Include="Engines\ScheduleFrequencyWeekly.cs" />
@@ -99,6 +101,7 @@
     <Compile Include="Interfaces\IBankAccountRepository.cs" />
     <Compile Include="Interfaces\IBankRepository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="WindsorInstallers\CashflowProjectionGroupInstaller.cs" />
     <Compile Include="WindsorInstallers\CashflowProjectionModeInstaller.cs" />
     <Compile Include="WindsorInstallers\CashflowProjectionInstaller.cs" />
     <Compile Include="WindsorInstallers\AppSettingsInstaller.cs" />

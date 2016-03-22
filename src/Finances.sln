@@ -1,6 +1,8 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2012
+# Visual Studio 14
+VisualStudioVersion = 14.0.23107.0
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Finances.Core", "Finances.Core\Finances.Core.csproj", "{BB8793F8-877F-42B0-82EF-0786B2C214EF}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Finances.Debug", "Finances.Debug\Finances.Debug.csproj", "{3A51B2E2-6848-4DBD-A1F2-70F0CB512600}"
@@ -22,6 +24,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Finances.Service", "Finances.Service\Finances.Service.csproj", "{96EAAEBB-E7FF-4E57-88CE-195A404D9348}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Finances.Interface", "Finances.Interface\Finances.Interface.csproj", "{482C90A7-4E96-4F46-8D51-93E902C265D0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Finances.Core.UnitTest", "Finances.Core.UnitTest\Finances.Core.UnitTest.csproj", "{EF0847FC-3BED-4F9C-A278-766EBB2D994E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -59,7 +63,6 @@ Global
 		{7ECEE40F-ECAA-4A43-884D-9ADB749CCDB8}.Release|Any CPU.Build.0 = Release|Any CPU
 		{8891AE26-F614-493C-B4F7-EDBC33C1805C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{8891AE26-F614-493C-B4F7-EDBC33C1805C}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{8891AE26-F614-493C-B4F7-EDBC33C1805C}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
 		{8891AE26-F614-493C-B4F7-EDBC33C1805C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8891AE26-F614-493C-B4F7-EDBC33C1805C}.Release|Any CPU.Build.0 = Release|Any CPU
 		{8891AE26-F614-493C-B4F7-EDBC33C1805C}.Release|Any CPU.Deploy.0 = Release|Any CPU
@@ -75,6 +78,10 @@ Global
 		{482C90A7-4E96-4F46-8D51-93E902C265D0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{482C90A7-4E96-4F46-8D51-93E902C265D0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{482C90A7-4E96-4F46-8D51-93E902C265D0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EF0847FC-3BED-4F9C-A278-766EBB2D994E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EF0847FC-3BED-4F9C-A278-766EBB2D994E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EF0847FC-3BED-4F9C-A278-766EBB2D994E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EF0847FC-3BED-4F9C-A278-766EBB2D994E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

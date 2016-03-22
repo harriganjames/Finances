@@ -16,13 +16,13 @@ using System.Windows.Data;
 
 namespace Finances.WinClient.ViewModels
 {
-    public interface ITransferListViewModel
-    {
-        void Open();
-        void Close();
-    }
+    //public interface ITransferListViewModel
+    //{
+    //    void Open();
+    //    void Close();
+    //}
 
-    public class TransferListViewModel : SortedListViewModelBase<TransferItemViewModel>, ITransferListViewModel
+    public class TransferListViewModel : SortedListViewModelBase<TransferItemViewModel> //, ITransferListViewModel
     {
         readonly ITransferRepository transferRepository;
         readonly ITransferAgent transferAgent;

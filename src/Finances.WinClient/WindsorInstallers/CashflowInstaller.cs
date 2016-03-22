@@ -20,11 +20,6 @@ namespace Finances.WinClient.WindsorInstallers
             bool debug;
             bool.TryParse(appSettings.GetSetting("debug"),out debug);
 
-            container.Register(Component.For<IWorkspace>()
-                .Forward<ICashflowListViewModel>() // for dashboard
-                .ImplementedBy<CashflowListViewModel>()
-                .LifeStyle.Transient
-                );
             container.Register(Component.For<CashflowEditorViewModel>()
                 .ImplementedBy<CashflowEditorViewModel>()
                 .LifeStyle.Transient
@@ -34,10 +29,6 @@ namespace Finances.WinClient.WindsorInstallers
                 );
 
 
-            // Cashflow Table
-            container.Register(Component.For<IWorkspace>()
-                .ImplementedBy<CashflowTableViewModel>()
-                );
 
 
             container.Register(Component.For<ICashflowAgent>()
