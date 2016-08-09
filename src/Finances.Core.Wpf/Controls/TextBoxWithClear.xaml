@@ -1,0 +1,73 @@
+﻿<UserControl x:Class="Finances.Core.Wpf.Controls.TextBoxWithClear"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Finances.Core.Wpf.Controls"
+             mc:Ignorable="d" 
+             d:DesignHeight="30" d:DesignWidth="300">
+    <Grid>
+        <Grid.Resources>
+            <Storyboard x:Key="ToTransparent">
+                <DoubleAnimation Storyboard.TargetProperty="Opacity"
+                                                     To="0" Duration="0:0:0.2"/>
+            </Storyboard>
+            <Storyboard x:Key="ToOpaque">
+                <DoubleAnimation Storyboard.TargetProperty="Opacity"
+                                                     To="1" Duration="0:0:0.2"/>
+            </Storyboard>
+            <Style x:Key="RevealHide" TargetType="Control">
+                <Style.Triggers>
+                    <DataTrigger Binding="{Binding Text, ElementName=TB}" Value="">
+                        <DataTrigger.EnterActions>
+                            <BeginStoryboard Storyboard="{StaticResource ToTransparent}"/>
+                        </DataTrigger.EnterActions>
+                        <DataTrigger.ExitActions>
+                            <BeginStoryboard Storyboard="{StaticResource ToOpaque}"/>
+                        </DataTrigger.ExitActions>
+                    </DataTrigger>
+                    <Trigger Property="IsMouseOver" Value="true">
+                        <Setter Property="Foreground" Value="Blue"/>
+                    </Trigger>
+                </Style.Triggers>
+            </Style>
+            <Style x:Key="watermark" TargetType="FrameworkElement">
+                <Setter Property="Visibility" Value="Hidden"/>
+                <Style.Triggers>
+                    <DataTrigger Binding="{Binding Text, ElementName=TB}" Value="">
+                        <Setter Property="Visibility" Value="Visible"/>
+                    </DataTrigger>
+                </Style.Triggers>
+            </Style>
+        </Grid.Resources>
+        <Border BorderThickness="1" BorderBrush="#FFABADB3">
+            <Grid Background="White" KeyUp="Grid_KeyUp">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="3"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <TextBlock Grid.Column="1" 
+                         Text="{Binding Watermark, RelativeSource={RelativeSource FindAncestor, AncestorType=UserControl}}"
+                           Foreground="Gray"
+                           Style="{StaticResource watermark}"/>
+                <TextBox Grid.Column="1"
+                         Text="{Binding Text, RelativeSource={RelativeSource FindAncestor, AncestorType=UserControl},UpdateSourceTrigger=PropertyChanged}"
+                         x:Name="TB"
+                         Background="#00ffffff"
+                         BorderThickness="0"/>
+                <Label Grid.Column="2"
+                        Content="X"
+                        VerticalAlignment="Center"
+                        Padding="7,0"
+                        Background="White"
+                        BorderThickness="0"
+                        MouseLeftButtonUp="Clear_MouseLeftButtonUp"
+                        Style="{StaticResource RevealHide}"
+                        Opacity="1"
+                        ToolTip="Clear">
+                </Label>
+            </Grid>
+        </Border>
+    </Grid>
+</UserControl>

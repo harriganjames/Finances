@@ -75,7 +75,7 @@ namespace Finances.Core.Wpf.AttachedProperties
             if (listView == null)
                 return;
 
-            if(TryFindParent<ListViewItem>(e.OriginalSource as DependencyObject)!=null)
+            if (TryFindParent<ListViewItem>(e.OriginalSource as DependencyObject)!=null)
             {
                 var cmd = GetDoubleClickCommand(listView);
                 if (cmd != null)
@@ -84,6 +84,16 @@ namespace Finances.Core.Wpf.AttachedProperties
                         cmd.Execute(listView.SelectedItem);
                 }
             }
+            else // aut-size all columns widths if double-click divider between column headers
+            {
+                var v = listView.View as GridView;
+                foreach (var col in v.Columns)
+                {
+                    col.Width = 1;
+                    col.Width = Double.NaN;
+                }
+            }
+
         }
 
         static private T TryFindParent<T>(DependencyObject current) where T : class

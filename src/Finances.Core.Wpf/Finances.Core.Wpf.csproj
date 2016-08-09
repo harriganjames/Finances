@@ -58,6 +58,7 @@
     <Compile Include="AttachedProperties\ListViewDoubleClickCommandBahavior.cs" />
     <Compile Include="AttachedProperties\TabItemGeneratorBehavior.cs" />
     <Compile Include="AttachedProperties\TreeViewItemExpandedBehavor.cs" />
+    <Compile Include="Behaviors\DragBehavior.cs" />
     <Compile Include="BooleanResultEventArgs.cs" />
     <Compile Include="ContainerWindow.xaml.cs">
       <DependentUpon>ContainerWindow.xaml</DependentUpon>
@@ -66,6 +67,9 @@
     <Compile Include="Controls\ListViewColumnWidths.cs" />
     <Compile Include="Controls\ListViewMouseDoubleClick.cs" />
     <Compile Include="Controls\ListViewScroll.cs" />
+    <Compile Include="Controls\TextBoxWithClear.xaml.cs">
+      <DependentUpon>TextBoxWithClear.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Converters\EmptyConverter.cs" />
     <Compile Include="Converters\MultiBooleanAndConverter.cs" />
     <Compile Include="Converters\ToggleBooleanConverter.cs" />
@@ -111,6 +115,10 @@
     <Page Include="ContainerWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Controls\TextBoxWithClear.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="DialogContainer.xaml">
       <SubType>Designer</SubType>

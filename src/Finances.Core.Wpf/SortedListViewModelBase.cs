@@ -31,12 +31,12 @@ namespace Finances.Core.Wpf
      */
 
 
-    public interface ISortedListViewModelBase<T> : IListViewModelBase<T> where T : IItemViewModelBase
+    public interface ISortedListViewModelBase<T> : IListViewModelBase<T> where T : class, IItemViewModelBase
     {
         SortedListViewModelBase<T>.ColumnHeaderSortIndicator ColumnHeaderSuffix { get; }
     }
 
-    public abstract class SortedListViewModelBase<T> : ListViewModelBase<T>, ISortedListViewModelBase<T> where T : IItemViewModelBase
+    public abstract class SortedListViewModelBase<T> : ListViewModelBase<T>, ISortedListViewModelBase<T> where T : class, IItemViewModelBase
     {
         CollectionViewSource dataListView;
 
@@ -44,6 +44,7 @@ namespace Finances.Core.Wpf
         {
             this.dataListView = new CollectionViewSource();
             this.dataListView.Source = base.dataList;
+            this.dataListView.View.Filter = ViewFilter;
 
             SortColumnCommand = base.AddNewCommand(new ActionCommand(SortColumn));
         }
@@ -61,6 +62,35 @@ namespace Finances.Core.Wpf
             }
         }
 
+        string filterExpression;
+        public string FilterExpression
+        {
+            get
+            {
+                return filterExpression;
+            }
+            set
+            {
+                filterExpression = value;
+                this.DataListView.Refresh();
+            }
+        }
+
+
+        private bool ViewFilter(object item)
+        {
+            if (String.IsNullOrWhiteSpace(filterExpression))
+                return true;
+            if (item is T)
+                return FilterItem(item as T);
+            return true;
+        }
+
+        public virtual bool FilterItem(T item)
+        {
+            return true;
+        }
+
 
         ColumnHeaderSortIndicator columnHeaderSuffix;
         public ColumnHeaderSortIndicator ColumnHeaderSuffix
@@ -68,7 +98,7 @@ namespace Finances.Core.Wpf
             get
             {
                 if (columnHeaderSuffix == null)
-                    columnHeaderSuffix = new ColumnHeaderSortIndicator(this.dataListView);
+                    columnHeaderSuffix = new ColumnHeaderSortIndicator(this.dataListView.View);
 
                 return columnHeaderSuffix;
             }
@@ -80,14 +110,16 @@ namespace Finances.Core.Wpf
             ListSortDirection direction;
             SortDescription existingSortDescription;
 
-            existingSortDescription = this.dataListView.SortDescriptions.FirstOrDefault(sd => sd.PropertyName == propertyName);
+            var view = this.dataListView.View;
+
+            existingSortDescription = view.SortDescriptions.FirstOrDefault(sd => sd.PropertyName == propertyName);
             if (existingSortDescription != null && existingSortDescription.PropertyName != null)
                 direction = existingSortDescription.Direction == ListSortDirection.Ascending ? ListSortDirection.Descending : ListSortDirection.Ascending;
             else
                 direction = ListSortDirection.Ascending;
 
-            this.dataListView.SortDescriptions.Clear();
-            this.dataListView.SortDescriptions.Add(new SortDescription(propertyName, direction));
+            view.SortDescriptions.Clear();
+            view.SortDescriptions.Add(new SortDescription(propertyName, direction));
 
             NotifyPropertyChanged(() => this.ColumnHeaderSuffix);
         }
@@ -95,8 +127,8 @@ namespace Finances.Core.Wpf
 
         public class ColumnHeaderSortIndicator
         {
-            CollectionViewSource cvs;
-            public ColumnHeaderSortIndicator(CollectionViewSource cvs)
+            ICollectionView cvs;
+            public ColumnHeaderSortIndicator(ICollectionView cvs)
             {
                 this.cvs = cvs;
             }

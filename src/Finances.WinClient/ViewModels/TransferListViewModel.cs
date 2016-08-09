@@ -65,7 +65,7 @@ namespace Finances.WinClient.ViewModels
         }
 
 
-        decimal amountSum;
+        decimal amountSum = 0;
         public decimal AmountSum
         {
             get
@@ -79,7 +79,16 @@ namespace Finances.WinClient.ViewModels
             }
         }
 
+
+
+
         #endregion
+
+        public override bool FilterItem(TransferItemViewModel item)
+        {
+            return item.Name.IndexOf(base.FilterExpression, StringComparison.OrdinalIgnoreCase) >= 0;
+        }
+
 
 
         public override void WorkspaceOpened()
@@ -95,6 +104,7 @@ namespace Finances.WinClient.ViewModels
 
         public void Open()
         {
+            base.FilterExpression = String.Empty;
             LoadData();
         }
 
@@ -135,6 +145,8 @@ namespace Finances.WinClient.ViewModels
                     base.DataList.Add(new TransferItemViewModel(t));
                 });
             }
+
+            this.AmountSum = 0;
 
             base.IsBusy = false;
         }

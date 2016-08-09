@@ -32,8 +32,9 @@ namespace Finances.Core.Wpf.Controls
         {
             ScrollIntoView(SelectedItem);
             ListViewItem item = this.ItemContainerGenerator.ContainerFromItem(SelectedItem) as ListViewItem;
-            if(item!=null)
-                item.Focus();
+            //below commented-out because was interfing with Filter focus
+            //if(item!=null)
+            //    item.Focus();
         }
 
 

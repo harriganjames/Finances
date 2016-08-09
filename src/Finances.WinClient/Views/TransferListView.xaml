@@ -18,7 +18,7 @@
              mc:Ignorable="d"
              x:Name="apex"
              d:DataContext="{d:DesignData Source=/DesignTimeData/TransferList.xaml}"
-             d:DesignHeight="300" d:DesignWidth="400"
+             d:DesignHeight="300" d:DesignWidth="600"
              FocusManager.FocusedElement="{Binding ElementName=Items}"
             >
     
@@ -40,6 +40,8 @@
                         <Button Content="Add" Command="{Binding AddCommand}"/>
                         <Button Content="Edit" Command="{Binding EditCommand}"/>
                         <Button Content="Delete" Command="{Binding DeleteCommand}"/>
+                    </ToolBarPanel>
+                    <ToolBarPanel Orientation="Horizontal">
                         <Button Content="Reload" Command="{Binding ReloadCommand}"/>
                         <StackPanel Orientation="Horizontal">
                             <Label Content="Amount Sum"/>
@@ -47,6 +49,14 @@
                                        TextAlignment="Right" 
                                        VerticalAlignment="Center"/>
                         </StackPanel>
+                    </ToolBarPanel>
+                    <ToolBarPanel Orientation="Horizontal">
+                        <libctl:TextBoxWithClear
+                                Text="{Binding FilterExpression, UpdateSourceTrigger=PropertyChanged}"
+                                Width="200"
+                                Height="20"
+                                Margin="10,0,0,0"
+                                />
                     </ToolBarPanel>
                 </ToolBar>
                 <libctl:ListViewScroll Name="Items"

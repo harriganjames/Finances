@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
+             xmlns:b="clr-namespace:Finances.Core.Wpf.Behaviors;assembly=Finances.Core.Wpf"
              mc:Ignorable="d" 
              MinWidth="440"
              MinHeight="340"
@@ -104,6 +105,9 @@
 
             <!--Account Name-->
             <Grid Margin="{StaticResource Spacer}">
+                <i:Interaction.Behaviors>
+                    <b:DragBehavior MyProperty="123"/>
+                </i:Interaction.Behaviors>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" SharedSizeGroup="label"/>
                     <ColumnDefinition Width="*"/>
