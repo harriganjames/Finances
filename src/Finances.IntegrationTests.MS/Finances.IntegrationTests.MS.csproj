@@ -70,11 +70,13 @@
     <Compile Include="BankAccountRepositoryEFTests.cs" />
     <Compile Include="CashflowRepositoryEFTests.cs" />
     <Compile Include="ConnectionInstaller.cs" />
+    <Compile Include="IntegrationExceptionService.cs" />
     <Compile Include="Fakes\FakeScheduleFactory.cs" />
     <Compile Include="Fakes\FakeTransferFactory.cs" />
     <Compile Include="IntegrationBase.cs" />
     <Compile Include="IntegrationConnection.cs" />
     <Compile Include="IntegrationContainer.cs" />
+    <Compile Include="BalanceDateRepositoryEFTests.cs" />
     <Compile Include="TransferRepositoryEFTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -94,6 +96,10 @@
     <ProjectReference Include="..\Finances.Persistence.EF\Finances.Persistence.EF.csproj">
       <Project>{8bba6faa-e9db-4016-8af2-1466a7a751a0}</Project>
       <Name>Finances.Persistence.EF</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Finances.Service\Finances.Service.csproj">
+      <Project>{96eaaebb-e7ff-4e57-88ce-195a404d9348}</Project>
+      <Name>Finances.Service</Name>
     </ProjectReference>
     <ProjectReference Include="..\Finances.WinClient\Finances.WinClient.csproj">
       <Project>{d481adf1-4007-40d7-9e05-2daaf3d89d90}</Project>

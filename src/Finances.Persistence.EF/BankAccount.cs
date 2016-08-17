@@ -14,6 +14,11 @@ namespace Finances.Persistence.EF
     
     public partial class BankAccount
     {
+        public BankAccount()
+        {
+            this.BalanceDateBankAccounts = new HashSet<BalanceDateBankAccount>();
+        }
+    
         public int BankAccountId { get; set; }
         public string Name { get; set; }
         public int BankId { get; set; }
@@ -34,5 +39,6 @@ namespace Finances.Persistence.EF
         public System.DateTime RecordUpdatedDateTime { get; set; }
     
         public virtual Bank Bank { get; set; }
+        public virtual ICollection<BalanceDateBankAccount> BalanceDateBankAccounts { get; set; }
     }
 }

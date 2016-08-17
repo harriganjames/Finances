@@ -34,6 +34,8 @@ namespace Finances.Persistence.EF
         public DbSet<CashflowBankAccount> CashflowBankAccounts { get; set; }
         public DbSet<Transfer> Transfers { get; set; }
         public DbSet<TransferCategory> TransferCategories { get; set; }
+        public DbSet<BalanceDate> BalanceDates { get; set; }
+        public DbSet<BalanceDateBankAccount> BalanceDateBankAccounts { get; set; }
     
         public virtual ObjectResult<GetDataTest_Result> GetDataTest()
         {

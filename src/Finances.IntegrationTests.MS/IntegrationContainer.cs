@@ -9,6 +9,17 @@ using Castle.MicroKernel.Resolvers.SpecializedResolvers;
 using Castle.Windsor;
 using Finances.Persistence.EF.WindsorInstallers;
 using Finances.WinClient.CastleInstallers;
+using Castle.Windsor.Installer;
+using Castle.MicroKernel.Registration;
+using System.IO;
+using System.Reflection;
+using Finances.Service;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System.Diagnostics;
+using Finances.Service.WindsorInstallers;
+using Finances.Persistence.EF;
+using Finances.Core;
+using Finances.Interface;
 
 namespace Finances.IntegrationTests.MS
 {
@@ -32,26 +43,25 @@ namespace Finances.IntegrationTests.MS
             
             container.Kernel.AddFacility<TypedFactoryFacility>();
 
-            container.Install(
-                            //new SystemInstaller(),
-                            new ConnectionInstaller(),
-                            new EFModelContextFactoryInstaller(),
-                            //new DialogServiceInstaller(w),
-                            //new RepositoriesInstaller(),
-                            //new BankInstaller(),
-                            //new BankAccountInstaller(),
-                            //new TransferInstaller(),
-                            new CashflowInstaller()
-                            //new DomainServicesInstaller(),
-                            //new ExceptionServiceInstaller(),
-                            //new InterceptorsInstaller(),
-                            //new WorkspaceInstaller(),
-                            //new ViewModelInstallers(),
-                            //new UtilitiesInstaller(w),
-                            //new MappingsCreatorInstaller()
-                            //new EnginesInstaller(),
-                            //new EntityInstaller()
-                            );
+            //selectively install Finance.Service classes
+            container.Install(  new MappingsCreatorInstaller()
+                                //new MappingsInstaller()
+                                );
+
+            //Persistence.EF installers
+            container.Install(FromAssembly.Containing<ModelContextFactory>());
+
+            //Core installers
+            container.Install(FromAssembly.Containing<AppSettings>());
+
+            //Integration inplememntations
+            container.Register(Component.For<IConnection>().ImplementedBy<IntegrationConnection>());
+            container.Register(Component.For<IExceptionService>().ImplementedBy<IntegrationExceptionService>());
+
+            //Create all mappings
+            container.Resolve<MappingsCreator>();
+
+            DisplayRegistrations();
 
 
         }
@@ -63,6 +73,20 @@ namespace Finances.IntegrationTests.MS
                 return container;
             }
         }
+
+        public void DisplayRegistrations()
+        {
+            foreach (var handler in container.Kernel.GetAssignableHandlers(typeof(object)))
+            {
+                Debug.Write(String.Format("{0} :", handler.ComponentModel.Implementation));
+                foreach (var service in handler.ComponentModel.Services)
+                {
+                    Debug.Write(String.Format(" {0}", service.Name));
+                }
+                Debug.WriteLine("");
+            }
+        }
+
 
     }
 }

@@ -61,6 +61,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BalanceDate.cs">
+      <DependentUpon>Model.tt</DependentUpon>
+    </Compile>
+    <Compile Include="BalanceDateBankAccount.cs">
+      <DependentUpon>Model.tt</DependentUpon>
+    </Compile>
     <Compile Include="Bank.cs">
       <DependentUpon>Model.tt</DependentUpon>
     </Compile>
@@ -75,9 +81,10 @@
     <Compile Include="CashflowBankAccount.cs">
       <DependentUpon>Model.tt</DependentUpon>
     </Compile>
+    <Compile Include="BalanceDateRepository.cs" />
     <Compile Include="Interceptors\DbEntityValidationExceptionInterceptor.cs" />
     <Compile Include="Interceptors\ErrorHandlingInterceptor.cs" />
-    <Compile Include="WindsorInstallers\CashflowInstaller.cs" />
+    <Compile Include="Mappings\BalanceDateMappings.cs" />
     <Compile Include="WindsorInstallers\InterceptorsInstaller.cs" />
     <Compile Include="WindsorInstallers\MappingsInstaller.cs" />
     <Compile Include="WindsorInstallers\RepositoriesInstaller.cs" />

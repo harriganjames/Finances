@@ -5,6 +5,24 @@
     <!-- SSDL content -->
     <edmx:StorageModels>
     <Schema Namespace="FinanceModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2008" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="BalanceDate">
+          <Key>
+            <PropertyRef Name="BalanceDateId" />
+          </Key>
+          <Property Name="BalanceDateId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="DateOfBalance" Type="date" Nullable="false" />
+          <Property Name="RecordCreatedDateTime" Type="datetime" Nullable="false" StoreGeneratedPattern="Computed" />
+        </EntityType>
+        <EntityType Name="BalanceDateBankAccount">
+          <Key>
+            <PropertyRef Name="BalanceDateBankAccountId" />
+          </Key>
+          <Property Name="BalanceDateBankAccountId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="BalanceDateId" Type="int" Nullable="false" />
+          <Property Name="BankAccountId" Type="int" Nullable="false" />
+          <Property Name="BalanceAmount" Type="money" Nullable="false" />
+          <Property Name="RecordCreatedDateTime" Type="datetime" Nullable="false" StoreGeneratedPattern="Computed" />
+        </EntityType>
         <EntityType Name="Bank">
           <Key>
             <PropertyRef Name="BankId" />
@@ -74,6 +92,7 @@
           <Property Name="RecordCreatedDateTime" Type="datetime" Nullable="false" StoreGeneratedPattern="Computed" />
           <Property Name="RecordUpdatedDateTime" Type="datetime" Nullable="false" StoreGeneratedPattern="Computed" />
           <Property Name="ScheduleFrequencyEvery" Type="int" Nullable="false" />
+          <Property Name="FrequencyEvery" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="TransferCategory">
           <Key>
@@ -84,6 +103,34 @@
           <Property Name="Name" Type="varchar" MaxLength="100" Nullable="false" />
           <Property Name="DisplayOrder" Type="int" Nullable="false" />
         </EntityType>
+        <Association Name="FK_BalanceDateBankAccount_BalanceDateId">
+          <End Role="BalanceDate" Type="Self.BalanceDate" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="BalanceDateBankAccount" Type="Self.BalanceDateBankAccount" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="BalanceDate">
+              <PropertyRef Name="BalanceDateId" />
+            </Principal>
+            <Dependent Role="BalanceDateBankAccount">
+              <PropertyRef Name="BalanceDateId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_BalanceDateBankAccount_BankAccountId">
+          <End Role="BankAccount" Type="Self.BankAccount" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="BalanceDateBankAccount" Type="Self.BalanceDateBankAccount" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="BankAccount">
+              <PropertyRef Name="BankAccountId" />
+            </Principal>
+            <Dependent Role="BalanceDateBankAccount">
+              <PropertyRef Name="BankAccountId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_BankAccount_BankId">
           <End Role="Bank" Type="Self.Bank" Multiplicity="1" />
           <End Role="BankAccount" Type="Self.BankAccount" Multiplicity="*" />
@@ -160,12 +207,22 @@
         </Association>
         <Function Name="GetDataTest" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
         <EntityContainer Name="FinanceModelStoreContainer">
+          <EntitySet Name="BalanceDate" EntityType="Self.BalanceDate" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="BalanceDateBankAccount" EntityType="Self.BalanceDateBankAccount" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Bank" EntityType="Self.Bank" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="BankAccount" EntityType="Self.BankAccount" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Cashflow" EntityType="Self.Cashflow" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="CashflowBankAccount" EntityType="Self.CashflowBankAccount" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Transfer" EntityType="Self.Transfer" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="TransferCategory" EntityType="Self.TransferCategory" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_BalanceDateBankAccount_BalanceDateId" Association="Self.FK_BalanceDateBankAccount_BalanceDateId">
+            <End Role="BalanceDate" EntitySet="BalanceDate" />
+            <End Role="BalanceDateBankAccount" EntitySet="BalanceDateBankAccount" />
+          </AssociationSet>
+          <AssociationSet Name="FK_BalanceDateBankAccount_BankAccountId" Association="Self.FK_BalanceDateBankAccount_BankAccountId">
+            <End Role="BankAccount" EntitySet="BankAccount" />
+            <End Role="BalanceDateBankAccount" EntitySet="BalanceDateBankAccount" />
+          </AssociationSet>
           <AssociationSet Name="FK_BankAccount_BankId" Association="Self.FK_BankAccount_BankId">
             <End Role="Bank" EntitySet="Bank" />
             <End Role="BankAccount" EntitySet="BankAccount" />
@@ -227,7 +284,17 @@
             <End Role="TransferCategory" EntitySet="TransferCategories" />
             <End Role="Transfer" EntitySet="Transfers" />
           </AssociationSet>
-        </EntityContainer>
+          <EntitySet Name="BalanceDates" EntityType="FinanceModel.BalanceDate" />
+          <EntitySet Name="BalanceDateBankAccounts" EntityType="FinanceModel.BalanceDateBankAccount" />
+          <AssociationSet Name="FK_BalanceDateBankAccount_BalanceDateId" Association="FinanceModel.FK_BalanceDateBankAccount_BalanceDateId">
+            <End Role="BalanceDate" EntitySet="BalanceDates" />
+            <End Role="BalanceDateBankAccount" EntitySet="BalanceDateBankAccounts" />
+          </AssociationSet>
+          <AssociationSet Name="FK_BalanceDateBankAccount_BankAccountId" Association="FinanceModel.FK_BalanceDateBankAccount_BankAccountId">
+            <End Role="BankAccount" EntitySet="BankAccounts" />
+            <End Role="BalanceDateBankAccount" EntitySet="BalanceDateBankAccounts" />
+          </AssociationSet>
+          </EntityContainer>
         <EntityType Name="Bank" a:TypeAccess="Public" xmlns:a="http://schemas.microsoft.com/ado/2006/04/codegeneration">
           <Key>
             <PropertyRef Name="BankId" />
@@ -259,6 +326,7 @@
           <Property Name="RecordCreatedDateTime" Type="DateTime" Nullable="false" Precision="3" annotation:StoreGeneratedPattern="Computed" />
           <Property Name="RecordUpdatedDateTime" Type="DateTime" Nullable="false" Precision="3" annotation:StoreGeneratedPattern="Computed" />
           <NavigationProperty Name="Bank" Relationship="FinanceModel.FK_BankAccount_BankId" FromRole="BankAccount" ToRole="Bank" />
+          <NavigationProperty Name="BalanceDateBankAccounts" Relationship="FinanceModel.FK_BalanceDateBankAccount_BankAccountId" FromRole="BankAccount" ToRole="BalanceDateBankAccount" />
         </EntityType>
         <Association Name="FK_BankAccount_BankId">
           <End Role="Bank" Type="FinanceModel.Bank" Multiplicity="1" />
@@ -347,6 +415,7 @@
           <Property Name="ScheduleEndDate" Type="DateTime" Precision="0" />
           <Property Name="ScheduleFrequency" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
           <Property Name="ScheduleFrequencyEvery" Type="Int32" Nullable="false" />
+          <Property Name="FrequencyEvery" Type="Int32" Nullable="false" />
         </EntityType>
         <EntityType Name="TransferCategory">
           <Key>
@@ -394,7 +463,56 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-      </Schema>
+        <EntityType Name="BalanceDate">
+          <Key>
+            <PropertyRef Name="BalanceDateId" />
+          </Key>
+          <Property Name="BalanceDateId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="DateOfBalance" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="RecordCreatedDateTime" Type="DateTime" Nullable="false" Precision="3" annotation:StoreGeneratedPattern="Computed" />
+          <NavigationProperty Name="BalanceDateBankAccounts" Relationship="FinanceModel.FK_BalanceDateBankAccount_BalanceDateId" FromRole="BalanceDate" ToRole="BalanceDateBankAccount" />
+        </EntityType>
+        <EntityType Name="BalanceDateBankAccount">
+          <Key>
+            <PropertyRef Name="BalanceDateBankAccountId" />
+          </Key>
+          <Property Name="BalanceDateBankAccountId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="BalanceDateId" Type="Int32" Nullable="false" />
+          <Property Name="BankAccountId" Type="Int32" Nullable="false" />
+          <Property Name="BalanceAmount" Type="Decimal" Nullable="false" Precision="19" Scale="4" />
+          <Property Name="RecordCreatedDateTime" Type="DateTime" Nullable="false" Precision="3" annotation:StoreGeneratedPattern="Computed" />
+          <NavigationProperty Name="BalanceDate" Relationship="FinanceModel.FK_BalanceDateBankAccount_BalanceDateId" FromRole="BalanceDateBankAccount" ToRole="BalanceDate" />
+          <NavigationProperty Name="BankAccount" Relationship="FinanceModel.FK_BalanceDateBankAccount_BankAccountId" FromRole="BalanceDateBankAccount" ToRole="BankAccount" />
+        </EntityType>
+        <Association Name="FK_BalanceDateBankAccount_BalanceDateId">
+          <End Type="FinanceModel.BalanceDate" Role="BalanceDate" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="FinanceModel.BalanceDateBankAccount" Role="BalanceDateBankAccount" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="BalanceDate">
+              <PropertyRef Name="BalanceDateId" />
+            </Principal>
+            <Dependent Role="BalanceDateBankAccount">
+              <PropertyRef Name="BalanceDateId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_BalanceDateBankAccount_BankAccountId">
+          <End Type="FinanceModel.BankAccount" Role="BankAccount" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="FinanceModel.BalanceDateBankAccount" Role="BalanceDateBankAccount" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="BankAccount">
+              <PropertyRef Name="BankAccountId" />
+            </Principal>
+            <Dependent Role="BalanceDateBankAccount">
+              <PropertyRef Name="BankAccountId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
     <edmx:Mappings>
@@ -467,6 +585,7 @@
           <EntitySetMapping Name="Transfers">
             <EntityTypeMapping TypeName="FinanceModel.Transfer">
               <MappingFragment StoreEntitySet="Transfer">
+                <ScalarProperty Name="FrequencyEvery" ColumnName="FrequencyEvery" />
                 <ScalarProperty Name="ScheduleFrequencyEvery" ColumnName="ScheduleFrequencyEvery" />
                 <ScalarProperty Name="ScheduleFrequency" ColumnName="ScheduleFrequency" />
                 <ScalarProperty Name="ScheduleEndDate" ColumnName="ScheduleEndDate" />
@@ -491,6 +610,26 @@
                 <ScalarProperty Name="Name" ColumnName="Name" />
                 <ScalarProperty Name="Code" ColumnName="Code" />
                 <ScalarProperty Name="TransferCategoryId" ColumnName="TransferCategoryId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="BalanceDates">
+            <EntityTypeMapping TypeName="FinanceModel.BalanceDate">
+              <MappingFragment StoreEntitySet="BalanceDate">
+                <ScalarProperty Name="RecordCreatedDateTime" ColumnName="RecordCreatedDateTime" />
+                <ScalarProperty Name="DateOfBalance" ColumnName="DateOfBalance" />
+                <ScalarProperty Name="BalanceDateId" ColumnName="BalanceDateId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="BalanceDateBankAccounts">
+            <EntityTypeMapping TypeName="FinanceModel.BalanceDateBankAccount">
+              <MappingFragment StoreEntitySet="BalanceDateBankAccount">
+                <ScalarProperty Name="RecordCreatedDateTime" ColumnName="RecordCreatedDateTime" />
+                <ScalarProperty Name="BalanceAmount" ColumnName="BalanceAmount" />
+                <ScalarProperty Name="BankAccountId" ColumnName="BankAccountId" />
+                <ScalarProperty Name="BalanceDateId" ColumnName="BalanceDateId" />
+                <ScalarProperty Name="BalanceDateBankAccountId" ColumnName="BalanceDateBankAccountId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -529,7 +668,11 @@
         <AssociationConnector Association="FinanceModel.FK_Transfer_FromBankAccountId" />
         <AssociationConnector Association="FinanceModel.FK_Transfer_ToBankAccountId" />
         <AssociationConnector Association="FinanceModel.FK_Transfer_TransferCategory" />
-      </Diagram>
+        <EntityTypeShape EntityType="FinanceModel.BalanceDate" Width="1.5" PointX="6" PointY="10.125" />
+        <EntityTypeShape EntityType="FinanceModel.BalanceDateBankAccount" Width="1.5" PointX="8.25" PointY="7.875" />
+        <AssociationConnector Association="FinanceModel.FK_BalanceDateBankAccount_BalanceDateId" />
+        <AssociationConnector Association="FinanceModel.FK_BalanceDateBankAccount_BankAccountId" />
+        </Diagram>
     </Diagrams>
   </Designer>
 </edmx:Edmx>

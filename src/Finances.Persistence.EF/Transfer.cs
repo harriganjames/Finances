@@ -28,6 +28,7 @@ namespace Finances.Persistence.EF
         public Nullable<System.DateTime> ScheduleEndDate { get; set; }
         public string ScheduleFrequency { get; set; }
         public int ScheduleFrequencyEvery { get; set; }
+        public int FrequencyEvery { get; set; }
     
         public virtual BankAccount FromBankAccount { get; set; }
         public virtual BankAccount ToBankAccount { get; set; }

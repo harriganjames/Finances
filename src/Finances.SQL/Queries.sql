@@ -79,3 +79,24 @@ end
 
 
 
+select	c.CashflowId, c.Name, count(*)
+from	dbo.Cashflow c
+inner join dbo.CashflowBankAccount cba
+	on	c.CashflowId=cba.CashflowId
+group by c.CashflowId, c.Name
+
+select	*
+from	dbo.BankAccount
+
+
+insert	dbo.BalanceDate(DateOfBalance) values ('2016-08-10')
+
+insert	dbo.BalanceDateBankAccount(BalanceDateId,BankAccountId,BalanceAmount) values (1,2,200)
+insert	dbo.BalanceDateBankAccount(BalanceDateId,BankAccountId,BalanceAmount) values (1,3,300)
+
+select	*
+from	dbo.BalanceDate
+
+select	*
+from	dbo.BalanceDateBankAccount
+

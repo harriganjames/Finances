@@ -48,7 +48,11 @@
     <Content Include="Queries.sql" />
     <Content Include="ResetINT.sql" />
     <Content Include="Tables.sql" />
+    <Content Include="Tables\BankAccount.sql" />
+    <Content Include="Tables\Bank.sql" />
     <Content Include="Tables\Cashflow.sql" />
+    <Content Include="Tables\BalanceDateBankAccount.sql" />
+    <Content Include="Tables\BalanceDate.sql" />
     <Content Include="Tables\CashflowBankAccount.sql" />
     <Content Include="Tables\TransferCategory.sql" />
     <Content Include="Tables\Transfer.sql" />

@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 using Castle.Windsor;
+using System.Diagnostics;
 
 namespace Finances.IntegrationTests.MS
 {
@@ -18,6 +19,8 @@ namespace Finances.IntegrationTests.MS
 
             //container.Resolve<Finances.Core.MappingsCreator>();
         }
+
+
 
     }
 }
