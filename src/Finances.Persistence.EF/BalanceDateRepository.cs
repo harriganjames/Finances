@@ -8,6 +8,9 @@ using AutoMapper.QueryableExtensions;
 using System.Data.Entity.Validation;
 using System.Text;
 using System.Data;
+using System.Threading.Tasks;
+using System.Threading.Tasks.Dataflow;
+using Finances.Core;
 //using EntityFramework.Extensions;
 
 
@@ -146,6 +149,15 @@ namespace Finances.Persistence.EF
             return true;
         }
 
+        private IQueryable<BalanceDate> ReadQuery(FinanceEntities context, int? id=null)
+        {
+            return (from b in context.BalanceDates
+                                .Include(a => a.BalanceDateBankAccounts)
+                                .Include("BalanceDateBankAccounts.BankAccount")
+                                .Include("BalanceDateBankAccounts.BankAccount.Bank")
+                    where !id.HasValue || b.BalanceDateId == id
+                    select b);
+        }
 
 
         public Core.Entities.BalanceDate Read(int id)
@@ -153,12 +165,14 @@ namespace Finances.Persistence.EF
             Core.Entities.BalanceDate entity = null;
             using (FinanceEntities context = factory.CreateContext())
             {
-                var ef = (from b in context.BalanceDates
-                                .Include(a => a.BalanceDateBankAccounts)
-                                .Include("BalanceDateBankAccounts.BankAccount")
-                                .Include("BalanceDateBankAccounts.BankAccount.Bank")
-                          where b.BalanceDateId==id
-                            select b).FirstOrDefault();
+                var ef = ReadQuery(context, id).FirstOrDefault();
+
+                //var ef = (from b in context.BalanceDates
+                //                .Include(a => a.BalanceDateBankAccounts)
+                //                .Include("BalanceDateBankAccounts.BankAccount")
+                //                .Include("BalanceDateBankAccounts.BankAccount.Bank")
+                //          where b.BalanceDateId==id
+                //            select b).FirstOrDefault();
 
                 entity = mapper.Map<Core.Entities.BalanceDate>(ef);
             }
@@ -170,16 +184,57 @@ namespace Finances.Persistence.EF
             List<Core.Entities.BalanceDate> list = null;
             using (FinanceEntities context = factory.CreateContext())
             {
-                var ef = (from b in context.BalanceDates
-                                .Include(a => a.BalanceDateBankAccounts)
-                                .Include("BalanceDateBankAccounts.BankAccount")
-                                .Include("BalanceDateBankAccounts.BankAccount.Bank")
-                          select b).ToList();
+                var ef = ReadQuery(context).ToList();
+                //var ef = (from b in context.BalanceDates
+                //                .Include(a => a.BalanceDateBankAccounts)
+                //                .Include("BalanceDateBankAccounts.BankAccount")
+                //                .Include("BalanceDateBankAccounts.BankAccount.Bank")
+                //          select b).ToList();
 
                 list = mapper.Map<List<Core.Entities.BalanceDate>>(ef);
             }
             return list;
         }
+
+
+        public async Task PostList(ITargetBlock<Core.Entities.BalanceDate> target)
+        {
+            Diag.ThreadPrint("PostList - start");
+
+            var transform = new TransformBlock<BalanceDate, Core.Entities.BalanceDate>(ef =>
+                 mapper.Map<Core.Entities.BalanceDate>(ef), new ExecutionDataflowBlockOptions() { MaxDegreeOfParallelism = 4 });
+
+            transform.LinkTo(target,new DataflowLinkOptions() { PropagateCompletion = true });
+
+            await Task.Run(() =>
+            {
+                Diag.ThreadPrint("PostList - task start");
+
+                using (FinanceEntities context = factory.CreateContext())
+                {
+                    (from b in context.BalanceDates
+                                .Include(a => a.BalanceDateBankAccounts)
+                                .Include("BalanceDateBankAccounts.BankAccount")
+                                .Include("BalanceDateBankAccounts.BankAccount.Bank")
+                     select b).AsParallel().ForAll(ef => transform.Post(ef));
+                    //await transform.Completion;
+                    //transform.Completion.ContinueWith(t =>
+                    //{
+                    //    if (t.IsFaulted) target.Fault(t.Exception);
+                    //    else
+                    //    {
+                    //        Diag.ThreadPrint("PostList - task set target complete");
+                    //        target.Complete();
+                    //    }
+                    //});
+                    transform.Complete();
+                }
+                Diag.ThreadPrint("PostList - task end");
+            }).ConfigureAwait(false);
+
+            Diag.ThreadPrint("PostList - end");
+        }
+
 
 
         public List<Core.Entities.DataIdName> ReadListDataIdName()

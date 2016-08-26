@@ -12,7 +12,8 @@
         <StackPanel Orientation="Horizontal">
             <TextBlock Text="{Binding DirectionName}" Foreground="Green" VerticalAlignment="Center"/>
             <TextBlock Text=" to " Foreground="Green" VerticalAlignment="Center"/>
-            <ContentPresenter Content="{Binding ToBankAccount}" ContentTemplate="{StaticResource BankAccountDataTemplate}"/>
+            <!--<ContentPresenter Content="{Binding ToBankAccount}" ContentTemplate="{StaticResource BankAccountDataTemplate}"/>-->
+            <local:BankAccountElsewhere DataContext="{Binding ToBankAccount}"/>
         </StackPanel>  
     </Grid>
 </UserControl>

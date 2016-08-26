@@ -11,9 +11,11 @@
     <Grid>
         <StackPanel Orientation="Horizontal">
             <TextBlock Text="Transfer from " Foreground="Blue" VerticalAlignment="Center"/>
-            <ContentPresenter Content="{Binding FromBankAccount}" ContentTemplate="{StaticResource BankAccountDataTemplate}"/>
+            <local:BankAccountElsewhere DataContext="{Binding FromBankAccount}"/>
+            <!--<ContentPresenter Content="{Binding FromBankAccount}" ContentTemplate="{StaticResource BankAccountDataTemplate}"/>-->
             <TextBlock Text=" to " Foreground="Blue" VerticalAlignment="Center"/>
-            <ContentPresenter Content="{Binding ToBankAccount}" ContentTemplate="{StaticResource BankAccountDataTemplate}"/>
+            <local:BankAccountElsewhere DataContext="{Binding ToBankAccount}"/>
+            <!--<ContentPresenter Content="{Binding ToBankAccount}" ContentTemplate="{StaticResource BankAccountDataTemplate}"/>-->
         </StackPanel>
 
     </Grid>

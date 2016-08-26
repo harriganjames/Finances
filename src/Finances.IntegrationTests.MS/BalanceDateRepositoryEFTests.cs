@@ -16,6 +16,7 @@ using Castle.Windsor.Installer;
 using Finances.Core;
 using Finances.Interface;
 using System.Collections.Generic;
+using System.Threading.Tasks.Dataflow;
 
 namespace Finances.IntegrationTests.MS
 {
@@ -24,7 +25,7 @@ namespace Finances.IntegrationTests.MS
     {
         IBalanceDateRepository repository;
         Core.Entities.BalanceDate testEntity;
-        IBalanceDateFactory transferFactory;
+        IBalanceDateFactory balanceDateFactory;
 
         [TestInitialize]
         public void Initialize()
@@ -32,9 +33,9 @@ namespace Finances.IntegrationTests.MS
 
             repository = container.Resolve<IBalanceDateRepository>();
 
-            transferFactory = container.Resolve<IBalanceDateFactory>();
+            balanceDateFactory = container.Resolve<IBalanceDateFactory>();
 
-            testEntity = transferFactory.Create();
+            testEntity = balanceDateFactory.Create();
 
             testEntity.DateOfBalance = DateTime.Today;
             testEntity.BalanceDateBankAccounts.AddRange(new List<Core.Entities.BalanceDateBankAccount>()
@@ -93,6 +94,12 @@ namespace Finances.IntegrationTests.MS
         [TestMethod]
         public void TestReadList()
         {
+            // clear out first
+            var all = repository.ReadListDataIdName();
+            repository.Delete(all.Select(d => d.Id).ToList());
+            var entity = testEntity;
+            repository.Add(testEntity);
+
             var list = repository.ReadList();
             Assert.IsNotNull(list);
             Assert.IsTrue(list.Count > 0);
@@ -107,12 +114,54 @@ namespace Finances.IntegrationTests.MS
         [TestMethod]
         public void TestReadListDataIdName()
         {
+            var all = repository.ReadListDataIdName();
+            repository.Delete(all.Select(d => d.Id).ToList());
+            var entity = testEntity;
+            repository.Add(testEntity);
+
+
             var list = repository.ReadListDataIdName();
             Assert.IsNotNull(list);
             Assert.IsTrue(list.Count > 0);
 
             Assert.IsTrue(list.Count(d => d.Id > 0) == list.Count);
             Assert.IsTrue(list.Count(d => !String.IsNullOrEmpty(d.Name)) == list.Count);
+        }
+
+
+        [TestMethod]
+        public void TestPostList()
+        {
+            //prepare data
+            var all = repository.ReadListDataIdName();
+            repository.Delete(all.Select(d => d.Id).ToList());
+            var entity = testEntity;
+            repository.Add(testEntity);
+
+
+            // read data
+            var list = new List<Core.Entities.BalanceDate>();
+            var target = new ActionBlock<Core.Entities.BalanceDate>(a =>
+            {
+                list.Add(a);
+
+            }, new ExecutionDataflowBlockOptions() { MaxDegreeOfParallelism = 1 });
+
+            repository.PostList(target).Wait();
+            target.Completion.Wait(); ;
+
+            //await repository.PostList(target).ConfigureAwait(false);
+            //await target.Completion.ConfigureAwait(false);
+
+            //test data
+            Assert.IsNotNull(list);
+            Assert.IsTrue(list.Count > 0);
+            Assert.IsNotNull(list[0].DateOfBalance);
+            Assert.IsNotNull(list[0].BalanceDateBankAccounts);
+            Assert.IsTrue(list[0].BalanceDateBankAccounts.Count > 0);
+            Assert.IsNotNull(list[0].BalanceDateBankAccounts[0].BankAccount);
+            Assert.IsNotNull(list[0].BalanceDateBankAccounts[0].BankAccount.Bank);
+
         }
 
 

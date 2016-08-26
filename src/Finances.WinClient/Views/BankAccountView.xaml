@@ -4,20 +4,23 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:Finances.WinClient.Views"
+             xmlns:dd="clr-namespace:Finances.WinClient.DesignTimeData"
              mc:Ignorable="d"
-            d:DataContext="{d:DesignData Source=/DesignTimeData/BankAccount.xaml}">
+             d:DataContext="{d:DesignInstance Type=dd:BankAccount,IsDesignTimeCreatable=True}"
+
+    >
+
+    <!--d:DataContext="{Binding Path=., Source={x:Static dd:DesignData.BankAccount}}"-->
+    
+    <!--d:DataContext="{d:DesignInstance Type=dd:BankAccount,IsDesignTimeCreatable=True}"-->
+
+    <!--d:DataContext="{d:DesignData Source=/DesignTimeData/BankAccount.xaml}">-->
 
     <Grid>
-        <StackPanel Orientation="Vertical">
-            <Grid Visibility="{Binding Path=., Converter={StaticResource AccountElsewhereToCollapsedConverter}}">
-                <StackPanel Orientation="Horizontal">
-                    <ContentPresenter Content="{Binding Bank}" ContentTemplate="{StaticResource BankDataTemplate}"/>
-                    <TextBlock Text="{Binding AccountName}" Padding="5,0,0,0" VerticalAlignment="Center"/>
-                </StackPanel>
-            </Grid>
-            <Grid Visibility="{Binding Path=., Converter={StaticResource AccountElsewhereToVisibileConverter}}">
-                <local:BankAccountElsewhere/>
-            </Grid>
+        <StackPanel Orientation="Horizontal">
+            <local:BankView DataContext="{Binding Bank}"/>
+            <!--<ContentPresenter Content="{Binding Bank}" ContentTemplate="{StaticResource BankDataTemplate}"/>-->
+            <TextBlock Text="{Binding AccountName}" Padding="5,0,0,0" VerticalAlignment="Center"/>
         </StackPanel>
     </Grid>
 </UserControl>

@@ -15,6 +15,8 @@ namespace Finances.WinClient.Converters
         {
             var account = value as BankAccountItemViewModel;
 
+            if (!(value is BankAccountItemViewModel)) return Visibility.Collapsed;  // for design mode
+
             return (account == null || account.BankAccountId == -1) ? Visibility.Visible : Visibility.Collapsed;
         }
 

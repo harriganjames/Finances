@@ -127,11 +127,27 @@
     <Compile Include="Converters\AccountElsewhereToBooleanNotConverter.cs" />
     <Compile Include="Converters\AccountElsewhereToBooleanConverter.cs" />
     <Compile Include="Converters\TansferToDirectionConverter.cs" />
+    <Compile Include="DesignTimeData\BalanceDate.cs" />
+    <Compile Include="DesignTimeData\BalanceDateBankAccount.cs" />
     <Compile Include="DesignTimeData\BankAccount.cs" />
+    <Compile Include="DesignTimeData\DesignData.cs" />
     <Compile Include="DesignTimeData\Transfer.cs" />
     <Compile Include="DesignTimeData\TransferList.cs" />
+    <Compile Include="DomainServices\BalanceDataAgent.cs" />
     <Compile Include="InterceptorSelectors\ErrorHandlingInterceptorSelector.cs" />
     <Compile Include="DesignTimeData\Bank.cs" />
+    <Compile Include="ViewModels\BalanceDateItemViewModel.cs" />
+    <Compile Include="ViewModels\BalanceDateBankAccountItemViewModel.cs" />
+    <Compile Include="ViewModels\BalanceDateListViewModel.cs" />
+    <Compile Include="Views\BalanceDateAccount.xaml.cs">
+      <DependentUpon>BalanceDateAccount.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\BalanceDateAccountList.xaml.cs">
+      <DependentUpon>BalanceDateAccountList.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\ElsewhereBankAccount.xaml.cs">
+      <DependentUpon>ElsewhereBankAccount.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\BankAccountElsewhere.xaml.cs">
       <DependentUpon>BankAccountElsewhere.xaml</DependentUpon>
     </Compile>
@@ -156,6 +172,10 @@
     <Compile Include="Views\TransferDirectionView.xaml.cs">
       <DependentUpon>TransferDirectionView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\BalanceDateListView.xaml.cs">
+      <DependentUpon>BalanceDateListView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="WindsorInstallers\BalanceDateInstaller.cs" />
     <Compile Include="WindsorInstallers\BankInstaller.cs" />
     <Compile Include="WindsorInstallers\BankAccountInstaller.cs" />
     <Compile Include="WindsorInstallers\CashflowInstaller.cs" />
@@ -286,6 +306,18 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="Views\BalanceDateAccount.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\BalanceDateAccountList.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\ElsewhereBankAccount.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Views\BankAccountElsewhere.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -365,6 +397,10 @@
     <Page Include="Views\TransferEditorView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\BalanceDateListView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Views\TransferListView.xaml">
       <SubType>Designer</SubType>

@@ -43,6 +43,10 @@ namespace Finances.WinClient.WindsorInstallers
                 .ImplementedBy<CashflowTableViewModel>()
                 );
 
+            container.Register(Component.For<IWorkspace>()
+                .ImplementedBy<BalanceDateListViewModel>()
+                );
+
         }
 
     }

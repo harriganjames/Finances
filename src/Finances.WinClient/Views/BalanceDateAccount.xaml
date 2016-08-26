@@ -1,0 +1,27 @@
+﻿<UserControl x:Class="Finances.WinClient.Views.BalanceDateAccount"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Finances.WinClient.Views"
+             mc:Ignorable="d"              
+             xmlns:dd="clr-namespace:Finances.WinClient.DesignTimeData"
+             d:DesignHeight="50" d:DesignWidth="300"
+    d:DataContext="{d:DesignInstance Type=dd:BalanceDateBankAccount,IsDesignTimeCreatable=True}"             
+    >
+
+    <!--d:DataContext="{d:DesignInstance Type=dd:BalanceDateBankAccount,IsDesignTimeCreatable=True}"-->
+
+    <!--d:DataContext="{d:DesignData Source=/DesignTimeData/BalanceDate.xaml}"-->
+    <!--d:DataContext="{Binding Path=BalanceDateBankAccounts[0], Source={x:Static dd:DesignData.BalanceDate}}"-->
+
+
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <local:BankAccountView Grid.Column="0" DataContext="{Binding BankAccount}"/>
+        <TextBlock Grid.Column="1" Text="{Binding BalanceAmount, StringFormat={}{0:c}}" VerticalAlignment="Center" Padding="5,0,0,0"/>
+    </Grid>
+</UserControl>

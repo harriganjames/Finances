@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
 using Finances.Core.Entities;
+using System.Threading.Tasks;
+using System.Threading.Tasks.Dataflow;
 
 namespace Finances.Core.Interfaces
 {
@@ -10,6 +12,7 @@ namespace Finances.Core.Interfaces
         bool Delete(BalanceDate data);
         bool Delete(List<int> ids);
         BalanceDate Read(int dataId);
+        Task PostList(ITargetBlock<Core.Entities.BalanceDate> target);
         List<BalanceDate> ReadList();
         List<DataIdName> ReadListDataIdName();
     }

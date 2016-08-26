@@ -11,7 +11,8 @@
     <Grid>
         <StackPanel Orientation="Horizontal">
             <TextBlock Text="Outgoing from " Foreground="Red" VerticalAlignment="Center"/>
-            <ContentPresenter Content="{Binding FromBankAccount}" ContentTemplate="{StaticResource BankAccountDataTemplate}"/>
+            <!--<ContentPresenter Content="{Binding FromBankAccount}" ContentTemplate="{StaticResource BankAccountDataTemplate}"/>-->
+            <local:BankAccountElsewhere DataContext="{Binding FromBankAccount}"/>
         </StackPanel>
     </Grid>
 </UserControl>
