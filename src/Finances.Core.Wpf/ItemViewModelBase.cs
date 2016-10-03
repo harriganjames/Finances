@@ -38,6 +38,11 @@ namespace Finances.Core.Wpf
             }
         }
 
+        public virtual int Id
+        {
+            get { return 0;  }
+        }
+
         protected void OnSelectedChanged(bool selectedChanged)
         {
             if (this.SelectedChanged != null)

@@ -25,7 +25,7 @@
     <UpdateRequired>false</UpdateRequired>
     <MapFileExtensions>true</MapFileExtensions>
     <AutorunEnabled>true</AutorunEnabled>
-    <ApplicationRevision>15</ApplicationRevision>
+    <ApplicationRevision>16</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
@@ -130,20 +130,26 @@
     <Compile Include="DesignTimeData\BalanceDate.cs" />
     <Compile Include="DesignTimeData\BalanceDateBankAccount.cs" />
     <Compile Include="DesignTimeData\BankAccount.cs" />
+    <Compile Include="DesignTimeData\DataContextInheritConverter.cs" />
     <Compile Include="DesignTimeData\DesignData.cs" />
     <Compile Include="DesignTimeData\Transfer.cs" />
     <Compile Include="DesignTimeData\TransferList.cs" />
     <Compile Include="DomainServices\BalanceDataAgent.cs" />
+    <Compile Include="Factories\IBalanceDateEditorViewModelFactory.cs" />
     <Compile Include="InterceptorSelectors\ErrorHandlingInterceptorSelector.cs" />
     <Compile Include="DesignTimeData\Bank.cs" />
     <Compile Include="ViewModels\BalanceDateItemViewModel.cs" />
     <Compile Include="ViewModels\BalanceDateBankAccountItemViewModel.cs" />
     <Compile Include="ViewModels\BalanceDateListViewModel.cs" />
+    <Compile Include="ViewModels\BalanceDateEditorViewModel.cs" />
     <Compile Include="Views\BalanceDateAccount.xaml.cs">
       <DependentUpon>BalanceDateAccount.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\BalanceDateAccountList.xaml.cs">
       <DependentUpon>BalanceDateAccountList.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\BalanceDateEditorView.xaml.cs">
+      <DependentUpon>BalanceDateEditorView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\ElsewhereBankAccount.xaml.cs">
       <DependentUpon>ElsewhereBankAccount.xaml</DependentUpon>
@@ -313,6 +319,10 @@
     <Page Include="Views\BalanceDateAccountList.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\BalanceDateEditorView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Views\ElsewhereBankAccount.xaml">
       <Generator>MSBuild:Compile</Generator>

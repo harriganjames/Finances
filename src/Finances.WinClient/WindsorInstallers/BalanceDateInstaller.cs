@@ -21,13 +21,13 @@ namespace Finances.WinClient.WindsorInstallers
             //bool debug;
             //bool.TryParse(appSettings.GetSetting("debug"),out debug);
 
-            //container.Register(Component.For<BankAccountEditorViewModel>()
-            //    .ImplementedBy<BankAccountEditorViewModel>()
-            //    .LifeStyle.Transient
-            //    );
-            //container.Register(Component.For<IBankAccountEditorViewModelFactory>()
-            //    .AsFactory()
-            //    );
+            container.Register(Component.For<BalanceDateEditorViewModel>()
+                .ImplementedBy<BalanceDateEditorViewModel>()
+                .LifeStyle.Transient
+                );
+            container.Register(Component.For<IBalanceDateEditorViewModelFactory>()
+                .AsFactory()
+                );
 
 
             container.Register(Component.For<IBalanceDateAgent>()

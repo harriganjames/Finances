@@ -54,7 +54,7 @@
     <!-- Places an exlamation to the right of the control in error with error message in tooltip -->
     <ControlTemplate x:Key="validationTemplate">
         <DockPanel>
-            <AdornedElementPlaceholder/>
+            <AdornedElementPlaceholder />
             <Grid Name="errorGrid" ToolTip="{Binding Path=/ErrorContent}"
                   Width="20" Height="0"
                   >

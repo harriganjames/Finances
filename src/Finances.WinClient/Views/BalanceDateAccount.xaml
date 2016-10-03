@@ -7,7 +7,7 @@
              mc:Ignorable="d"              
              xmlns:dd="clr-namespace:Finances.WinClient.DesignTimeData"
              d:DesignHeight="50" d:DesignWidth="300"
-    d:DataContext="{d:DesignInstance Type=dd:BalanceDateBankAccount,IsDesignTimeCreatable=True}"             
+            d:DataContext="{Binding Path=NextBalanceDateBankAccount, Source={x:Static dd:DesignData.BalanceDate}}"
     >
 
     <!--d:DataContext="{d:DesignInstance Type=dd:BalanceDateBankAccount,IsDesignTimeCreatable=True}"-->

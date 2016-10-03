@@ -196,6 +196,18 @@ namespace Finances.Persistence.EF
             return list;
         }
 
+        public async Task<List<Core.Entities.BalanceDate>> ReadListAsync()
+        {
+            return await Task.Factory.StartNew(() =>
+               {
+                   using (FinanceEntities context = factory.CreateContext())
+                   {
+                       var ef = ReadQuery(context).ToList();
+                       return mapper.Map<List<Core.Entities.BalanceDate>>(ef);
+                   }
+               });
+        }
+
 
         public async Task PostList(ITargetBlock<Core.Entities.BalanceDate> target)
         {

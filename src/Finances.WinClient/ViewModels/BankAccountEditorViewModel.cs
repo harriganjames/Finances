@@ -15,7 +15,7 @@ using System.Diagnostics;
 
 namespace Finances.WinClient.ViewModels
 {
-    public class BankAccountEditorViewModel : EditorViewModelBase
+    public class BankAccountEditorViewModel : ValidationViewModelBase
     {
         bool delayValidation = false; // must be false until change logic around IsValid
         ObservableCollection<BankItemViewModel> bankList;

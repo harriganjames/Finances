@@ -55,8 +55,12 @@
         <v:CashflowTableView/>
     </DataTemplate>
 
+    <!--BalanceDate-->
     <DataTemplate DataType="{x:Type vm:BalanceDateListViewModel}">
         <v:BalanceDateListView/>
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type vm:BalanceDateEditorViewModel}">
+        <v:BalanceDateEditorView/>
     </DataTemplate>
     
     <!-- Dashboard -->

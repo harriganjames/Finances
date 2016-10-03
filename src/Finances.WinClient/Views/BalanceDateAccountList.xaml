@@ -6,7 +6,7 @@
              xmlns:local="clr-namespace:Finances.WinClient.Views"
              mc:Ignorable="d" 
              xmlns:dd="clr-namespace:Finances.WinClient.DesignTimeData"
-    d:DataContext="{d:DesignInstance Type=dd:BalanceDate,IsDesignTimeCreatable=True}"             
+            d:DataContext="{Binding Path=., Source={x:Static dd:DesignData.BalanceDate}}"
              
              d:DesignHeight="100" d:DesignWidth="300">
     <Grid>

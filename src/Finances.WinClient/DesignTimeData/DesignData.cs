@@ -12,6 +12,9 @@ namespace Finances.WinClient.DesignTimeData
     {
         static DesignData()
         {
+            DataContextInheritConverter = new DataContextInheritConverter();
+
+
             Bank = new Bank()
             {
                 Name = "HABS"
@@ -25,9 +28,16 @@ namespace Finances.WinClient.DesignTimeData
 
             BankAccount = new BankAccount()
             {
-                AccountName = "Current",
+                AccountName = "Current Account",
                 Bank = Bank,
                 SortCode = "12-34-56"
+            };
+
+            BankAccount2 = new BankAccount()
+            {
+                AccountName = "Savings",
+                Bank = Bank,
+                SortCode = "00-00-00"
             };
 
             BalanceDate = new BalanceDate()
@@ -39,6 +49,11 @@ namespace Finances.WinClient.DesignTimeData
                     {
                         BankAccount = BankAccount,
                         BalanceAmount = 123
+                    },
+                    new BalanceDateBankAccount()
+                    {
+                        BankAccount = BankAccount2,
+                        BalanceAmount = 456
                     }
                 }
             };
@@ -47,9 +62,13 @@ namespace Finances.WinClient.DesignTimeData
 
         public static Bank Bank { get; set; }
         public static BankAccount BankAccount { get; set; }
+        public static BankAccount BankAccount2 { get; set; }
 
 
 
         public static BalanceDate BalanceDate { get; set; }
+
+        public static DataContextInheritConverter DataContextInheritConverter { get; set; }
+
     }
 }

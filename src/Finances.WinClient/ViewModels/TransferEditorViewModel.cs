@@ -22,7 +22,7 @@ namespace Finances.WinClient.ViewModels
         To
     }
 
-    public class TransferEditorViewModel : EditorViewModelBase
+    public class TransferEditorViewModel : ValidationViewModelBase
     {
         bool delayValidation = false; // must be false until change logic around IsValid
         ObservableCollection<BankAccountItemViewModel> bankAccounts;

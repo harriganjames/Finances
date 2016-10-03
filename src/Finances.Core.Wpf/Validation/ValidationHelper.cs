@@ -32,17 +32,27 @@ namespace Finances.Core.Wpf.Validation
             if (instance == null) { throw new ArgumentNullException("instance"); }
             this.instances.Add(instance);
         }
-        public ValidationHelper(IEnumerable<object> inst)
-        {
-            if (instances == null) { throw new ArgumentNullException("instance"); }
-            foreach (object o in inst)
-                instances.Add(inst);
-        }
+        //public ValidationHelper(IEnumerable<object> inst)
+        //{
+        //    if (instances == null) { throw new ArgumentNullException("instance"); }
+        //    foreach (object o in inst)
+        //        instances.Add(inst);
+        //}
         #endregion
 
         public void AddInstance(object instance)
         {
-            this.instances.Add(instance);
+            //removed because don't think required
+            //this.instances.Add(instance);
+
+        }
+
+        public IEnumerable<object> Instances
+        {
+            get
+            {
+                return instances;
+            }
         }
 
 

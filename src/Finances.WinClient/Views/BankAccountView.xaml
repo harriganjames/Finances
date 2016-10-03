@@ -6,10 +6,9 @@
              xmlns:local="clr-namespace:Finances.WinClient.Views"
              xmlns:dd="clr-namespace:Finances.WinClient.DesignTimeData"
              mc:Ignorable="d"
-             d:DataContext="{d:DesignInstance Type=dd:BankAccount,IsDesignTimeCreatable=True}"
-
+            d:DataContext="{Binding Path=.,Source={x:Static dd:DesignData.BankAccount}}"
     >
-
+    
     <!--d:DataContext="{Binding Path=., Source={x:Static dd:DesignData.BankAccount}}"-->
     
     <!--d:DataContext="{d:DesignInstance Type=dd:BankAccount,IsDesignTimeCreatable=True}"-->

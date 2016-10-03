@@ -11,7 +11,6 @@ namespace Finances.WinClient.DesignTimeData
         public BankAccount()
         {
             Bank = new Bank();
-            AccountName = "Current 2";
         }
 
         public Bank Bank { get; set; }

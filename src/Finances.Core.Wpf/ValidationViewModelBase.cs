@@ -13,24 +13,52 @@ using Finances.Core.Wpf.Validation;
 
 namespace Finances.Core.Wpf
 {
-    public interface IEditorViewModelBase : IViewModelBase
+    public interface IValidationViewModelBase : IViewModelBase
     {
-        IEnumerable<string> Errors { get; }
-        event EventHandler<DataErrorsChangedEventArgs> ErrorsChanged;
+        ObservableCollectionSafe<string> Errors { get; }
+        //event EventHandler<DataErrorsChangedEventArgs> ErrorsChanged;
         bool IsValid { get; set; }
         void NotifyPropertyChangedAndValidate(Expression<Func<object>> propertyExpression);
         void NotifyPropertyChangedAndValidate(string propertyName = "");
+        void Validate();
+        event EventHandler ValidationComplete;
     }
 
-    public abstract class EditorViewModelBase : ViewModelBase, INotifyDataErrorInfo, IEditorViewModelBase
+    public abstract class ValidationViewModelBase : ViewModelBase, INotifyDataErrorInfo, IValidationViewModelBase
     {
         bool _isValid;
         ValidationHelper _validationHelper;
+        private readonly List<IValidationViewModelBase> instances = new List<IValidationViewModelBase>();
 
-        public EditorViewModelBase()
+        public ValidationViewModelBase()
         {
             _validationHelper = new ValidationHelper(this);
 
+        }
+
+        // add child instances
+        public void AddValidationInstance(IValidationViewModelBase instance)
+        {
+            instances.Add(instance);
+            instance.ValidationComplete += ValidationInstance_ValidationComplete;
+        }
+
+        private void ValidationInstance_ValidationComplete(object sender, EventArgs e)
+        {
+            // when an instance has completed validation, validate this only
+            ValidateThis();
+        }
+
+
+        public event EventHandler ValidationComplete;
+
+        protected void OnValidationComplete()
+        {
+
+            if (ValidationComplete != null)
+            {
+                ValidationComplete(this, new EventArgs());
+            }
         }
 
 
@@ -67,38 +95,67 @@ namespace Finances.Core.Wpf
                 {
                     _isValid = value;
                     NotifyPropertyChanged();
-                    //NotifyPropertyChanged(() => this.Errors);
                 }
             }
         }
 
 
+        ObservableCollectionSafe<string> errors = new ObservableCollectionSafe<string>();
+        void UpdateErrors()
+        {
+            //Debug.WriteLine("UpdateErrors start {0}", (object)this.GetType().Name);
+            errors.Clear();
+            foreach (var inst in instances)
+            {
+                errors.AddRange(inst.Errors);
+            }
+            errors.AddRange(_validationHelper.Errors);
+
+            this.IsValid = errors.Count() == 0;
+
+            base.RefreshCommands();
+            //Debug.WriteLine("UpdateErrors end {0}, errors={1}", (object)this.GetType().Name, errors.Count());
+        }
 
         // returns a list of all validation errors
-        public IEnumerable<string> Errors
+        //public IEnumerable<string> Errors
+        public ObservableCollectionSafe<string> Errors
         {
             get
             {
-                //Debug.WriteLine("Errors - qty={0}", _validationHelper.Errors.Count());
+                Debug.WriteLine("Errors read - qty={0}", errors.Count());
 
-                return _validationHelper.Errors;
+                return errors;
             }
         }
 
-        protected void Validate()
+        public void Validate()
         {
-            //Debug.WriteLine("Validate(base) - start");
-            _validationHelper.Enabled = true;
-            _validationHelper.Validate();   // attribute validation
-            this.ValidateData();            // custom validation
-            base.RefreshCommands();
-            this.IsValid = _validationHelper.Errors.Count() == 0;
-            NotifyPropertyChanged(() => this.Errors);
-            //Debug.WriteLine("Validate(base) - end");
+            if (!_validationHelper.Enabled) return;
 
+            //Debug.WriteLine("Validate(base) - start");
+            //iterate instances and call their Validate() method
+            foreach (var inst in instances)
+            {
+                inst.Validate();
+            }
+
+            ValidateThis();
+
+            //Debug.WriteLine("Validate(base) - end");
+            OnValidationComplete();
             return;
         }
 
+        void ValidateThis()
+        {
+            _validationHelper.Enabled = true;
+            _validationHelper.Validate();   // attribute validation
+
+            this.ValidateData();            // custom validation
+            //base.RefreshCommands();
+            UpdateErrors();
+        }
 
         protected virtual void ValidateData()
         {

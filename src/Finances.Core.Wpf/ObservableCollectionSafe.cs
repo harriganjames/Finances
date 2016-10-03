@@ -83,5 +83,13 @@ namespace Finances.Core.Wpf
         //    base.OnPropertyChanged((PropertyChangedEventArgs)param);
         //}
 
+        public void AddRange(IEnumerable<T> list)
+        {
+            foreach (var item in list)
+            {
+                base.Add(item);
+            }
+        }
+
     }
 }

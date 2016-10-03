@@ -19,12 +19,12 @@
     <!--Global Styles-->
     
     <Style TargetType="{x:Type Control}">
-        <Setter Property="BorderThickness" Value="2"/>
-
+        <Setter Property="BorderThickness" Value="1"/>
 
         <Style.Triggers>
             <Trigger Property="IsKeyboardFocusWithin" Value="true">
                 <Setter Property="BorderBrush" Value="#FF6BA5C8" />
+                <Setter Property="BorderThickness" Value="2"/>
             </Trigger>
         </Style.Triggers>
 

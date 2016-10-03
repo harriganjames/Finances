@@ -15,6 +15,7 @@
              xmlns:conv="clr-namespace:Finances.Core.Wpf.Converters;assembly=Finances.Core.Wpf"
              xmlns:libctl="clr-namespace:Finances.Core.Wpf.Controls;assembly=Finances.Core.Wpf"
              xmlns:libattach="clr-namespace:Finances.Core.Wpf.AttachedProperties;assembly=Finances.Core.Wpf"
+             xmlns:action="clr-namespace:Finances.Core.Wpf.Actions;assembly=Finances.Core.Wpf"
              mc:Ignorable="d"
              x:Name="apex"
              d:DataContext="{d:DesignData Source=/DesignTimeData/TransferList.xaml}"
@@ -40,6 +41,15 @@
                         <Button Content="Add" Command="{Binding AddCommand}"/>
                         <Button Content="Edit" Command="{Binding EditCommand}"/>
                         <Button Content="Delete" Command="{Binding DeleteCommand}"/>
+                        <Button Content="Widths">
+                            <i:Interaction.Triggers>
+                                <i:EventTrigger EventName="Click">
+                                    <action:SetPropertyTriggerAction TargetObject="{Binding ElementName=Items}"
+                                                                     PropertyName="AdjustColumnWidthsSignal"
+                                                                     PropertyValue="true"/>
+                                </i:EventTrigger>
+                            </i:Interaction.Triggers>
+                        </Button>
                     </ToolBarPanel>
                     <ToolBarPanel Orientation="Horizontal">
                         <Button Content="Reload" Command="{Binding ReloadCommand}"/>
@@ -51,6 +61,7 @@
                                        SelectionMode="Extended"
                                        ColumnWidthStore="{Binding ViewData[ListViewColumnWidths], Mode=TwoWay}"
                                        libattach:ListViewDoubleClickBehavior.DoubleClickCommand="{Binding EditCommand}"
+                                       AdjustColumnWidthsSignal="{Binding AdjustColumnWidthsSignal}"
                                        >
                     <libctl:ListViewScroll.InputBindings>
                         <KeyBinding Gesture="Return" Command="{Binding EditCommand}"/>
@@ -84,6 +95,9 @@
                                 </GridViewColumn.CellTemplate>
                             </GridViewColumn>
 
+                            <GridViewColumn Header="Total" DisplayMemberBinding="{Binding BalanceAmountTotal, StringFormat={}{0:c}}">
+                                
+                            </GridViewColumn>
 
                         </GridView>
                     </ListView.View>

@@ -127,5 +127,45 @@ namespace Finances.Core.Wpf.Controls
             DependencyProperty.Register("ColumnWidthStore", typeof(object), typeof(ListViewColumnWidths), new PropertyMetadata(null));
 
 
+
+        //
+
+
+
+        public bool AdjustColumnWidthsSignal
+        {
+            get { return (bool)GetValue(AdjustColumnWidthsSignalProperty); }
+            set { SetValue(AdjustColumnWidthsSignalProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for AdjustColumnWidths.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty AdjustColumnWidthsSignalProperty =
+            DependencyProperty.Register("AdjustColumnWidthsSignal", typeof(bool), typeof(ListViewColumnWidths), new FrameworkPropertyMetadata(false,FrameworkPropertyMetadataOptions.BindsTwoWayByDefault,AdjustColumnWidthsSignalChanged));
+
+        private static void AdjustColumnWidthsSignalChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            var view = d as ListViewColumnWidths;
+            if (view.AdjustColumnWidthsSignal)
+            {
+                view.AdjustAllColumnsWidths(view);
+                view.AdjustColumnWidthsSignal = false;
+            }
+        }
+
+        private void AdjustAllColumnsWidths(ListView lv)
+        {
+            var v = lv.View as GridView;
+            if (v != null && v.Columns != null)
+            {
+                foreach (var col in v.Columns)
+                {
+                    col.Width = 1;
+                    col.Width = Double.NaN;
+                }
+            }
+        }
+
+
+
     }
 }

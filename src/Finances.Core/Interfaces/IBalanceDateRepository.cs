@@ -14,6 +14,7 @@ namespace Finances.Core.Interfaces
         BalanceDate Read(int dataId);
         Task PostList(ITargetBlock<Core.Entities.BalanceDate> target);
         List<BalanceDate> ReadList();
+        Task<List<Core.Entities.BalanceDate>> ReadListAsync();
         List<DataIdName> ReadListDataIdName();
     }
 }

@@ -14,7 +14,7 @@ using Finances.WinClient.DomainServices;
 
 namespace Finances.WinClient.ViewModels
 {
-    public class BankEditorViewModel : EditorViewModelBase
+    public class BankEditorViewModel : ValidationViewModelBase
     {
         bool delayValidation = false; // must be false until change logic around IsValid
         List<DataIdName> existingBanks;

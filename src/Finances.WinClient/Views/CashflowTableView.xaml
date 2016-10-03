@@ -34,12 +34,21 @@
                     <ComboBox ItemsSource="{Binding Cashflows}"
                               SelectedItem="{Binding SelectedCashflow}"
                               MinWidth="120"/>
-
-                    <TextBlock  Text="Start Date:"
+                    
+                    <TextBlock  Text="Balance Date:"
                                 Padding="5,0"
                                 VerticalAlignment="Center"
                                 />
-                    <DatePicker SelectedDate="{Binding StartDate, UpdateSourceTrigger=LostFocus}"/>
+                    <ComboBox ItemsSource="{Binding BalanceDates}"
+                              SelectedItem="{Binding SelectedBalanceDate}"
+                              MinWidth="120"/>
+
+                    <TextBlock Text="Balance:"
+                               Padding="5,0"
+                               VerticalAlignment="Center"/>
+                    <TextBox Text="{Binding OpeningBalance.Input, UpdateSourceTrigger=LostFocus}"
+                             Width="80"
+                             IsEnabled="False"/>
 
                     <TextBlock Text="Months:"
                                Padding="5,0"
@@ -47,11 +56,6 @@
                     <TextBox Text="{Binding QtyMonths.Input, UpdateSourceTrigger=LostFocus}"
                              Width="30"
                              VerticalContentAlignment="Center"/>
-                    <TextBlock Text="Opening Balance:"
-                               Padding="5,0"
-                               VerticalAlignment="Center"/>
-                    <TextBox Text="{Binding OpeningBalance.Input, UpdateSourceTrigger=LostFocus}"
-                             Width="80"/>
                     <TextBlock Text="Threshold:"
                                Padding="5,0"
                                VerticalAlignment="Center"/>
@@ -62,7 +66,7 @@
                               SelectedItem="{Binding SelectedMode}"
                               MinWidth="130"/>-->
                     <Label Width="5"/>
-                    <Button Content="Refresh" Command="{Binding RefreshCommand}"
+                    <Button Content="Reload" Command="{Binding ReloadCommand}"
                             />
                 </StackPanel>
             </Grid>
@@ -73,6 +77,7 @@
                                    SelectionMode="Extended"
                                    SelectedItem="{Binding SelectedCashflowProjectionItem}"
                                    libattach:ListViewDoubleClickBehavior.DoubleClickCommand="{Binding ToggleModeCommand}"
+                                   AdjustColumnWidthsSignal="{Binding AdjustColumnWidthsSignal}"
                                    >
 
                 <!--ColumnWidthStore="{Binding ViewData[ListViewColumnWidths], Mode=TwoWay}"-->

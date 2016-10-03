@@ -28,26 +28,29 @@ namespace Finances.WinClient.ViewModels
     {
         readonly ICashflowRepository cashflowRepository;
         readonly IEnumerable<ICashflowProjectionMode> aggregatedProjectionItemsGenerators;
+        readonly IBalanceDateRepository balanceDateRepository;
 
         ObservableCollectionSafe<CashflowProjectionItem> cashflowProjectionItems;
 
         CashflowProjectionGroup cashflowProjectionGroup;
 
         public CashflowTableViewModel(ICashflowRepository cashflowRepository,
-                                        IEnumerable<ICashflowProjectionMode> aggregatedProjectionItemsGenerators
+                                        IEnumerable<ICashflowProjectionMode> aggregatedProjectionItemsGenerators,
+                                        IBalanceDateRepository balanceDateRepository
                                         )
         {
             this.cashflowRepository = cashflowRepository;
             this.aggregatedProjectionItemsGenerators = aggregatedProjectionItemsGenerators;
+            this.balanceDateRepository = balanceDateRepository;
 
-            RefreshCommand = base.AddNewCommand(new ActionCommand(Refresh));
+            ReloadCommand = base.AddNewCommand(new ActionCommand(Reload));
             ToggleModeCommand = base.AddNewCommand(new ActionCommand(ToggleMode));
         }
 
 
         #region Commmands
 
-        public ActionCommand RefreshCommand { get; set; }
+        public ActionCommand ReloadCommand { get; set; }
         public ActionCommand ToggleModeCommand { get; set; }
 
         #endregion
@@ -55,7 +58,9 @@ namespace Finances.WinClient.ViewModels
 
         public override void WorkspaceOpened()
         {
-            LoadData();
+            Reload();
+            //LoadReferenceDataAsync();
+            //GenerateProjectionAsync();
         }
 
         public override void WorkspaceClosed()
@@ -88,7 +93,33 @@ namespace Finances.WinClient.ViewModels
                     selectedCashflow = value;
                     OpeningBalance.Value = selectedCashflow==null ? 0M : selectedCashflow.OpeningBalance;
                     //NotifyPropertyChanged(() => this.SelectedCashflow);
-                    GenerateProjection();
+                    SelectedCashflowChanged();
+                }
+            }
+        }
+
+
+        ObservableCollectionSafe<BalanceDateItemViewModel> balanceDates;
+        public ObservableCollectionSafe<BalanceDateItemViewModel> BalanceDates
+        {
+            get
+            {
+                if (this.balanceDates == null)
+                    this.balanceDates = new ObservableCollectionSafe<BalanceDateItemViewModel>();
+                return this.balanceDates;
+            }
+        }
+
+        BalanceDateItemViewModel selectedBalanceDate;
+        public BalanceDateItemViewModel SelectedBalanceDate
+        {
+            get { return selectedBalanceDate; }
+            set
+            {
+                if (selectedBalanceDate != value)
+                {
+                    selectedBalanceDate = value;
+                    SelectedBalanceDateChanged();
                 }
             }
         }
@@ -120,7 +151,7 @@ namespace Finances.WinClient.ViewModels
                         FormatString = "n0",
                         Mandatory = true,
                         AllowInvalid = false,
-                        Value = 6
+                        Value = 15
                     };
                 }
                 return qtyMonths;
@@ -233,66 +264,196 @@ namespace Finances.WinClient.ViewModels
             }
         }
 
-
-        #endregion
-
-
-        #region LoadData
-
-        private void LoadData()
+        bool adjustColumnWidthsSignal;
+        public bool AdjustColumnWidthsSignal
         {
-            base.IsBusy = true;
-
-            Task<List<Cashflow>>.Factory
-                .StartNew(() => RetrieveCashflowsTask())
-                .ContinueWith(t => PopulateCashflowsTask(t.Result), base.UIScheduler)
-                //.ContinueWith(t => GenerateProjection())
-                .ContinueWith(t => base.IsBusy = false);
-
-        }
-
-
-        private List<Cashflow> RetrieveCashflowsTask()
-        {
-            return cashflowRepository.ReadList();
-        }
-
-        private void PopulateCashflowsTask(List<Cashflow> data)
-        {
-            int prevId = 0;
-            if (SelectedCashflow != null)
-                prevId = SelectedCashflow.CashflowId;
-
-            Cashflows.Clear();
-            SelectedCashflow = null;
-            if (data != null)
+            get
             {
-                data.ForEach(d => Cashflows.Add(new CashflowItemViewModel(d)));
-                if (Cashflows.Count > 0)
-                {
-                    SelectedCashflow = prevId == 0 ? Cashflows[0] : Cashflows.FirstOrDefault(c => c.CashflowId == prevId);
-                    NotifyPropertyChanged(() => this.SelectedCashflow);
-                }
+                return adjustColumnWidthsSignal;
+            }
+            set
+            {
+                adjustColumnWidthsSignal = value;
+                NotifyPropertyChanged();
+            }
+        }
+
+        bool isOpeningBalanceAvailable;
+        public bool IsOpeningBalanceAvailable
+        {
+            get
+            {
+                return isOpeningBalanceAvailable;
+            }
+
+            set
+            {
+                isOpeningBalanceAvailable = value;
+                NotifyPropertyChanged();
             }
         }
 
         #endregion
 
 
-        private void Refresh()
+        bool isLoading = false;
+
+        #region LoadRefernceData
+
+        private async Task LoadReferenceDataAsync()
         {
-            GenerateProjection();
+            base.IsBusy = true;
+
+            isLoading = true;
+
+            //await Task<List<Cashflow>>.Factory
+            //    .StartNew(() => RetrieveCashflowsTask())
+            //    .ContinueWith(t => PopulateCashflowsTask(t.Result), base.UIScheduler);
+
+            await PopulateCashflowsAsync();
+
+            await PopulateBalanceDatesAsync();
+
+            isLoading = false;
+
+            base.IsBusy = false;
+        }
+
+        private async Task PopulateCashflowsAsync()
+        {
+            var cs = cashflowRepository.ReadList();
+
+            this.SelectedCashflow = await PopulateListAsync(cs, Cashflows, SelectedCashflow, (d) => new CashflowItemViewModel(d));
+
+            NotifyPropertyChanged(()=>this.SelectedCashflow);
+        }
+
+        private async Task PopulateBalanceDatesAsync()
+        {
+            var bds = await balanceDateRepository.ReadListAsync();
+
+            this.SelectedBalanceDate = await PopulateListAsync(bds, BalanceDates, SelectedBalanceDate, (d) => new BalanceDateItemViewModel(d));
+            NotifyPropertyChanged(() => this.SelectedBalanceDate);
+
+        }
+
+        private async Task<TViewModel> PopulateListAsync<TViewModel,TData>(List<TData> data, IList<TViewModel> list, TViewModel selected, Func<TData,TViewModel> factory) where TViewModel : ItemViewModelBase
+        {
+            return await Task.Factory.StartNew(() =>
+            {
+                TViewModel rv = selected;
+                int prevId = 0;
+                if (selected != null)
+                    prevId = selected.Id;
+
+                list.Clear();
+                if (data != null)
+                {
+                    data.ForEach(d => list.Add(factory(d)));
+                    if (list.Count > 0)
+                    {
+                        rv = prevId == 0 ? list[0] : list.FirstOrDefault(c => c.Id == prevId);
+                    }
+                }
+                return rv;
+            });
         }
 
 
 
-        private async void GenerateProjection()
+
+        //private List<Cashflow> RetrieveCashflowsTask()
+        //{
+        //    return cashflowRepository.ReadList();
+        //}
+
+        //private void PopulateCashflowsTask(List<Cashflow> data)
+        //{
+        //    int prevId = 0;
+        //    if (SelectedCashflow != null)
+        //        prevId = SelectedCashflow.CashflowId;
+
+        //    Cashflows.Clear();
+        //    SelectedCashflow = null;
+        //    if (data != null)
+        //    {
+        //        data.Where(i=>i.CashflowBankAccounts.Count>0).ToList().ForEach(d => Cashflows.Add(new CashflowItemViewModel(d)));
+        //        if (Cashflows.Count > 0)
+        //        {
+        //            SelectedCashflow = prevId == 0 ? Cashflows[0] : Cashflows.FirstOrDefault(c => c.CashflowId == prevId);
+        //            NotifyPropertyChanged(() => this.SelectedCashflow);
+        //        }
+        //    }
+
+        //}
+
+        #endregion
+
+
+        private async void Reload()
         {
+            await LoadReferenceDataAsync();
+            await GenerateProjectionAsync();
+        }
+
+        private async void SelectedBalanceDateChanged()
+        {
+            CalculateOpeningBalance();
+            await GenerateProjectionAsync();
+        }
+
+        private async void SelectedCashflowChanged()
+        {
+            CalculateOpeningBalance();
+            await GenerateProjectionAsync();
+        }
+
+        private void CalculateOpeningBalance()
+        {
+            this.IsOpeningBalanceAvailable = false;
+
+            if (SelectedCashflow == null || SelectedBalanceDate == null)
+                return;
+
+            decimal openingBalance = 0;
+            int missing = 0;
+            foreach (var ba in SelectedCashflow.Entity.CashflowBankAccounts)
+            {
+                var bda = SelectedBalanceDate.Entity.BalanceDateBankAccounts.FirstOrDefault(b => b.BankAccount.BankAccountId == ba.BankAccount.BankAccountId);
+                if (bda != null)
+                    openingBalance += bda.BalanceAmount;
+                else
+                    missing++;
+            }
+
+            if (missing == 0)
+            {
+                OpeningBalance.Value = openingBalance;
+                IsOpeningBalanceAvailable = true;
+            }
+        }
+
+        private async Task GenerateProjectionAsync()
+        {
+            if (isLoading)
+                return;
+
+            if (SelectedCashflow == null || SelectedBalanceDate == null)
+                return;
+
+            if(!IsOpeningBalanceAvailable)
+            {
+                CashflowProjectionItems.Clear();
+                return;
+            }
+
             base.IsBusy = true;
 
             await RetreiveCashflowProjectionGroupAsync();
 
             await PopulateProjectionsFromGroupAsync();
+
+            AdjustColumnWidthsSignal = true;
 
             base.IsBusy = false;
         }
@@ -302,21 +463,14 @@ namespace Finances.WinClient.ViewModels
         private async Task RetreiveCashflowProjectionGroupAsync()
         {
             this.cashflowProjectionGroup = await SelectedCashflow.Entity.GenerateProjectionAsync(
-                                    StartDate.Value,
+                                    SelectedBalanceDate.DateOfBalance.AddDays(1),
                                     Convert.ToInt32(QtyMonths.Value),
                                     OpeningBalance.Value,
                                     Threshold.Value
                                     );
-
-            //await Task.Factory.StartNew(() => {
-            //    this.cashflowProjectionGroup = SelectedCashflow.Entity.GenerateProjectionAsync(
-            //                            StartDate.Value,
-            //                            Convert.ToInt32(QtyMonths.Value),
-            //                            OpeningBalance.Value,
-            //                            Threshold.Value
-            //                            );
-            //});
         }
+
+
 
         private async Task PopulateProjectionsFromGroupAsync()
         {
@@ -371,6 +525,7 @@ namespace Finances.WinClient.ViewModels
                     SelectedCashflowProjectionItem = item;
             }
 
+            AdjustColumnWidthsSignal = true;
         }
 
 

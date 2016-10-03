@@ -1,8 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace Finances.Core.Entities
 {
-    public class BankAccount
+    public class BankAccount : IEqualityComparer<BankAccount>
     {
         public BankAccount()
         {
@@ -29,6 +30,17 @@ namespace Finances.Core.Entities
         public virtual System.DateTime RecordUpdatedDateTime { get; set; }
 
         public virtual Bank Bank { get; set; }
+
+        public bool Equals(BankAccount x, BankAccount y)
+        {
+            return x.BankAccountId == y.BankAccountId;
+        }
+
+        public int GetHashCode(BankAccount obj)
+        {
+            return obj.GetHashCode();
+        }
+
 
     }
 }

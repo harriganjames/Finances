@@ -55,6 +55,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ActionCommand.cs" />
+    <Compile Include="Actions\SetPropertyTriggerAction.cs" />
     <Compile Include="AttachedProperties\ListViewDoubleClickCommandBahavior.cs" />
     <Compile Include="AttachedProperties\TabItemGeneratorBehavior.cs" />
     <Compile Include="AttachedProperties\TreeViewItemExpandedBehavor.cs" />
@@ -64,6 +65,7 @@
       <DependentUpon>ContainerWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\DataContextSpy.cs" />
+    <Compile Include="Controls\DecimalTextBox.cs" />
     <Compile Include="Controls\ListViewColumnWidths.cs" />
     <Compile Include="Controls\ListViewMouseDoubleClick.cs" />
     <Compile Include="Controls\ListViewScroll.cs" />
@@ -88,7 +90,7 @@
       <DependentUpon>DialogContainer.xaml</DependentUpon>
     </Compile>
     <Compile Include="DialogService.cs" />
-    <Compile Include="EditorViewModelBase.cs" />
+    <Compile Include="ValidationViewModelBase.cs" />
     <Compile Include="ItemViewModelBase.cs" />
     <Compile Include="ListView.cs" />
     <Compile Include="ListViewModelBase.cs" />
@@ -146,6 +148,7 @@
   <ItemGroup>
     <None Include="ClassDiagram1.cd" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

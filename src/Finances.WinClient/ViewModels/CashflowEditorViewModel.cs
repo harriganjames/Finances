@@ -16,7 +16,7 @@ using Finances.WinClient.Factories;
 namespace Finances.WinClient.ViewModels
 {
 
-    public class CashflowEditorViewModel : EditorViewModelBase
+    public class CashflowEditorViewModel : ValidationViewModelBase
     {
         bool delayValidation = false; // must be false until change logic around IsValid
         ObservableCollection<BankAccountItemViewModel> bankAccounts;

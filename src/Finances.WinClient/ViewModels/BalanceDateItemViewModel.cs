@@ -44,6 +44,13 @@ namespace Finances.WinClient.ViewModels
             get { return entity.DateOfBalance; }
         }
 
+        public override int Id
+        {
+            get
+            {
+                return entity.BalanceDateId;
+            }
+        }
 
         ObservableCollection<BalanceDateBankAccountItemViewModel> balanceDateBankAccounts;
         public ObservableCollection<BalanceDateBankAccountItemViewModel> BalanceDateBankAccounts
@@ -62,6 +69,19 @@ namespace Finances.WinClient.ViewModels
             }
         }
 
+
+        public decimal BalanceAmountTotal
+        {
+            get
+            {
+                return entity.BalanceDateBankAccounts.Sum(ba => ba.BalanceAmount);
+            }
+        }
+
+        public override string ToString()
+        {
+            return DateOfBalance.ToString("yyyy-MM-dd");
+        }
 
     }
 }

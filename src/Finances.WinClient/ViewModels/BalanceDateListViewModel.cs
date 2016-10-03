@@ -63,6 +63,21 @@ namespace Finances.WinClient.ViewModels
             }
         }
 
+        bool adjustColumnWidthsSignal;
+        public bool AdjustColumnWidthsSignal
+        {
+            get
+            {
+                return adjustColumnWidthsSignal;
+            }
+            set
+            {
+                adjustColumnWidthsSignal = value;
+                NotifyPropertyChanged();
+            }
+        }
+
+
         #endregion
 
 
@@ -120,6 +135,9 @@ namespace Finances.WinClient.ViewModels
             Diag.ThreadPrint("Load - after target completion. qty={0}", balanceDates.Count);
 
             base.IsBusy = false;
+
+            AdjustColumnWidthsSignal = true;
+
             Diag.ThreadPrint("Load end");
         }
 
