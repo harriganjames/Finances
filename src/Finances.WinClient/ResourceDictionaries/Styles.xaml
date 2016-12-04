@@ -1,0 +1,196 @@
+﻿<ResourceDictionary 
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:s="clr-namespace:System;assembly=mscorlib"
+        >
+
+    <Style TargetType="{x:Type ComboBox}" BasedOn="{StaticResource {x:Type ComboBox}}">
+        <Setter Property="Background" Value="{StaticResource AppFeintBrush}" />
+        <Setter Property="HorizontalAlignment" Value="Left" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
+        <Setter Property="Validation.ErrorTemplate" Value="{StaticResource validationTemplate}" />
+        <Style.Triggers>
+            <Trigger Property="IsKeyboardFocusWithin" Value="true">
+                <Setter Property="BorderBrush" Value="{StaticResource AppDarkBrush}" />
+                <Setter Property="BorderThickness" Value="2"/>
+                <Setter Property="Background" Value="{StaticResource AppHighlightFocusBrush}" />
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
+
+    <Style x:Key="AppInputStyle" TargetType="{x:Type Control}">
+        <Setter Property="BorderThickness" Value="1"/>
+        <Setter Property="Background" Value="{StaticResource AppFeintBrush}" />
+        <Setter Property="Border.CornerRadius" Value="3"/>
+        <Setter Property="VerticalContentAlignment" Value="Center"/>
+
+        <Style.Triggers>
+            <Trigger Property="IsKeyboardFocusWithin" Value="true">
+                <Setter Property="BorderBrush" Value="{StaticResource AppDarkBrush}" />
+                <Setter Property="BorderThickness" Value="2"/>
+                <Setter Property="Background" Value="{StaticResource AppHighlightFocusBrush}" />
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
+    <Style TargetType="{x:Type PasswordBox}" BasedOn="{StaticResource AppInputStyle}"/>
+
+    <Style TargetType="{x:Type TextBox}" BasedOn="{StaticResource AppInputStyle}">
+        <Setter Property="Border.CornerRadius" Value="1"/>
+        <Setter Property="HorizontalAlignment" Value="Left"/>
+        <Setter Property="Validation.ErrorTemplate" Value="{StaticResource validationTemplate}" />
+        <Setter Property="Control.Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="TextBoxBase">
+                    <Border CornerRadius="{TemplateBinding Border.CornerRadius}" BorderThickness="{TemplateBinding Border.BorderThickness}" BorderBrush="{TemplateBinding Border.BorderBrush}" Background="{TemplateBinding Panel.Background}" Name="border" SnapsToDevicePixels="True">
+                        <ScrollViewer HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Hidden" Name="PART_ContentHost" Focusable="False" />
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="UIElement.IsEnabled">
+                            <Setter Property="UIElement.Opacity" TargetName="border">
+                                <Setter.Value>
+                                    <s:Double>0.56</s:Double>
+                                </Setter.Value>
+                            </Setter>
+                            <Trigger.Value>
+                                <s:Boolean>False</s:Boolean>
+                            </Trigger.Value>
+                        </Trigger>
+                        <Trigger Property="UIElement.IsMouseOver">
+                            <Setter Property="Border.BorderBrush" TargetName="border">
+                                <Setter.Value>
+                                    <SolidColorBrush>#FF7EB4EA</SolidColorBrush>
+                                </Setter.Value>
+                            </Setter>
+                            <Trigger.Value>
+                                <s:Boolean>True</s:Boolean>
+                            </Trigger.Value>
+                        </Trigger>
+                        <Trigger Property="UIElement.IsKeyboardFocused">
+                            <Setter Property="Border.BorderBrush" TargetName="border">
+                                <Setter.Value>
+                                    <SolidColorBrush>#FF569DE5</SolidColorBrush>
+                                </Setter.Value>
+                            </Setter>
+                            <Trigger.Value>
+                                <s:Boolean>True</s:Boolean>
+                            </Trigger.Value>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+
+    <Style TargetType="{x:Type Button}">
+        <Style.Resources>
+            <CornerRadius x:Key="ButtonCornerRadius" BottomLeft="3" BottomRight="3" TopLeft="3" TopRight="3"/>
+
+            <SolidColorBrush x:Key="ButtonBaseBrush" Color="{StaticResource AppPaleLightColor}"></SolidColorBrush>
+            <SolidColorBrush x:Key="ButtonMouseOverBrush" Color="{StaticResource AppLightMediumColor}"></SolidColorBrush>
+            <SolidColorBrush x:Key="ButtonPressedBrush" Color="{StaticResource AppMediumDarkColor}"></SolidColorBrush>
+
+            <SolidColorBrush x:Key="ButtonBorderBrush" Color="#999"/>
+            <SolidColorBrush x:Key="ButtonMouseOverBorderBrush" Color="#666"/>
+
+            <Storyboard x:Key="MouseLeaveStoryboard">
+                <DoubleAnimation BeginTime="00:00:00" Storyboard.TargetName="MouseOverRectangle" Duration="00:00:00.250" From="1" To="0" Storyboard.TargetProperty="Opacity"></DoubleAnimation>
+            </Storyboard>
+            <Storyboard x:Key="MouseEnterStoryboard">
+                <DoubleAnimation BeginTime="00:00:00" Storyboard.TargetName="MouseOverRectangle" Duration="00:00:00.250" From="0" To="1" Storyboard.TargetProperty="Opacity">
+                </DoubleAnimation>
+            </Storyboard>
+        </Style.Resources>
+
+        <Setter Property="OverridesDefaultStyle" Value="True" />
+        <Setter Property="SnapsToDevicePixels" Value="True" />
+        <Setter Property="Foreground" Value="White" />
+        <Setter Property="Control.HorizontalContentAlignment" Value="Center" />
+        <Setter Property="Control.VerticalContentAlignment" Value="Center" />
+        <Setter Property="Control.Padding" Value="10,3" />
+        <Setter Property="FrameworkElement.FocusVisualStyle">
+            <Setter.Value>
+                <Style TargetType="IFrameworkInputElement">
+                    <Style.Resources>
+                        <ResourceDictionary />
+                    </Style.Resources>
+                    <Setter Property="Control.Template">
+                        <Setter.Value>
+                            <ControlTemplate>
+                                <Rectangle Stroke="{StaticResource AppFeintBrush}" StrokeThickness="1" StrokeDashArray="1 2" Margin="3,3,3,3" SnapsToDevicePixels="True" />
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                </Style>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate x:Name="tmpltButton">
+                    <Grid>
+                        <Border x:Name="BaseRectangle" 
+                                    Background="{StaticResource ButtonBaseBrush}" 
+                                    CornerRadius="{StaticResource ButtonCornerRadius}">
+                        </Border>
+                        <Border x:Name="MouseOverRectangle" 
+                                    Background="{StaticResource ButtonMouseOverBrush}" 
+                                    CornerRadius="{StaticResource ButtonCornerRadius}" 
+                                    Opacity="0">
+                        </Border>
+                        <Border x:Name="PressedRectangle" 
+                                    Background="{StaticResource ButtonPressedBrush}" 
+                                    CornerRadius="{StaticResource ButtonCornerRadius}" 
+                                    Opacity="0">
+                        </Border>
+                        <Border x:Name="ButtonBorder"
+                                    CornerRadius="{StaticResource ButtonCornerRadius}"
+                                    BorderBrush="{StaticResource ButtonBorderBrush}" 
+                                    BorderThickness="1">
+                            <ContentPresenter x:Name="ButtonContent" 
+                                              RecognizesAccessKey="True" 
+								                              Content="{TemplateBinding ContentControl.Content}" 
+                              								ContentTemplate="{TemplateBinding ContentControl.ContentTemplate}" 
+                              								ContentStringFormat="{TemplateBinding ContentControl.ContentStringFormat}" 
+                              								HorizontalAlignment="{TemplateBinding Control.HorizontalContentAlignment}" 
+                              								VerticalAlignment="{TemplateBinding Control.VerticalContentAlignment}" 
+                              								SnapsToDevicePixels="{TemplateBinding UIElement.SnapsToDevicePixels}" 
+                                              Margin="{TemplateBinding Control.Padding}"
+                                              />
+                        </Border>
+                    </Grid>
+                    <ControlTemplate.Triggers>
+                        <EventTrigger RoutedEvent="Button.MouseLeave">
+                            <EventTrigger.Actions>
+                                <BeginStoryboard Storyboard="{StaticResource MouseLeaveStoryboard}"></BeginStoryboard>
+                            </EventTrigger.Actions>
+                        </EventTrigger>
+                        <EventTrigger RoutedEvent="Button.MouseEnter">
+                            <EventTrigger.Actions>
+                                <BeginStoryboard Storyboard="{StaticResource MouseEnterStoryboard}"></BeginStoryboard>
+                            </EventTrigger.Actions>
+                        </EventTrigger>
+
+                        <Trigger Property="Button.IsMouseOver" Value="True">
+                            <Setter Property="BorderBrush" TargetName="ButtonBorder" Value="{StaticResource ButtonMouseOverBorderBrush}"></Setter>
+                        </Trigger>
+
+                        <Trigger Property="Button.IsPressed" Value="True">
+                            <Setter Property="Opacity" TargetName="PressedRectangle" Value="1"></Setter>
+                        </Trigger>
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter Property="Opacity" TargetName="ButtonContent" Value=".3"></Setter>
+                            <Setter Property="Opacity" TargetName="ButtonBorder" Value=".5"></Setter>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+
+
+</ResourceDictionary>
+    
+    

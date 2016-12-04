@@ -48,12 +48,12 @@
                 <Setter Property="VerticalContentAlignment" Value="Center" />
                 <Setter Property="Height" Value="25" />
             </Style>
-            <Style TargetType="TextBox" BasedOn="{StaticResource {x:Type Control}}" >
+            <Style TargetType="TextBox" BasedOn="{StaticResource {x:Type TextBox}}" >
                 <Setter Property="Background" Value="Beige" />
                 <Setter Property="HorizontalAlignment" Value="Left" />
                 <Setter Property="Validation.ErrorTemplate" Value="{StaticResource validationTemplate}" />
             </Style>
-            <Style TargetType="ComboBox" BasedOn="{StaticResource {x:Type Control}}">
+            <Style TargetType="ComboBox" BasedOn="{StaticResource {x:Type ComboBox}}">
                 <Setter Property="Background" Value="Beige" />
                 <Setter Property="Height" Value="25" />
                 <Setter Property="Width" Value="350" />
@@ -68,7 +68,7 @@
                 <Setter Property="VerticalContentAlignment" Value="Center" />
                 <Setter Property="Validation.ErrorTemplate" Value="{StaticResource validationTemplate}" />
             </Style>
-            <Style TargetType="libctl:DecimalTextBox" BasedOn="{StaticResource {x:Type Control}}" >
+            <Style TargetType="libctl:DecimalTextBox" BasedOn="{StaticResource {x:Type TextBox}}" >
                 <Setter Property="Validation.ErrorTemplate" Value="{StaticResource validationTemplate}" />
             </Style>
         </Grid.Resources>

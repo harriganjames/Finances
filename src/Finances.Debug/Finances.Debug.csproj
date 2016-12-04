@@ -42,6 +42,10 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Threading.Tasks.Dataflow, Version=4.5.24.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\libs\Microsoft.Tpl.Dataflow.4.5.24\lib\portable-net45+win8+wpa81\System.Threading.Tasks.Dataflow.dll</HintPath>
+    </Reference>
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -64,6 +68,10 @@
     <ProjectReference Include="..\Finances.Core\Finances.Core.csproj">
       <Project>{bb8793f8-877f-42b0-82ef-0786b2c214ef}</Project>
       <Name>Finances.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Finances.Utility\Finances.Utility.csproj">
+      <Project>{1dd8cb19-a75f-493e-be91-bed3c978982b}</Project>
+      <Name>Finances.Utility</Name>
     </ProjectReference>
     <ProjectReference Include="..\Finances.WinClient\Finances.WinClient.csproj">
       <Project>{d481adf1-4007-40d7-9e05-2daaf3d89d90}</Project>

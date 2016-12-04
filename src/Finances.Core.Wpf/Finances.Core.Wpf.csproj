@@ -144,9 +144,10 @@
       <Project>{96eaaebb-e7ff-4e57-88ce-195a404d9348}</Project>
       <Name>Finances.Service</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="ClassDiagram1.cd" />
+    <ProjectReference Include="..\Finances.Utility\Finances.Utility.csproj">
+      <Project>{1dd8cb19-a75f-493e-be91-bed3c978982b}</Project>
+      <Name>Finances.Utility</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

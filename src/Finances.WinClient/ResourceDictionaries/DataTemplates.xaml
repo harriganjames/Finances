@@ -59,12 +59,6 @@
         <v:TransferDirectionView/>
     </DataTemplate>
     
-
-    <Style TargetType="Button">
-        <!--<Setter Property="Background" Value="#3030C0"/>-->
-        <!--<Setter Property="Foreground" Value="White"/>-->
-        <!--<Setter Property="FontWeight" Value="Bold"/>-->
-    </Style>
     
     
 </ResourceDictionary>

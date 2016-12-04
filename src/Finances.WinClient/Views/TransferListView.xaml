@@ -52,7 +52,7 @@
                     </ToolBarPanel>
                     <ToolBarPanel Orientation="Horizontal">
                         <libctl:TextBoxWithClear
-                                Text="{Binding FilterExpression, UpdateSourceTrigger=PropertyChanged}"
+                                Text="{Binding FilterExpression, UpdateSourceTrigger=PropertyChanged, Delay=500}"
                                 Width="200"
                                 Height="20"
                                 Margin="10,0,0,0"

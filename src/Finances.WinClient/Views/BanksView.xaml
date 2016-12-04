@@ -15,7 +15,7 @@
              xmlns:libattach="clr-namespace:Finances.Core.Wpf.AttachedProperties;assembly=Finances.Core.Wpf"
              mc:Ignorable="d"
              x:Name="apex"
-             d:DesignHeight="300" d:DesignWidth="300"
+             d:DesignHeight="300" d:DesignWidth="600"
             >
 
     <!--FocusManager.FocusedElement="{Binding ElementName=Items}"-->

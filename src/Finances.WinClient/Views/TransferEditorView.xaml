@@ -32,18 +32,18 @@
                 <Setter Property="VerticalContentAlignment" Value="Center" />
                 <!--<Setter Property="Height" Value="25" />-->
             </Style>
-            <Style TargetType="TextBox" BasedOn="{StaticResource {x:Type Control}}" >
-                <Setter Property="Background" Value="Beige" />
-                <Setter Property="HorizontalAlignment" Value="Left" />
-                <Setter Property="Validation.ErrorTemplate" Value="{StaticResource validationTemplate}" />
+            <Style TargetType="TextBox" BasedOn="{StaticResource {x:Type TextBox}}" >
+                <!--<Setter Property="Background" Value="Beige" />-->
+                <!--<Setter Property="HorizontalAlignment" Value="Left" />-->
+                <!--<Setter Property="Validation.ErrorTemplate" Value="{StaticResource validationTemplate}" />-->
             </Style>
-            <Style TargetType="ComboBox" BasedOn="{StaticResource {x:Type Control}}">
-                <Setter Property="Background" Value="Beige" />
+            <Style TargetType="ComboBox" BasedOn="{StaticResource {x:Type ComboBox}}">
+                <!--<Setter Property="Background" Value="Beige" />-->
                 <Setter Property="MinHeight" Value="25" />
                 <Setter Property="Width" Value="350" />
-                <Setter Property="HorizontalAlignment" Value="Left" />
+                <!--<Setter Property="HorizontalAlignment" Value="Left" />
                 <Setter Property="VerticalContentAlignment" Value="Center" />
-                <Setter Property="Validation.ErrorTemplate" Value="{StaticResource validationTemplate}" />
+                <Setter Property="Validation.ErrorTemplate" Value="{StaticResource validationTemplate}" />-->
             </Style>
             <Style TargetType="DatePicker" >
                 <!--<Setter Property="Background" Value="Beige" />-->

@@ -60,6 +60,7 @@
     <Compile Include="Interfaces\IBalanceDateRepository.cs" />
     <Compile Include="Interfaces\ICashflowProjection.cs" />
     <Compile Include="Interfaces\IRepositoryWrite.cs" />
+    <Compile Include="Utility\DebounceExecutor.cs" />
     <Compile Include="ValueObjects\BalanceState.cs" />
     <Compile Include="ValueObjects\BalanceStateOK.cs" />
     <Compile Include="Engines\Cashflow\CashflowProjectionGroup.cs" />

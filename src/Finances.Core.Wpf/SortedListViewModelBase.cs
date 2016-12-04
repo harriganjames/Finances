@@ -7,6 +7,8 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Data;
 
+using Finances.Utility;
+
 namespace Finances.Core.Wpf
 {
     /*
@@ -39,6 +41,7 @@ namespace Finances.Core.Wpf
     public abstract class SortedListViewModelBase<T> : ListViewModelBase<T>, ISortedListViewModelBase<T> where T : class, IItemViewModelBase
     {
         CollectionViewSource dataListView;
+        DebounceExecutor<string> filterDebounce = new DebounceExecutor<string>();
 
         public SortedListViewModelBase()
         {
@@ -47,8 +50,14 @@ namespace Finances.Core.Wpf
             this.dataListView.View.Filter = ViewFilter;
 
             SortColumnCommand = base.AddNewCommand(new ActionCommand(SortColumn));
-        }
 
+            filterDebounce.Initialize(new TimeSpan(0, 0, 0, 0, 500 ), FilterExecute);
+        }
+        //public SortedListViewModelBase(IDebounceExecutor<string> de) : base()
+        //{
+        //    filterDebounce = de;
+        //    filterDebounce.Initialize(new TimeSpan(0, 0, 0, 1), FilterExecute);
+        //}
 
         public ActionCommand SortColumnCommand { get; set; }
 
@@ -71,9 +80,20 @@ namespace Finances.Core.Wpf
             }
             set
             {
+                //filterDebounce.Execute(value);
                 filterExpression = value;
-                this.DataListView.Refresh();
+                Task.Factory.StartNew(() => this.DataListView.Refresh(),System.Threading.CancellationToken.None,TaskCreationOptions.None,this.UIScheduler);
+
+                //this.DataListView.Refresh();
             }
+        }
+
+        string filterExdeuteExpression;
+
+        void FilterExecute(string filter)
+        {
+            filterExdeuteExpression = filter;
+            this.DataListView.Refresh();
         }
 
 

@@ -3,6 +3,30 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              >
     <Application.Resources>
-        <ResourceDictionary Source="AppResourceDictionary.xaml" />
+        <ResourceDictionary>
+            <!--<Style TargetType="{x:Type Ellipse}"/>-->
+
+            <!--<ResourceDictionary Source="AppResourceDictionary.xaml" />-->
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="ResourceDictionaries\Converters.xaml" />
+                <ResourceDictionary Source="ResourceDictionaries\DataTemplates.xaml" />
+                <ResourceDictionary Source="ResourceDictionaries\Validation.xaml" />
+                <ResourceDictionary Source="ResourceDictionaries\ViewModelMappings.xaml" />
+
+                <!--<ResourceDictionary Source="pack://application:,,,/Finances.Core.Wpf;component/ViewModelMappings.xaml" />-->
+
+                <ResourceDictionary Source="/Finances.Core.Wpf;component/ViewModelMappings.xaml" />
+
+                <ResourceDictionary Source="ResourceDictionaries\Brushes.xaml" />
+                <ResourceDictionary Source="ResourceDictionaries\Styles.xaml" />
+                <!--<ResourceDictionary Source="ResourceDictionaries\London Theme.xaml" />-->
+
+                <ResourceDictionary Source="AppResourceDictionary.xaml" />
+
+            </ResourceDictionary.MergedDictionaries>
+
+
+        </ResourceDictionary>
+
     </Application.Resources>
 </Application>

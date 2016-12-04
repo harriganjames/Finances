@@ -27,6 +27,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Finances.Interface", "Finan
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Finances.Core.UnitTest", "Finances.Core.UnitTest\Finances.Core.UnitTest.csproj", "{EF0847FC-3BED-4F9C-A278-766EBB2D994E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Finances.Utility", "Finances.Utility\Finances.Utility.csproj", "{1DD8CB19-A75F-493E-BE91-BED3C978982B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -82,6 +84,10 @@ Global
 		{EF0847FC-3BED-4F9C-A278-766EBB2D994E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EF0847FC-3BED-4F9C-A278-766EBB2D994E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EF0847FC-3BED-4F9C-A278-766EBB2D994E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1DD8CB19-A75F-493E-BE91-BED3C978982B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1DD8CB19-A75F-493E-BE91-BED3C978982B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1DD8CB19-A75F-493E-BE91-BED3C978982B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1DD8CB19-A75F-493E-BE91-BED3C978982B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
