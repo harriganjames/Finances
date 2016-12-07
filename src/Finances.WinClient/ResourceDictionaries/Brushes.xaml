@@ -3,6 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         >
 
+    <Color x:Key="AppControlBackgoundColor">#FFF</Color>
     <Color x:Key="AppFeintColor"      >#CCF</Color>
     <Color x:Key="AppFeintPaleColor"  >#BBE</Color>
     <Color x:Key="AppPaleColor"       >#AAD</Color>
@@ -18,6 +19,7 @@
     <Color x:Key="AppTextLightColor">#FFeeeeee</Color>
     <Color x:Key="AppTextDarkColor">#FF111111</Color>
 
+    <SolidColorBrush x:Key="AppControlBackgoundBrush" Color="{StaticResource AppControlBackgoundColor}"/>
     <SolidColorBrush x:Key="AppFeintBrush" Color="{StaticResource AppFeintColor}"/>
     <SolidColorBrush x:Key="AppFeintPaleBrush" Color="{StaticResource AppFeintPaleColor}"/>
     <SolidColorBrush x:Key="AppPaleBrush" Color="{StaticResource AppPaleColor}"/>

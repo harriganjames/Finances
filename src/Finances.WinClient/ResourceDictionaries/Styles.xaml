@@ -4,8 +4,8 @@
         xmlns:s="clr-namespace:System;assembly=mscorlib"
         >
 
-    <Style TargetType="{x:Type ComboBox}" BasedOn="{StaticResource {x:Type ComboBox}}">
-        <Setter Property="Background" Value="{StaticResource AppFeintBrush}" />
+    <!--<Style TargetType="{x:Type ComboBox}" BasedOn="{StaticResource {x:Type ComboBox}}">
+        <Setter Property="Background" Value="{StaticResource AppControlBackgoundBrush}" />
         <Setter Property="HorizontalAlignment" Value="Left" />
         <Setter Property="VerticalContentAlignment" Value="Center" />
         <Setter Property="Validation.ErrorTemplate" Value="{StaticResource validationTemplate}" />
@@ -16,12 +16,12 @@
                 <Setter Property="Background" Value="{StaticResource AppHighlightFocusBrush}" />
             </Trigger>
         </Style.Triggers>
-    </Style>
+    </Style>-->
 
 
     <Style x:Key="AppInputStyle" TargetType="{x:Type Control}">
         <Setter Property="BorderThickness" Value="1"/>
-        <Setter Property="Background" Value="{StaticResource AppFeintBrush}" />
+        <Setter Property="Background" Value="{StaticResource AppControlBackgoundBrush}" />
         <Setter Property="Border.CornerRadius" Value="3"/>
         <Setter Property="VerticalContentAlignment" Value="Center"/>
 
@@ -88,9 +88,9 @@
         <Style.Resources>
             <CornerRadius x:Key="ButtonCornerRadius" BottomLeft="3" BottomRight="3" TopLeft="3" TopRight="3"/>
 
-            <SolidColorBrush x:Key="ButtonBaseBrush" Color="{StaticResource AppPaleLightColor}"></SolidColorBrush>
-            <SolidColorBrush x:Key="ButtonMouseOverBrush" Color="{StaticResource AppLightMediumColor}"></SolidColorBrush>
-            <SolidColorBrush x:Key="ButtonPressedBrush" Color="{StaticResource AppMediumDarkColor}"></SolidColorBrush>
+            <SolidColorBrush x:Key="ButtonBaseBrush" Color="{StaticResource AppFeintColor}"></SolidColorBrush>
+            <SolidColorBrush x:Key="ButtonMouseOverBrush" Color="{StaticResource AppPaleColor}"></SolidColorBrush>
+            <SolidColorBrush x:Key="ButtonPressedBrush" Color="{StaticResource AppLightMediumColor}"></SolidColorBrush>
 
             <SolidColorBrush x:Key="ButtonBorderBrush" Color="#999"/>
             <SolidColorBrush x:Key="ButtonMouseOverBorderBrush" Color="#666"/>
@@ -106,7 +106,7 @@
 
         <Setter Property="OverridesDefaultStyle" Value="True" />
         <Setter Property="SnapsToDevicePixels" Value="True" />
-        <Setter Property="Foreground" Value="White" />
+        <Setter Property="Foreground" Value="Black" />
         <Setter Property="Control.HorizontalContentAlignment" Value="Center" />
         <Setter Property="Control.VerticalContentAlignment" Value="Center" />
         <Setter Property="Control.Padding" Value="10,3" />
@@ -190,6 +190,60 @@
     </Style>
 
 
+    <Style TargetType="{x:Type ComboBox}">
+        <Style.Triggers>
+            <Trigger Property="IsKeyboardFocusWithin" Value="true">
+                <Setter Property="BorderBrush" Value="{StaticResource AppDarkBrush}" />
+                <Setter Property="BorderThickness" Value="2"/>
+                <Setter Property="Background" Value="{StaticResource AppHighlightFocusBrush}" />
+            </Trigger>
+        </Style.Triggers>
+        <Setter Property="Background" Value="{StaticResource AppControlBackgoundBrush}" />
+        <Setter Property="HorizontalAlignment" Value="Left" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
+        <Setter Property="Validation.ErrorTemplate" Value="{StaticResource validationTemplate}" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="ComboBox">
+                    <Grid>
+                        <ToggleButton Background="{TemplateBinding Background}" Grid.Column="2" Focusable="false" 
+                          IsChecked="{Binding Path=IsDropDownOpen,Mode=TwoWay,RelativeSource={RelativeSource TemplatedParent}}" >
+                            <ToggleButton.Template>
+                                <ControlTemplate>
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="5*" />
+                                            <ColumnDefinition Width="*" />
+                                        </Grid.ColumnDefinitions>
+                                        <Border x:Name="Border"  Grid.ColumnSpan="2" CornerRadius="3" Background="Beige" BorderBrush="Black" BorderThickness="1" />
+                                        <Border Grid.Column="0" CornerRadius="3,0,0,3"  Margin="1"  Background="{TemplateBinding Background}"  BorderBrush="Black" BorderThickness="0,0,1,0" />
+                                        <Path x:Name="Arrow" Grid.Column="1" Fill="Black" HorizontalAlignment="Center" VerticalAlignment="Center" Data="M 0 0 L 4 4 L 8 0 Z"/>
+                                    </Grid>
+                                    <ControlTemplate.Triggers>
+                                        <Trigger Property="ToggleButton.IsMouseOver" Value="true">
+                                            <Setter TargetName="Border" Property="Background" Value="LightGray" />
+                                        </Trigger>
+                                        <Trigger Property="ToggleButton.IsChecked" Value="true">
+                                        </Trigger>
+                                    </ControlTemplate.Triggers>
+                                </ControlTemplate>
+                            </ToggleButton.Template>
+                        </ToggleButton>
+                        <ContentPresenter Name="ContentSite" IsHitTestVisible="False"  Content="{TemplateBinding SelectionBoxItem}" ContentTemplate="{TemplateBinding SelectionBoxItemTemplate}" ContentTemplateSelector="{TemplateBinding ItemTemplateSelector}" Margin="3"  />
+                        <TextBox x:Name="PART_EditableTextBox" Visibility="Hidden" IsReadOnly="{TemplateBinding IsReadOnly}"/>
+                        <Popup Name="Popup" Placement="Bottom" IsOpen="{TemplateBinding IsDropDownOpen}" AllowsTransparency="True"  Focusable="False" PopupAnimation="Slide">
+                            <Grid  Name="DropDown" SnapsToDevicePixels="True" MinWidth="{TemplateBinding ActualWidth}" MaxHeight="{TemplateBinding MaxDropDownHeight}">
+                                <Border x:Name="DropDownBorder" Background="{TemplateBinding Background}" BorderThickness="1" BorderBrush="Black" />
+                                <ScrollViewer SnapsToDevicePixels="True">
+                                    <StackPanel IsItemsHost="True" />
+                                </ScrollViewer>
+                            </Grid>
+                        </Popup>
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
 
 </ResourceDictionary>
     
