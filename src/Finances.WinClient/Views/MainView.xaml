@@ -19,12 +19,12 @@
                     <TextBlock Text="Finances" FontSize="20" Padding="5"/>
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" >
                         <Button Content="ObjectInfo" 
-                                Margin="0,0,5,0" Padding="5,2" 
+                                Margin="0,0,5,0"  
                                 VerticalAlignment="Center"
                                 Visibility="{Binding IsDebugMode, Converter={StaticResource PositiveVisibilityConverter}}"
                                 Command="{Binding OpenObjectInfoCommand}"/>
                         <Button Content="Logout" VerticalAlignment="Center"
-                                Margin="5" Padding="5,2"
+                                Margin="5" 
                                 Command="{Binding LogoutCommand}" 
                                 Visibility="{Binding LoggedIn, Converter={StaticResource PositiveVisibilityConverter}}"/>
                         
@@ -54,8 +54,7 @@
                                              Background="AliceBlue"
                                              />
                                 <Button x:Name="btnLogin" Content="Login" 
-                                        Margin="10" Padding="8,5" 
-                                        VerticalAlignment="Center"
+                                        Margin="10"                                         VerticalAlignment="Center"
                                         Click="btnLogin_Click"/>
                             </StackPanel>
                         </Border>

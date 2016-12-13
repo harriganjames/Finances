@@ -18,6 +18,7 @@ namespace Finances.WinClient.DesignTimeData
             bi.UriSource = new Uri(@"C:\Secure\Projects\DevProjects\Finances\src\Finances.WinClient\Images\DesignTime\Bank.png", UriKind.Absolute);
             bi.EndInit();
             Logo = bi;
+
         }
 
         public string Name { get; set; }

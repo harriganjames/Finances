@@ -15,17 +15,17 @@
     <!--d:DataContext="{Binding Path=., Source={x:Static dd:DesignData.BankAccount}}"-->
 
     <Grid>
-        <Border BorderThickness="1" BorderBrush="DarkCyan" CornerRadius="2" Padding="1">
-            <StackPanel Orientation="Horizontal">
+        <Border BorderThickness="1" BorderBrush="DarkCyan" CornerRadius="2" Padding="1" HorizontalAlignment="Left">
+            <Grid>
                 <Grid Visibility="{Binding HasLogo, Converter={StaticResource PositiveVisibilityConverter}}">
                     <Border Height="20" Width="50" BorderThickness="0" CornerRadius="1" BorderBrush="Thistle">
                         <Image Source="{Binding Logo}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                     </Border>
                 </Grid>
                 <Grid Visibility="{Binding HasLogo, Converter={StaticResource NegativeVisibilityConverter}}">
-                    <TextBlock Text="{Binding Name}" Padding="5,0,5,0" VerticalAlignment="Center"/>
+                    <TextBlock Text="{Binding Name}" Padding="5,0,5,0" VerticalAlignment="Center" HorizontalAlignment="Left"/>
                 </Grid>
-            </StackPanel>
+            </Grid>
         </Border>
     </Grid>
 </UserControl>

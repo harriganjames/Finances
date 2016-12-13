@@ -1,9 +1,10 @@
 ﻿<ResourceDictionary 
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:s="clr-namespace:System;assembly=mscorlib"
         >
 
-    <Color x:Key="AppControlBackgoundColor">#FFF</Color>
+    <Color x:Key="AppControlBackgoundColor">#FFFF</Color>
     <Color x:Key="AppFeintColor"      >#CCF</Color>
     <Color x:Key="AppFeintPaleColor"  >#BBE</Color>
     <Color x:Key="AppPaleColor"       >#AAD</Color>
@@ -33,6 +34,8 @@
 
     <SolidColorBrush x:Key="AppTextLightBrush" Color="{StaticResource AppTextLightColor}"/>
     <SolidColorBrush x:Key="AppTextDarkBrush" Color="{StaticResource AppTextDarkColor}"/>
+
+    <s:Double x:Key="AppCornerRadius">3</s:Double>
 
 </ResourceDictionary>
     

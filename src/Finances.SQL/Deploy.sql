@@ -159,9 +159,6 @@ PRINT '	Done.'
 END
 
 
---
-alter TABLE [dbo].[Transfer] add CONSTRAINT FK_Transfer_TransferCategory FOREIGN KEY (TransferCategoryId) REFERENCES dbo.TransferCategory(TransferCategoryId)
-
 -- DROP TABLE [dbo].[Transfer] 
 
 IF OBJECT_ID('dbo.Transfer') IS NULL
@@ -176,9 +173,10 @@ CREATE TABLE [dbo].[Transfer]
 	,TransferCategoryId	INT NOT NULL
 	,Amount				MONEY NOT NULL
 	,AmountTolerence	NUMERIC(3,2) NOT NULL	-- %
-	,StartDate			DATE NOT NULL
-	,EndDate			DATE NULL
-	,Frequency			VARCHAR(100) NOT NULL
+	,ScheduleStartDate			DATE NOT NULL
+	,ScheduleEndDate			DATE NULL
+	,ScheduleFrequency			VARCHAR(100) NOT NULL
+	,ScheduleFrequencyEvery		INT NOT NULL
 	,IsEnabled			BIT NOT NULL
 
     ,RecordCreatedDateTime DATETIME NOT NULL DEFAULT(GETDATE())

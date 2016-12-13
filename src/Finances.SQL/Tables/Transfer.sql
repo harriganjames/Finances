@@ -20,6 +20,7 @@ CREATE TABLE [dbo].[Transfer]
 	,ScheduleEndDate			DATE NULL
 	,ScheduleFrequency			VARCHAR(100) NOT NULL
 	,ScheduleFrequencyEvery		INT NOT NULL
+	,FrequencyEvery INT NOT NULL DEFAULT(1)
 	,IsEnabled			BIT NOT NULL
 
     ,RecordCreatedDateTime DATETIME NOT NULL DEFAULT(GETDATE())
